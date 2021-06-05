@@ -48,8 +48,8 @@ class AnimatedVector extends StatelessWidget {
         }
 
         if (applyColor) {
-          child = ImageFiltered(
-            imageFilter: ColorFilter.mode(
+          child = ColorFiltered(
+            colorFilter: ColorFilter.mode(
               color ?? Theme.of(context).iconTheme.color ?? Colors.black,
               BlendMode.srcIn,
             ),
