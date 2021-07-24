@@ -320,8 +320,9 @@ class PathElement extends VectorElement {
   final StrokeCap strokeCap;
   final StrokeJoin strokeJoin;
   final double strokeMiterLimit;
-  final double trimOffsetStart;
-  final double trimOffsetEnd;
+  final double trimStart;
+  final double trimEnd;
+  final double trimOffset;
   final PathAnimationProperties properties;
 
   PathElement({
@@ -332,12 +333,14 @@ class PathElement extends VectorElement {
     this.strokeCap = StrokeCap.butt,
     this.strokeJoin = StrokeJoin.bevel,
     this.strokeMiterLimit = 4.0,
-    this.trimOffsetStart = 0.0,
-    this.trimOffsetEnd = 1.0,
+    this.trimStart = 0.0,
+    this.trimEnd = 1.0,
+    this.trimOffset = 0.0,
     PathAnimationProperties? properties,
   })  : properties = properties ?? PathAnimationProperties(),
-        assert(trimOffsetStart >= 0 && trimOffsetStart <= 1),
-        assert(trimOffsetEnd >= 0 && trimOffsetEnd <= 1);
+        assert(trimStart >= 0 && trimStart <= 1),
+        assert(trimEnd >= 0 && trimEnd <= 1),
+        assert(trimOffset >= 0 && trimOffset <= 1);
 
   @override
   PathElement evaluate(
@@ -352,10 +355,12 @@ class PathElement extends VectorElement {
         properties.strokeColor, this.strokeColor, baseDuration, t);
     final double strokeWidth = evaluateProperties(
         properties.strokeWidth, this.strokeWidth, baseDuration, t)!;
-    final double trimOffsetStart = evaluateProperties(
-        properties.trimOffsetStart, this.trimOffsetStart, baseDuration, t)!;
-    final double trimOffsetEnd = evaluateProperties(
-        properties.trimOffsetEnd, this.trimOffsetEnd, baseDuration, t)!;
+    final double trimStart = evaluateProperties(
+        properties.trimStart, this.trimStart, baseDuration, t)!;
+    final double trimEnd =
+        evaluateProperties(properties.trimEnd, this.trimEnd, baseDuration, t)!;
+    final double trimOffset = evaluateProperties(
+        properties.trimOffset, this.trimOffset, baseDuration, t)!;
 
     return PathElement(
       pathData: pathData,
@@ -365,8 +370,9 @@ class PathElement extends VectorElement {
       strokeCap: strokeCap,
       strokeJoin: strokeJoin,
       strokeMiterLimit: strokeMiterLimit,
-      trimOffsetStart: trimOffsetStart,
-      trimOffsetEnd: trimOffsetEnd,
+      trimStart: trimStart,
+      trimEnd: trimEnd,
+      trimOffset: trimOffset,
     );
   }
 
@@ -379,8 +385,9 @@ class PathElement extends VectorElement {
 
     canvas.drawPath(
       evaluated.pathData.toPath(
-        trimOffsetStart: evaluated.trimOffsetStart,
-        trimOffsetEnd: evaluated.trimOffsetEnd,
+        trimStart: evaluated.trimStart,
+        trimEnd: evaluated.trimEnd,
+        trimOffset: evaluated.trimOffset,
       ),
       Paint()
         ..color = evaluated.strokeColor ?? Colors.transparent
@@ -392,8 +399,9 @@ class PathElement extends VectorElement {
     );
     canvas.drawPath(
       evaluated.pathData.toPath(
-        trimOffsetStart: evaluated.trimOffsetStart,
-        trimOffsetEnd: evaluated.trimOffsetEnd,
+        trimStart: evaluated.trimStart,
+        trimEnd: evaluated.trimEnd,
+        trimOffset: evaluated.trimOffset,
       ),
       Paint()..color = evaluated.fillColor ?? Colors.transparent,
     );
@@ -408,8 +416,9 @@ class PathElement extends VectorElement {
         strokeCap.hashCode,
         strokeJoin.hashCode,
         strokeMiterLimit.hashCode,
-        trimOffsetStart.hashCode,
-        trimOffsetEnd.hashCode,
+        trimStart.hashCode,
+        trimEnd.hashCode,
+        trimOffset.hashCode,
         properties.hashCode,
       );
 
@@ -423,8 +432,9 @@ class PathElement extends VectorElement {
           strokeCap == other.strokeCap &&
           strokeJoin == other.strokeJoin &&
           strokeMiterLimit == other.strokeMiterLimit &&
-          trimOffsetStart == other.trimOffsetStart &&
-          trimOffsetEnd == other.trimOffsetEnd &&
+          trimStart == other.trimStart &&
+          trimEnd == other.trimEnd &&
+          trimOffset == other.trimOffset &&
           properties == other.properties;
     }
 
@@ -546,9 +556,12 @@ class PathData {
   }
 
   Path toPath({
-    double trimOffsetStart = 0.0,
-    double trimOffsetEnd = 1.0,
+    double trimStart = 0.0,
+    double trimEnd = 1.0,
+    double trimOffset = 0.0,
   }) {
+    if (trimStart == trimEnd) return Path();
+
     final Path base = Path();
 
     for (final PathCommand operation in operations) {
@@ -578,23 +591,30 @@ class PathData {
       }
     }
 
-    final Path trimStart = Path();
+    final Path trimPath = Path();
     for (final PathMetric metric in base.computeMetrics()) {
-      trimStart.addPath(
-        metric.extractPath(metric.length * trimOffsetStart, metric.length),
-        Offset.zero,
-      );
+      final double offset = metric.length * trimOffset;
+      double start = metric.length * trimStart + offset;
+      double end = metric.length * trimEnd + offset;
+      start = start.wrap(0, metric.length);
+      end = end.wrap(0, metric.length);
+
+      final Path path;
+
+      if (end <= start) {
+        final Path lower = metric.extractPath(0.0, end);
+        final Path higher = metric.extractPath(start, metric.length);
+        path = Path()
+          ..addPath(lower, Offset.zero)
+          ..addPath(higher, Offset.zero);
+      } else {
+        path = metric.extractPath(start, end);
+      }
+
+      trimPath.addPath(path, Offset.zero);
     }
 
-    final Path trimEnd = Path();
-    for (final PathMetric metric in trimStart.computeMetrics()) {
-      trimEnd.addPath(
-        metric.extractPath(0.0, metric.length * trimOffsetEnd),
-        Offset.zero,
-      );
-    }
-
-    return trimEnd;
+    return trimPath;
   }
 
   @override
@@ -770,22 +790,25 @@ class PathAnimationProperties extends AnimationProperties {
   final AnimationPropertySequence<Color>? fillColor;
   final AnimationPropertySequence<Color>? strokeColor;
   final AnimationPropertySequence<double>? strokeWidth;
-  final AnimationPropertySequence<double>? trimOffsetStart;
-  final AnimationPropertySequence<double>? trimOffsetEnd;
+  final AnimationPropertySequence<double>? trimStart;
+  final AnimationPropertySequence<double>? trimEnd;
+  final AnimationPropertySequence<double>? trimOffset;
 
   PathAnimationProperties({
     this.pathData,
     this.fillColor,
     this.strokeColor,
     this.strokeWidth,
-    this.trimOffsetStart,
-    this.trimOffsetEnd,
+    this.trimStart,
+    this.trimEnd,
+    this.trimOffset,
   })  : assert(AnimationProperties.checkForIntervalsValidity(pathData)),
         assert(AnimationProperties.checkForIntervalsValidity(fillColor)),
         assert(AnimationProperties.checkForIntervalsValidity(strokeColor)),
         assert(AnimationProperties.checkForIntervalsValidity(strokeWidth)),
-        assert(AnimationProperties.checkForIntervalsValidity(trimOffsetStart)),
-        assert(AnimationProperties.checkForIntervalsValidity(trimOffsetEnd));
+        assert(AnimationProperties.checkForIntervalsValidity(trimStart)),
+        assert(AnimationProperties.checkForIntervalsValidity(trimEnd)),
+        assert(AnimationProperties.checkForIntervalsValidity(trimOffset));
 
   @override
   int get hashCode => hashValues(
@@ -793,8 +816,9 @@ class PathAnimationProperties extends AnimationProperties {
         fillColor,
         strokeColor,
         strokeWidth,
-        trimOffsetStart,
-        trimOffsetEnd,
+        trimStart,
+        trimEnd,
+        trimOffset,
       );
 
   @override
@@ -804,8 +828,9 @@ class PathAnimationProperties extends AnimationProperties {
           listEquals(fillColor, other.fillColor) &&
           listEquals(strokeColor, other.strokeColor) &&
           listEquals(strokeWidth, other.strokeWidth) &&
-          listEquals(trimOffsetStart, other.trimOffsetStart) &&
-          listEquals(trimOffsetEnd, other.trimOffsetEnd);
+          listEquals(trimStart, other.trimStart) &&
+          listEquals(trimEnd, other.trimEnd) &&
+          listEquals(trimOffset, other.trimOffset);
     }
 
     return false;
@@ -956,5 +981,15 @@ extension _ListNullGet<T> on List<T> {
       return null;
     }
     return this[index];
+  }
+}
+
+extension _DoubleWrap on double {
+  double wrap(double min, double max) {
+    if (this > max || this < min) {
+      return min + (this - min) % (max - min);
+    } else {
+      return this;
+    }
   }
 }

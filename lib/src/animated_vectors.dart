@@ -39,7 +39,7 @@ class AnimatedVectors {
             strokeColor: const Color(0xFF000000),
             strokeWidth: 1.8,
             properties: PathAnimationProperties(
-              trimOffsetStart: [
+              trimStart: [
                 AnimationProperty(
                   tween: Tween<double>(end: 1),
                   interval: const AnimationInterval(
@@ -58,7 +58,7 @@ class AnimatedVectors {
         strokeColor: const Color(0xFF000000),
         strokeWidth: 1.8,
         properties: PathAnimationProperties(
-          trimOffsetStart: [
+          trimStart: [
             AnimationProperty(
               tween: Tween<double>(begin: 1.0, end: 0.0),
               interval: const AnimationInterval(
@@ -75,7 +75,7 @@ class AnimatedVectors {
         strokeColor: const Color(0xFF000000),
         strokeWidth: 1.8,
         properties: PathAnimationProperties(
-          trimOffsetStart: [
+          trimStart: [
             AnimationProperty(
               tween: Tween<double>(begin: 0.48, end: 0.0),
               interval: const AnimationInterval(
@@ -85,7 +85,7 @@ class AnimatedVectors {
               curve: Curves.fastOutSlowIn,
             ),
           ],
-          trimOffsetEnd: [
+          trimEnd: [
             AnimationProperty(
               tween: Tween<double>(begin: 1, end: 0.86),
               interval: const AnimationInterval(
@@ -135,7 +135,7 @@ class AnimatedVectors {
             strokeColor: const Color(0xFF000000),
             strokeWidth: 1.8,
             properties: PathAnimationProperties(
-              trimOffsetEnd: [
+              trimEnd: [
                 AnimationProperty(
                   tween: Tween<double>(begin: 0, end: 1),
                   interval: const AnimationInterval(
@@ -154,7 +154,7 @@ class AnimatedVectors {
         strokeColor: const Color(0xFF000000),
         strokeWidth: 1.8,
         properties: PathAnimationProperties(
-          trimOffsetEnd: [
+          trimEnd: [
             AnimationProperty(
               tween: Tween<double>(begin: 1.0, end: 0.0),
               interval: const AnimationInterval(
@@ -171,7 +171,7 @@ class AnimatedVectors {
         strokeColor: const Color(0xFF000000),
         strokeWidth: 1.8,
         properties: PathAnimationProperties(
-          trimOffsetStart: [
+          trimStart: [
             AnimationProperty(
               tween: Tween<double>(begin: 0.0, end: 0.48),
               interval: const AnimationInterval(
@@ -181,7 +181,7 @@ class AnimatedVectors {
               curve: Curves.fastOutSlowIn,
             ),
           ],
-          trimOffsetEnd: [
+          trimEnd: [
             AnimationProperty(
               tween: Tween<double>(begin: 0.86, end: 1.0),
               interval: const AnimationInterval(
@@ -942,10 +942,10 @@ class AnimatedVectors {
         ),
         strokeColor: const Color(0xFF000000),
         strokeWidth: 2,
-        trimOffsetStart: 0,
-        trimOffsetEnd: 0.185,
+        trimStart: 0,
+        trimEnd: 0.185,
         properties: PathAnimationProperties(
-          trimOffsetStart: [
+          trimStart: [
             AnimationProperty(
               tween: Tween<double>(end: 0.75),
               interval: const AnimationInterval(
@@ -954,7 +954,7 @@ class AnimatedVectors {
               curve: Curves.fastOutSlowIn,
             ),
           ],
-          trimOffsetEnd: [
+          trimEnd: [
             AnimationProperty(
               tween: Tween<double>(end: 1),
               interval: const AnimationInterval(
@@ -971,9 +971,9 @@ class AnimatedVectors {
         ),
         strokeColor: const Color(0xFF000000),
         strokeWidth: 2,
-        trimOffsetEnd: 1,
+        trimEnd: 1,
         properties: PathAnimationProperties(
-          trimOffsetEnd: [
+          trimEnd: [
             AnimationProperty(
               tween: Tween<double>(end: 0),
               interval: const AnimationInterval(
@@ -1010,9 +1010,9 @@ class AnimatedVectors {
             ),
             strokeColor: const Color(0xFF000000),
             strokeWidth: 2,
-            trimOffsetEnd: 0,
+            trimEnd: 0,
             properties: PathAnimationProperties(
-              trimOffsetEnd: [
+              trimEnd: [
                 AnimationProperty(
                   tween: Tween<double>(end: 0),
                   interval: const AnimationInterval(
@@ -1036,9 +1036,9 @@ class AnimatedVectors {
             ),
             strokeColor: const Color(0xFF000000),
             strokeWidth: 2,
-            trimOffsetEnd: 0,
+            trimEnd: 0,
             properties: PathAnimationProperties(
-              trimOffsetEnd: [
+              trimEnd: [
                 AnimationProperty(
                   tween: Tween<double>(end: 0),
                   interval: const AnimationInterval(
