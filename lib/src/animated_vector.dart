@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_parsing/path_parsing.dart';
@@ -131,75 +132,17 @@ abstract class VectorElement {
   void paint(Canvas canvas, double progress, Duration duration);
 
   T? evaluateProperties<T>(
-    AnimationPropertySequence<T>? properties,
+    AnimationPropertySequence<T?>? properties,
     T? defaultValue,
     Duration baseDuration,
     double t,
   ) {
     if (properties == null || properties.isEmpty) return defaultValue;
 
-    final List<Interval> intervals = [];
-    if (properties.length > 1) {
-      for (int i = 1; i <= properties.length; i++) {
-        final AnimationProperty<T> currentProperty = properties[i - 1];
-        late final AnimationProperty<T> nextProperty;
-        if (i != properties.length) {
-          nextProperty = properties[i];
-        } else {
-          intervals.add(currentProperty.calculateIntervalCurve(baseDuration));
-          break;
-        }
+    final _AnimationTimeline<T?> timeline =
+        _AnimationTimeline(properties, baseDuration, defaultValue);
 
-        final Interval currentInterval =
-            currentProperty.calculateIntervalCurve(baseDuration);
-        final Interval nextInterval =
-            nextProperty.calculateIntervalCurve(baseDuration);
-
-        intervals.add(
-          Interval(currentInterval.begin, nextInterval.begin),
-        );
-      }
-    } else {
-      intervals.add(properties.single.calculateIntervalCurve(baseDuration));
-    }
-
-    final List<Tween<T>> tweens = [];
-    if (properties.length > 1) {
-      for (int i = 0; i < properties.length; i++) {
-        final AnimationProperty<T> currentProperty = properties[i];
-
-        final Tween<T> t = currentProperty.tween;
-        t.begin = t.begin ??
-            AnimationProperties._getNearestDefaultForTween(
-                properties, i, defaultValue,
-                goDown: true);
-        t.end = t.end ??
-            AnimationProperties._getNearestDefaultForTween(
-                properties, i, defaultValue);
-        tweens.add(t);
-      }
-    } else {
-      tweens.add(properties.single.tween);
-    }
-
-    late final int index;
-    late final Curve c;
-
-    if (t <= intervals.first.begin) {
-      index = 0;
-      c = intervals.first;
-    } else if (t >= intervals.last.end) {
-      index = intervals.length - 1;
-      c = intervals.last;
-    } else {
-      index = intervals.indexWhere((i) => t >= i.begin && t <= i.end);
-      c = intervals[index];
-    }
-
-    final double curvedT = c.transform(t);
-    tweens[index].begin = tweens[index].begin ?? defaultValue;
-    tweens[index].end = tweens[index].end ?? defaultValue;
-    return tweens[index].transform(curvedT);
+    return timeline.evaluate(t) ?? defaultValue;
   }
 }
 
@@ -727,7 +670,7 @@ class AnimationProperties {
     T? value;
 
     for (int i = startIndex;
-        goDown ? i > 0 : i < properties.length;
+        goDown ? i >= 0 : i < properties.length;
         goDown ? i-- : i++) {
       if (value != null) break;
       value ??= goDown
@@ -787,8 +730,8 @@ class GroupAnimationProperties extends AnimationProperties {
 
 class PathAnimationProperties extends AnimationProperties {
   final AnimationPropertySequence<PathData>? pathData;
-  final AnimationPropertySequence<Color>? fillColor;
-  final AnimationPropertySequence<Color>? strokeColor;
+  final AnimationPropertySequence<Color?>? fillColor;
+  final AnimationPropertySequence<Color?>? strokeColor;
   final AnimationPropertySequence<double>? strokeWidth;
   final AnimationPropertySequence<double>? trimStart;
   final AnimationPropertySequence<double>? trimEnd;
@@ -924,6 +867,23 @@ class AnimationInterval {
           microseconds: startOffset.inMicroseconds + duration.inMicroseconds,
         );
 
+  bool isBetween(double value, Duration baseDuration) {
+    final List<double> resolved = resolve(baseDuration);
+    final double start = resolved.first;
+    final double end = resolved.last;
+
+    return value >= start && value <= end;
+  }
+
+  List<double> resolve(Duration baseDuration) {
+    return [
+      start.inMilliseconds.clamp(0, baseDuration.inMilliseconds) /
+          baseDuration.inMilliseconds,
+      end.inMilliseconds.clamp(0, baseDuration.inMilliseconds) /
+          baseDuration.inMilliseconds,
+    ];
+  }
+
   @override
   int get hashCode => hashValues(start.hashCode, end.hashCode);
 
@@ -934,6 +894,73 @@ class AnimationInterval {
     }
 
     return false;
+  }
+}
+
+class _AnimationTimeline<T> {
+  final AnimationPropertySequence<T?> timeline;
+  final Duration baseDuration;
+  final T? defaultValue;
+
+  const _AnimationTimeline(
+    this.timeline,
+    this.baseDuration,
+    this.defaultValue,
+  );
+
+  T? evaluate(double t) {
+    AnimationProperty<T?>? matchingProperty = timeline.firstWhereOrNull(
+      (element) => element.interval.isBetween(t, baseDuration),
+    );
+    T? beginDefaultValue;
+    T? endDefaultValue;
+
+    if (matchingProperty == null) {
+      for (int i = timeline.length - 1; i >= 0; i--) {
+        final AnimationProperty<T?> property = timeline[i];
+
+        final List<double> resolved = property.interval.resolve(baseDuration);
+        final double end = resolved.last;
+        double interval = t - end;
+        if (!interval.isNegative) {
+          return property.tween.end ??
+              AnimationProperties._getNearestDefaultForTween(
+                  timeline, i, defaultValue,
+                  goDown: true) ??
+              defaultValue;
+        }
+      }
+    } else {
+      final int indexOf = timeline.indexOf(matchingProperty);
+      if (indexOf != 0) {
+        beginDefaultValue = AnimationProperties._getNearestDefaultForTween(
+          timeline,
+          indexOf,
+          defaultValue,
+          goDown: true,
+        );
+        endDefaultValue = AnimationProperties._getNearestDefaultForTween(
+          timeline,
+          indexOf,
+          defaultValue,
+        );
+      }
+    }
+
+    matchingProperty ??= timeline.first;
+    beginDefaultValue ??= defaultValue;
+    endDefaultValue ??= defaultValue;
+
+    final List<double> resolved =
+        matchingProperty.interval.resolve(baseDuration);
+    final double begin = resolved.first;
+    final double end = resolved.last;
+    t = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
+    final tween = matchingProperty.tween;
+    tween.begin ??= beginDefaultValue;
+    tween.end ??= endDefaultValue;
+
+    return tween.transform(matchingProperty.curve.transform(t))!;
   }
 }
 
