@@ -15,7 +15,6 @@ class AnimatedVector extends StatelessWidget {
   final Animation<double> progress;
   final Size? size;
   final Color? color;
-  final double? opacity;
   final bool applyColor;
 
   const AnimatedVector({
@@ -23,7 +22,6 @@ class AnimatedVector extends StatelessWidget {
     required this.progress,
     this.color,
     this.applyColor = false,
-    this.opacity,
     this.size,
     Key? key,
   }) : super(key: key);
@@ -37,26 +35,14 @@ class AnimatedVector extends StatelessWidget {
           painter: _AnimatedVectorPainter(
             vector: vector,
             progress: progress.value,
+            colorOverride: applyColor
+                ? color ?? Theme.of(context).iconTheme.color ?? Colors.black
+                : null,
           ),
-          size: size ?? vector.viewportSize,
+          child: SizedBox.fromSize(
+            size: size ?? vector.viewportSize,
+          ),
         );
-
-        if (opacity != null) {
-          child = Opacity(
-            opacity: opacity ?? 1.0,
-            child: child,
-          );
-        }
-
-        if (applyColor) {
-          child = ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              color ?? Theme.of(context).iconTheme.color ?? Colors.black,
-              BlendMode.srcIn,
-            ),
-            child: child,
-          );
-        }
 
         return child;
       },
@@ -67,10 +53,12 @@ class AnimatedVector extends StatelessWidget {
 class _AnimatedVectorPainter extends CustomPainter {
   final AnimatedVectorData vector;
   final double progress;
+  final Color? colorOverride;
 
   const _AnimatedVectorPainter({
     required this.vector,
     required this.progress,
+    this.colorOverride,
   });
 
   @override
@@ -80,9 +68,18 @@ class _AnimatedVectorPainter extends CustomPainter {
       size.height / vector.viewportSize.height,
     );
 
-    for (final VectorElement element in vector.elements) {
-      element.paint(canvas, progress, vector.duration);
+    if (colorOverride != null) {
+      canvas.saveLayer(
+        null,
+        Paint()
+          ..colorFilter = ColorFilter.mode(
+            colorOverride!,
+            BlendMode.srcIn,
+          ),
+      );
     }
+    vector.root.paint(canvas, vector.viewportSize, progress, vector.duration);
+    if (colorOverride != null) canvas.restore();
   }
 
   @override
@@ -92,19 +89,19 @@ class _AnimatedVectorPainter extends CustomPainter {
 }
 
 class AnimatedVectorData {
-  final VectorElements elements;
+  final VectorElement root;
   final Duration duration;
   final Size viewportSize;
 
   const AnimatedVectorData({
-    required this.elements,
+    required this.root,
     required this.duration,
     required this.viewportSize,
   });
 
   @override
   int get hashCode => hashValues(
-        elements.hashCode,
+        root.hashCode,
         duration.hashCode,
         viewportSize.hashCode,
       );
@@ -112,7 +109,7 @@ class AnimatedVectorData {
   @override
   bool operator ==(Object other) {
     if (other is AnimatedVectorData) {
-      return listEquals(elements, other.elements) &&
+      return root == other.root &&
           duration == other.duration &&
           viewportSize == other.viewportSize;
     }
@@ -129,7 +126,7 @@ abstract class VectorElement {
     Duration baseDuration = const Duration(milliseconds: 300),
   });
 
-  void paint(Canvas canvas, double progress, Duration duration);
+  void paint(Canvas canvas, Size size, double progress, Duration duration);
 
   T? evaluateProperties<T>(
     AnimationPropertySequence<T?>? properties,
@@ -143,6 +140,71 @@ abstract class VectorElement {
         _AnimationTimeline(properties, baseDuration, defaultValue);
 
     return timeline.evaluate(t) ?? defaultValue;
+  }
+}
+
+class RootVectorElement extends VectorElement {
+  final double alpha;
+  final RootVectorAnimationProperties properties;
+  final VectorElements elements;
+
+  const RootVectorElement({
+    this.alpha = 1.0,
+    this.properties = const RootVectorAnimationProperties(),
+    this.elements = const [],
+  });
+
+  @override
+  RootVectorElement evaluate(
+    double t, {
+    Duration baseDuration = const Duration(milliseconds: 300),
+  }) {
+    final double alpha =
+        evaluateProperties(properties.alpha, this.alpha, baseDuration, t)!;
+
+    return RootVectorElement(
+      alpha: alpha,
+      elements: elements,
+    );
+  }
+
+  @override
+  void paint(Canvas canvas, Size size, double progress, Duration duration) {
+    final RootVectorElement evaluated = evaluate(
+      progress,
+      baseDuration: duration,
+    );
+
+    canvas.saveLayer(
+      Offset.zero & size,
+      Paint()
+        ..colorFilter = ColorFilter.mode(
+          Colors.white.withOpacity(evaluated.alpha),
+          BlendMode.modulate,
+        ),
+    );
+    for (final VectorElement element in evaluated.elements) {
+      element.paint(canvas, size, progress, duration);
+    }
+    canvas.restore();
+  }
+
+  @override
+  int get hashCode => hashValues(
+        alpha.hashCode,
+        elements.hashCode,
+        properties.hashCode,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is RootVectorElement) {
+      return alpha == other.alpha &&
+          listEquals(elements, other.elements) &&
+          properties == other.properties;
+    }
+
+    return false;
   }
 }
 
@@ -202,7 +264,7 @@ class GroupElement extends VectorElement {
   }
 
   @override
-  void paint(Canvas canvas, double progress, Duration duration) {
+  void paint(Canvas canvas, Size size, double progress, Duration duration) {
     final GroupElement evaluated = evaluate(
       progress,
       baseDuration: duration,
@@ -219,7 +281,7 @@ class GroupElement extends VectorElement {
     canvas.save();
     canvas.transform(transformMatrix.storage);
     for (final VectorElement element in evaluated.elements) {
-      element.paint(canvas, progress, duration);
+      element.paint(canvas, size, progress, duration);
     }
     canvas.restore();
   }
@@ -258,7 +320,9 @@ class GroupElement extends VectorElement {
 class PathElement extends VectorElement {
   final PathData pathData;
   final Color? fillColor;
+  final double fillAlpha;
   final Color? strokeColor;
+  final double strokeAlpha;
   final double strokeWidth;
   final StrokeCap strokeCap;
   final StrokeJoin strokeJoin;
@@ -271,7 +335,9 @@ class PathElement extends VectorElement {
   PathElement({
     required this.pathData,
     this.fillColor,
+    this.fillAlpha = 1.0,
     this.strokeColor,
+    this.strokeAlpha = 1.0,
     this.strokeWidth = 1.0,
     this.strokeCap = StrokeCap.butt,
     this.strokeJoin = StrokeJoin.bevel,
@@ -294,8 +360,12 @@ class PathElement extends VectorElement {
         properties.pathData, this.pathData, baseDuration, t)!;
     final Color? fillColor = evaluateProperties(
         properties.fillColor, this.fillColor, baseDuration, t);
+    final double fillAlpha = evaluateProperties(
+        properties.fillAlpha, this.fillAlpha, baseDuration, t)!;
     final Color? strokeColor = evaluateProperties(
         properties.strokeColor, this.strokeColor, baseDuration, t);
+    final double strokeAlpha = evaluateProperties(
+        properties.strokeAlpha, this.strokeAlpha, baseDuration, t)!;
     final double strokeWidth = evaluateProperties(
         properties.strokeWidth, this.strokeWidth, baseDuration, t)!;
     final double trimStart = evaluateProperties(
@@ -308,7 +378,9 @@ class PathElement extends VectorElement {
     return PathElement(
       pathData: pathData,
       fillColor: fillColor,
+      fillAlpha: fillAlpha,
       strokeColor: strokeColor,
+      strokeAlpha: strokeAlpha,
       strokeWidth: strokeWidth,
       strokeCap: strokeCap,
       strokeJoin: strokeJoin,
@@ -320,33 +392,37 @@ class PathElement extends VectorElement {
   }
 
   @override
-  void paint(Canvas canvas, double progress, Duration duration) {
+  void paint(Canvas canvas, Size size, double progress, Duration duration) {
     final PathElement evaluated = evaluate(
       progress,
       baseDuration: duration,
     );
 
+    final Color fillColor = evaluated.fillColor ?? Colors.transparent;
+    final Color strokeColor = evaluated.strokeColor ?? Colors.transparent;
+
+    if (evaluated.strokeWidth > 0 && evaluated.strokeColor != null) {
+      canvas.drawPath(
+        evaluated.pathData.toPath(
+          trimStart: evaluated.trimStart,
+          trimEnd: evaluated.trimEnd,
+          trimOffset: evaluated.trimOffset,
+        ),
+        Paint()
+          ..color = strokeColor
+              .withOpacity(strokeColor.opacity * evaluated.strokeAlpha)
+          ..strokeWidth = evaluated.strokeWidth
+          ..strokeCap = evaluated.strokeCap
+          ..strokeJoin = evaluated.strokeJoin
+          ..strokeMiterLimit = evaluated.strokeMiterLimit
+          ..style = PaintingStyle.stroke,
+      );
+    }
     canvas.drawPath(
-      evaluated.pathData.toPath(
-        trimStart: evaluated.trimStart,
-        trimEnd: evaluated.trimEnd,
-        trimOffset: evaluated.trimOffset,
-      ),
+      evaluated.pathData.toPath(),
       Paint()
-        ..color = evaluated.strokeColor ?? Colors.transparent
-        ..strokeWidth = evaluated.strokeWidth
-        ..strokeCap = evaluated.strokeCap
-        ..strokeJoin = evaluated.strokeJoin
-        ..strokeMiterLimit = evaluated.strokeMiterLimit
-        ..style = PaintingStyle.stroke,
-    );
-    canvas.drawPath(
-      evaluated.pathData.toPath(
-        trimStart: evaluated.trimStart,
-        trimEnd: evaluated.trimEnd,
-        trimOffset: evaluated.trimOffset,
-      ),
-      Paint()..color = evaluated.fillColor ?? Colors.transparent,
+        ..color =
+            fillColor.withOpacity(fillColor.opacity * evaluated.fillAlpha),
     );
   }
 
@@ -354,7 +430,9 @@ class PathElement extends VectorElement {
   int get hashCode => hashValues(
         pathData.hashCode,
         fillColor.hashCode,
+        fillAlpha.hashCode,
         strokeColor.hashCode,
+        strokeAlpha.hashCode,
         strokeWidth.hashCode,
         strokeCap.hashCode,
         strokeJoin.hashCode,
@@ -370,7 +448,9 @@ class PathElement extends VectorElement {
     if (other is PathElement) {
       return pathData == other.pathData &&
           fillColor == other.fillColor &&
+          fillAlpha == other.fillAlpha &&
           strokeColor == other.strokeColor &&
+          strokeAlpha == other.strokeAlpha &&
           strokeWidth == other.strokeWidth &&
           strokeCap == other.strokeCap &&
           strokeJoin == other.strokeJoin &&
@@ -406,7 +486,7 @@ class ClipPathElement extends VectorElement {
   }
 
   @override
-  void paint(Canvas canvas, double progress, Duration duration) {
+  void paint(Canvas canvas, Size size, double progress, Duration duration) {
     final ClipPathElement evaluated = evaluate(
       progress,
       baseDuration: duration,
@@ -460,6 +540,10 @@ class PathData {
       return const PathData([]);
     }
 
+    if (!svg.toUpperCase().startsWith("M")) {
+      svg = "M 0 0 $svg";
+    }
+
     final SvgPathStringSource parser = SvgPathStringSource(svg);
     final _PathCommandPathProxy path = _PathCommandPathProxy();
     final SvgPathNormalizer normalizer = SvgPathNormalizer();
@@ -467,6 +551,14 @@ class PathData {
       normalizer.emitSegment(seg, path);
     }
     return PathData(path.operations);
+  }
+
+  static PathData? tryParse(String svg) {
+    try {
+      return PathData.parse(svg);
+    } on StateError {
+      return null;
+    }
   }
 
   static PathData lerp(PathData a, PathData b, double t) {
@@ -534,6 +626,8 @@ class PathData {
       }
     }
 
+    if (trimStart == 0.0 && trimEnd == 1.0) return base;
+
     final Path trimPath = Path();
     for (final PathMetric metric in base.computeMetrics()) {
       final double offset = metric.length * trimOffset;
@@ -570,6 +664,11 @@ class PathData {
     }
 
     return false;
+  }
+
+  @override
+  String toString() {
+    return operations.join(" ");
   }
 }
 
@@ -639,9 +738,23 @@ class PathCommand {
 
     return false;
   }
+
+  @override
+  String toString() {
+    switch (type) {
+      case PathCommandType.moveTo:
+        return "M ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt}";
+      case PathCommandType.lineTo:
+        return "L ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt}";
+      case PathCommandType.curveTo:
+        return "C ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt} ${points[2].eventuallyAsInt} ${points[3].eventuallyAsInt} ${points[4].eventuallyAsInt} ${points[5].eventuallyAsInt}";
+      case PathCommandType.close:
+        return "Z";
+    }
+  }
 }
 
-class AnimationProperties {
+class AnimationProperties<T extends VectorElement> {
   const AnimationProperties();
 
   static bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
@@ -670,7 +783,7 @@ class AnimationProperties {
     T? value;
 
     for (int i = startIndex;
-        goDown ? i >= 0 : i < properties.length;
+        goDown ? i > 0 : i < properties.length;
         goDown ? i-- : i++) {
       if (value != null) break;
       value ??= goDown
@@ -682,7 +795,26 @@ class AnimationProperties {
   }
 }
 
-class GroupAnimationProperties extends AnimationProperties {
+class RootVectorAnimationProperties
+    extends AnimationProperties<RootVectorElement> {
+  final AnimationPropertySequence<double>? alpha;
+
+  const RootVectorAnimationProperties({this.alpha});
+
+  @override
+  int get hashCode => alpha.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is RootVectorAnimationProperties) {
+      return listEquals(alpha, other.alpha);
+    }
+
+    return false;
+  }
+}
+
+class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   final AnimationPropertySequence<double>? translateX;
   final AnimationPropertySequence<double>? translateY;
   final AnimationPropertySequence<double>? scaleX;
@@ -728,10 +860,12 @@ class GroupAnimationProperties extends AnimationProperties {
   }
 }
 
-class PathAnimationProperties extends AnimationProperties {
+class PathAnimationProperties extends AnimationProperties<PathElement> {
   final AnimationPropertySequence<PathData>? pathData;
   final AnimationPropertySequence<Color?>? fillColor;
+  final AnimationPropertySequence<double>? fillAlpha;
   final AnimationPropertySequence<Color?>? strokeColor;
+  final AnimationPropertySequence<double>? strokeAlpha;
   final AnimationPropertySequence<double>? strokeWidth;
   final AnimationPropertySequence<double>? trimStart;
   final AnimationPropertySequence<double>? trimEnd;
@@ -740,14 +874,18 @@ class PathAnimationProperties extends AnimationProperties {
   PathAnimationProperties({
     this.pathData,
     this.fillColor,
+    this.fillAlpha,
     this.strokeColor,
+    this.strokeAlpha,
     this.strokeWidth,
     this.trimStart,
     this.trimEnd,
     this.trimOffset,
   })  : assert(AnimationProperties.checkForIntervalsValidity(pathData)),
         assert(AnimationProperties.checkForIntervalsValidity(fillColor)),
+        assert(AnimationProperties.checkForIntervalsValidity(fillAlpha)),
         assert(AnimationProperties.checkForIntervalsValidity(strokeColor)),
+        assert(AnimationProperties.checkForIntervalsValidity(strokeAlpha)),
         assert(AnimationProperties.checkForIntervalsValidity(strokeWidth)),
         assert(AnimationProperties.checkForIntervalsValidity(trimStart)),
         assert(AnimationProperties.checkForIntervalsValidity(trimEnd)),
@@ -757,7 +895,9 @@ class PathAnimationProperties extends AnimationProperties {
   int get hashCode => hashValues(
         pathData,
         fillColor,
+        fillAlpha,
         strokeColor,
+        strokeAlpha,
         strokeWidth,
         trimStart,
         trimEnd,
@@ -769,7 +909,9 @@ class PathAnimationProperties extends AnimationProperties {
     if (other is PathAnimationProperties) {
       return listEquals(pathData, other.pathData) &&
           listEquals(fillColor, other.fillColor) &&
+          listEquals(fillAlpha, other.fillAlpha) &&
           listEquals(strokeColor, other.strokeColor) &&
+          listEquals(strokeAlpha, other.strokeAlpha) &&
           listEquals(strokeWidth, other.strokeWidth) &&
           listEquals(trimStart, other.trimStart) &&
           listEquals(trimEnd, other.trimEnd) &&
@@ -780,7 +922,7 @@ class PathAnimationProperties extends AnimationProperties {
   }
 }
 
-class ClipPathAnimationProperties extends AnimationProperties {
+class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   final AnimationPropertySequence<PathData>? pathData;
 
   const ClipPathAnimationProperties({this.pathData});
@@ -930,6 +1072,8 @@ class _AnimationTimeline<T> {
               defaultValue;
         }
       }
+
+      return defaultValue;
     } else {
       final int indexOf = timeline.indexOf(matchingProperty);
       if (indexOf != 0) {
@@ -947,7 +1091,6 @@ class _AnimationTimeline<T> {
       }
     }
 
-    matchingProperty ??= timeline.first;
     beginDefaultValue ??= defaultValue;
     endDefaultValue ??= defaultValue;
 
@@ -1011,12 +1154,19 @@ extension _ListNullGet<T> on List<T> {
   }
 }
 
-extension _DoubleWrap on double {
+extension DoubleHelper on double {
   double wrap(double min, double max) {
     if (this > max || this < min) {
       return min + (this - min) % (max - min);
     } else {
       return this;
     }
+  }
+
+  bool get isInt => (this % 1) == 0;
+
+  num get eventuallyAsInt {
+    if (isInt) return round();
+    return this;
   }
 }
