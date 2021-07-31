@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:animated_vector/src/animated_vector.dart';
+import 'package:animated_vector/animated_vector.dart';
 import 'package:flutter/animation.dart';
 
 class AnimatedVectors {
