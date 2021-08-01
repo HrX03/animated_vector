@@ -28,7 +28,7 @@ class AnimationProperties<T extends VectorElement> {
     return true;
   }
 
-  static T _getNearestDefaultForTween<T>(
+  static T getNearestDefaultForTween<T>(
     AnimationPropertySequence<T> properties,
     int startIndex,
     T defaultValue, {
@@ -321,7 +321,7 @@ class AnimationTimeline<T> {
         double interval = t - end;
         if (!interval.isNegative) {
           return property.tween.end ??
-              AnimationProperties._getNearestDefaultForTween(
+              AnimationProperties.getNearestDefaultForTween(
                   timeline, i, defaultValue,
                   goDown: true) ??
               defaultValue;
@@ -332,13 +332,13 @@ class AnimationTimeline<T> {
     } else {
       final int indexOf = timeline.indexOf(matchingProperty);
       if (indexOf != 0) {
-        beginDefaultValue = AnimationProperties._getNearestDefaultForTween(
+        beginDefaultValue = AnimationProperties.getNearestDefaultForTween(
           timeline,
           indexOf,
           defaultValue,
           goDown: true,
         );
-        endDefaultValue = AnimationProperties._getNearestDefaultForTween(
+        endDefaultValue = AnimationProperties.getNearestDefaultForTween(
           timeline,
           indexOf,
           defaultValue,

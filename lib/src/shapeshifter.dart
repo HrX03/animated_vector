@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:animated_vector/animated_vector.dart';
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/data.dart';
+import 'package:animated_vector/src/extensions.dart';
 import 'package:flutter/animation.dart';
 
 class ShapeshifterConverter {
@@ -17,9 +18,9 @@ class ShapeshifterConverter {
     final Map<String, dynamic> vectorLayer = layers.get("vectorLayer");
     final Map<String, dynamic> animation =
         json.get<Map<String, dynamic>>("timeline").get("animation");
-    final List<JsonAnimationProperty> blocks = animation
+    final List<_JsonAnimationProperty> blocks = animation
         .get<List<dynamic>>("blocks")
-        .map((e) => JsonAnimationProperty.fromJson(e))
+        .map((e) => _JsonAnimationProperty.fromJson(e))
         .toList();
     final List<dynamic> children = vectorLayer.get("children");
 
@@ -48,9 +49,362 @@ class ShapeshifterConverter {
     return data;
   }
 
+  static Map<String, dynamic> toJson(AnimatedVectorData data, String name) {
+    final Map<String, dynamic> documentRoot = {"version": 1};
+    final _UniqueID idGen = _UniqueID();
+    final Map<String, dynamic> vectorLayer = {
+      "id": idGen.generate(),
+      "name": name,
+      "type": "vector",
+      "width": data.viewportSize.width.floor(),
+      "height": data.viewportSize.height.floor(),
+    };
+    final String rootId = idGen.generate();
+    final Map<String, dynamic> timelineRoot = {
+      "id": rootId,
+      "name": "anim",
+      "duration": data.duration.inMilliseconds,
+    };
+    final Map<String, List<Map<String, dynamic>>> info =
+        _elementsToJson(data.root.elements, idGen);
+    vectorLayer["children"] = info["children"];
+
+    final alphaAnim = _timelineFromProperties<double, num>(
+      data.root.properties.alpha,
+      "alpha",
+      rootId,
+      (value) => value.eventuallyAsInt,
+      data.root.alpha,
+      idGen,
+    );
+    timelineRoot["blocks"] = [
+      if (alphaAnim != null) alphaAnim,
+      ...info["timeline"]!,
+    ];
+    if (data.root.alpha != 1) {
+      vectorLayer["alpha"] = data.root.alpha.eventuallyAsInt;
+    }
+
+    documentRoot["layers"] = {
+      "vectorLayer": vectorLayer,
+      "hiddenLayerIds": [],
+    };
+    documentRoot["timeline"] = {"animation": timelineRoot};
+
+    return documentRoot;
+  }
+
+  static Map<String, List<Map<String, dynamic>>> _elementsToJson(
+    VectorElements elements,
+    _UniqueID generator,
+  ) {
+    final List<Map<String, dynamic>> returnElements = [];
+    final List<Map<String, dynamic>> returnTimeline = [];
+
+    for (final VectorElement element in elements) {
+      final String id = generator.generate();
+      final Map<String, dynamic> toJson = {};
+      if (element is PathElement) {
+        toJson["id"] = id;
+        toJson["name"] = "path";
+        toJson["type"] = "path";
+        toJson["pathData"] = element.pathData.toString();
+        if (element.fillColor != null) {
+          toJson["fillColor"] = _colorToHex(element.fillColor!);
+        }
+        if (element.fillAlpha != 1) {
+          toJson["fillAlpha"] = element.fillAlpha.eventuallyAsInt;
+        }
+        if (element.strokeColor != null) {
+          toJson["strokeColor"] = _colorToHex(element.strokeColor!);
+        }
+        if (element.strokeAlpha != 1) {
+          toJson["strokeAlpha"] = element.strokeAlpha.eventuallyAsInt;
+        }
+        if (element.strokeWidth != 0) {
+          toJson["strokeWidth"] = element.strokeWidth.eventuallyAsInt;
+        }
+        if (element.strokeCap != StrokeCap.butt) {
+          toJson["strokeLinecap"] = _strokeCapToString(element.strokeCap);
+        }
+        if (element.strokeJoin != StrokeJoin.miter) {
+          toJson["strokeLinejoin"] = _strokeJoinToString(element.strokeJoin);
+        }
+        if (element.strokeMiterLimit != 4) {
+          toJson["strokeMiterLimit"] = element.strokeMiterLimit.eventuallyAsInt;
+        }
+        if (element.trimStart != 0) {
+          toJson["trimPathStart"] = element.trimStart.eventuallyAsInt;
+        }
+        if (element.trimEnd != 1) {
+          toJson["trimPathEnd"] = element.trimEnd.eventuallyAsInt;
+        }
+        if (element.trimOffset != 0) {
+          toJson["trimPathOffset"] = element.trimOffset.eventuallyAsInt;
+        }
+
+        final pathDataAnim = _timelineFromProperties<PathData, String>(
+          element.properties.pathData,
+          "pathData",
+          id,
+          (value) => value.toString(),
+          element.pathData,
+          generator,
+        );
+        final fillColorAnim = _timelineFromProperties<Color?, String>(
+          element.properties.fillColor,
+          "fillColor",
+          id,
+          (value) => _colorToHex(value!),
+          element.fillColor,
+          generator,
+        );
+        final fillAlphaAnim = _timelineFromProperties<double, num>(
+          element.properties.fillAlpha,
+          "fillAlpha",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.fillAlpha,
+          generator,
+        );
+        final strokeColorAnim = _timelineFromProperties<Color?, String>(
+          element.properties.strokeColor,
+          "strokeColor",
+          id,
+          (value) => _colorToHex(value!),
+          element.strokeColor,
+          generator,
+        );
+        final strokeAlphaAnim = _timelineFromProperties<double, num>(
+          element.properties.strokeAlpha,
+          "strokeAlpha",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.strokeAlpha,
+          generator,
+        );
+        final strokeWidthAnim = _timelineFromProperties<double, num>(
+          element.properties.strokeWidth,
+          "strokeWidth",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.strokeWidth,
+          generator,
+        );
+        final trimStartAnim = _timelineFromProperties<double, num>(
+          element.properties.trimStart,
+          "trimPathStart",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.trimStart,
+          generator,
+        );
+        final trimEndAnim = _timelineFromProperties<double, num>(
+          element.properties.trimEnd,
+          "trimPathEnd",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.trimEnd,
+          generator,
+        );
+        final trimOffsetAnim = _timelineFromProperties<double, num>(
+          element.properties.trimOffset,
+          "trimPathOffset",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.trimOffset,
+          generator,
+        );
+
+        if (pathDataAnim != null) returnTimeline.addAll(pathDataAnim);
+        if (fillColorAnim != null) returnTimeline.addAll(fillColorAnim);
+        if (fillAlphaAnim != null) returnTimeline.addAll(fillAlphaAnim);
+        if (strokeColorAnim != null) returnTimeline.addAll(strokeColorAnim);
+        if (strokeAlphaAnim != null) returnTimeline.addAll(strokeAlphaAnim);
+        if (strokeWidthAnim != null) returnTimeline.addAll(strokeWidthAnim);
+        if (trimStartAnim != null) returnTimeline.addAll(trimStartAnim);
+        if (trimEndAnim != null) returnTimeline.addAll(trimEndAnim);
+        if (trimOffsetAnim != null) returnTimeline.addAll(trimOffsetAnim);
+      } else if (element is GroupElement) {
+        toJson["id"] = id;
+        toJson["name"] = "group";
+        toJson["type"] = "group";
+        if (element.translateX != 0) {
+          toJson["translateX"] = element.translateX.eventuallyAsInt;
+        }
+        if (element.translateY != 0) {
+          toJson["translateY"] = element.translateY.eventuallyAsInt;
+        }
+        if (element.scaleX != 1) {
+          toJson["scaleX"] = element.scaleX.eventuallyAsInt;
+        }
+        if (element.scaleY != 1) {
+          toJson["scaleY"] = element.scaleY.eventuallyAsInt;
+        }
+        if (element.pivotX != 0) {
+          toJson["pivotX"] = element.pivotX.eventuallyAsInt;
+        }
+        if (element.pivotY != 0) {
+          toJson["pivotY"] = element.pivotY.eventuallyAsInt;
+        }
+        if (element.rotation != 0) {
+          toJson["rotation"] = element.rotation.eventuallyAsInt;
+        }
+        final Map<String, List<Map<String, dynamic>>> info =
+            _elementsToJson(element.elements, generator);
+        toJson["children"] = info["children"];
+        returnTimeline.addAll(info["timeline"]!);
+
+        final translateXAnim = _timelineFromProperties<double, num>(
+          element.properties.translateX,
+          "translateX",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.translateX,
+          generator,
+        );
+        final translateYAnim = _timelineFromProperties<double, num>(
+          element.properties.translateY,
+          "translateY",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.translateY,
+          generator,
+        );
+        final scaleXAnim = _timelineFromProperties<double, num>(
+          element.properties.scaleX,
+          "scaleX",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.scaleX,
+          generator,
+        );
+        final scaleYAnim = _timelineFromProperties<double, num>(
+          element.properties.scaleY,
+          "scaleY",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.scaleY,
+          generator,
+        );
+        final pivotXAnim = _timelineFromProperties<double, num>(
+          element.properties.pivotX,
+          "pivotX",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.pivotX,
+          generator,
+        );
+        final pivotYAnim = _timelineFromProperties<double, num>(
+          element.properties.pivotY,
+          "pivotY",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.pivotY,
+          generator,
+        );
+        final rotationAnim = _timelineFromProperties<double, num>(
+          element.properties.rotation,
+          "rotation",
+          id,
+          (value) => value.eventuallyAsInt,
+          element.rotation,
+          generator,
+        );
+
+        if (translateXAnim != null) returnTimeline.addAll(translateXAnim);
+        if (translateYAnim != null) returnTimeline.addAll(translateYAnim);
+        if (scaleXAnim != null) returnTimeline.addAll(scaleXAnim);
+        if (scaleYAnim != null) returnTimeline.addAll(scaleYAnim);
+        if (pivotXAnim != null) returnTimeline.addAll(pivotXAnim);
+        if (pivotYAnim != null) returnTimeline.addAll(pivotYAnim);
+        if (rotationAnim != null) returnTimeline.addAll(rotationAnim);
+      } else if (element is ClipPathElement) {
+        toJson["id"] = id;
+        toJson["name"] = "mask";
+        toJson["type"] = "mask";
+        toJson["pathData"] = element.pathData.toString();
+
+        final pathDataAnim = _timelineFromProperties<PathData, String>(
+          element.properties.pathData,
+          "pathData",
+          id,
+          (value) => value.toString(),
+          element.pathData,
+          generator,
+        );
+
+        if (pathDataAnim != null) returnTimeline.addAll(pathDataAnim);
+      }
+
+      if (toJson.isNotEmpty) returnElements.add(toJson);
+    }
+
+    return {
+      "children": returnElements,
+      "timeline": returnTimeline,
+    };
+  }
+
+  static List<Map<String, dynamic>>? _timelineFromProperties<T, V>(
+    AnimationPropertySequence<T>? properties,
+    String name,
+    String layerId,
+    V Function(T value) formatter,
+    T defaultValue,
+    _UniqueID generator,
+  ) {
+    if (properties == null) return null;
+    final List<Map<String, dynamic>> returnTimeline = [];
+
+    final String type;
+    if (defaultValue is PathData) {
+      type = "path";
+    } else if (defaultValue is num) {
+      type = "number";
+    } else if (defaultValue is Color?) {
+      type = "color";
+    } else {
+      throw UnsupportedError("Type not supported, something went wrong");
+    }
+
+    for (int i = 0; i < properties.length; i++) {
+      final AnimationProperty<T> prop = properties[i];
+      final T beginValue = prop.tween.begin ??
+          AnimationProperties.getNearestDefaultForTween(
+            properties,
+            i,
+            defaultValue,
+            goDown: true,
+          );
+      final T endValue = prop.tween.end ??
+          AnimationProperties.getNearestDefaultForTween(
+            properties,
+            i,
+            defaultValue,
+          );
+
+      final Map<String, dynamic> jsonProp = {
+        "id": generator.generate(),
+        "layerId": layerId,
+        "propertyName": name,
+        "startTime": prop.interval.start.inMilliseconds,
+        "endTime": prop.interval.end.inMilliseconds,
+        "interpolator":
+            _JsonAnimationProperty._stringFromInterpolator(prop.curve),
+        "type": type,
+        "fromValue": formatter(beginValue),
+        "toValue": formatter(endValue),
+      };
+      returnTimeline.add(jsonProp);
+    }
+
+    return returnTimeline;
+  }
+
   static VectorElements _elementsFromJson(
     List<Map<String, dynamic>> json,
-    List<JsonAnimationProperty> animations,
+    List<_JsonAnimationProperty> animations,
   ) {
     final VectorElements elements = [];
 
@@ -196,7 +550,7 @@ class ShapeshifterConverter {
   }
 
   static AnimationPropertySequence<T> _parseJsonAnimationProperties<T>(
-    List<JsonAnimationProperty> properties,
+    List<_JsonAnimationProperty> properties,
     String layerId,
     String propertyName,
   ) {
@@ -238,9 +592,33 @@ class ShapeshifterConverter {
         return StrokeJoin.miter;
     }
   }
+
+  static String _strokeCapToString(StrokeCap source) {
+    switch (source) {
+      case StrokeCap.square:
+        return "square";
+      case StrokeCap.round:
+        return "round";
+      case StrokeCap.butt:
+      default:
+        return "butt";
+    }
+  }
+
+  static String _strokeJoinToString(StrokeJoin source) {
+    switch (source) {
+      case StrokeJoin.bevel:
+        return "bevel";
+      case StrokeJoin.round:
+        return "round";
+      case StrokeJoin.miter:
+      default:
+        return "miter";
+    }
+  }
 }
 
-class JsonAnimationProperty<T> {
+class _JsonAnimationProperty<T> {
   final String layerId;
   final String propertyName;
   final Tween<T?> tween;
@@ -248,7 +626,7 @@ class JsonAnimationProperty<T> {
   final int endTime;
   final Curve interpolator;
 
-  const JsonAnimationProperty({
+  const _JsonAnimationProperty({
     required this.layerId,
     required this.propertyName,
     required this.tween,
@@ -257,7 +635,7 @@ class JsonAnimationProperty<T> {
     required this.interpolator,
   });
 
-  static JsonAnimationProperty fromJson<T>(Map<String, dynamic> json) {
+  static _JsonAnimationProperty fromJson<T>(Map<String, dynamic> json) {
     final String layerId = json.get<String>("layerId");
     final String propertyName = json.get<String>("propertyName");
     final int startTime = json.get<int>("startTime");
@@ -270,7 +648,7 @@ class JsonAnimationProperty<T> {
       case "path":
         final PathData from = PathData.parse(json.get<String>("fromValue"));
         final PathData to = PathData.parse(json.get<String>("toValue"));
-        return JsonAnimationProperty<PathData>(
+        return _JsonAnimationProperty<PathData>(
           layerId: layerId,
           propertyName: propertyName,
           startTime: startTime,
@@ -281,7 +659,7 @@ class JsonAnimationProperty<T> {
       case "color":
         final Color from = _colorFromHex(json.get<String>("fromValue"))!;
         final Color to = _colorFromHex(json.get<String>("toValue"))!;
-        return JsonAnimationProperty<Color>(
+        return _JsonAnimationProperty<Color>(
           layerId: layerId,
           propertyName: propertyName,
           startTime: startTime,
@@ -292,7 +670,7 @@ class JsonAnimationProperty<T> {
       case "number":
         final double from = json.get<num>("fromValue").toDouble();
         final double to = json.get<num>("toValue").toDouble();
-        return JsonAnimationProperty<double>(
+        return _JsonAnimationProperty<double>(
           layerId: layerId,
           propertyName: propertyName,
           startTime: startTime,
@@ -330,6 +708,34 @@ class JsonAnimationProperty<T> {
       case "LINEAR":
       default:
         return ShapeshifterCurves.linear;
+    }
+  }
+
+  static String _stringFromInterpolator(Curve interpolator) {
+    switch (interpolator) {
+      case ShapeshifterCurves.fastOutSlowIn:
+        return "FAST_OUT_SLOW_IN";
+      case ShapeshifterCurves.fastOutLinearIn:
+        return "FAST_OUT_LINEAR_IN";
+      case ShapeshifterCurves.linearOutSlowIn:
+        return "LINEAR_OUT_SLOW_IN";
+      case ShapeshifterCurves.accelerateDecelerate:
+        return "ACCELERATE_DECELERATE";
+      case ShapeshifterCurves.accelerate:
+        return "ACCELERATE";
+      case ShapeshifterCurves.decelerate:
+        return "DECELERATE";
+      case ShapeshifterCurves.anticipate:
+        return "ANTICIPATE";
+      case ShapeshifterCurves.overshoot:
+        return "OVERSHOOT";
+      case ShapeshifterCurves.bounce:
+        return "BOUNCE";
+      case ShapeshifterCurves.anticipateOvershoot:
+        return "ANTICIPATE_OVERSHOOT";
+      case ShapeshifterCurves.linear:
+      default:
+        return "LINEAR";
     }
   }
 }
@@ -429,6 +835,12 @@ Color? _colorFromHex(String? hex) {
   return Color(colorValue);
 }
 
+String _colorToHex(Color color) {
+  final String radixString = color.value.toRadixString(16);
+  if (color.alpha == 0xFF) return "#${radixString.substring(2)}";
+  return "#$radixString";
+}
+
 class UnsupportedAnimationProperty implements Exception {
   final String property;
 
@@ -458,5 +870,28 @@ extension SafeMapGet<K> on Map<K, dynamic> {
     }
 
     return this[key]! as T;
+  }
+}
+
+class _UniqueID {
+  final Map<String, int> _generatedIds = {};
+
+  String generate([String prefix = '%default%']) {
+    if (!_generatedIds.containsKey(prefix)) {
+      _generatedIds[prefix] = 1;
+    } else {
+      _generatedIds[prefix] = _generatedIds[prefix]! + 1;
+    }
+    final int id = _generatedIds[prefix]!;
+
+    if (prefix == '%default%') {
+      return '$id';
+    }
+
+    return '$prefix$id';
+  }
+
+  void reset() {
+    _generatedIds.clear();
   }
 }

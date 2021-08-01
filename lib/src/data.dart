@@ -9,7 +9,7 @@ import 'package:flutter/rendering.dart';
 typedef VectorElements = List<VectorElement>;
 
 class AnimatedVectorData {
-  final VectorElement root;
+  final RootVectorElement root;
   final Duration duration;
   final Size viewportSize;
 
@@ -260,7 +260,7 @@ class PathElement extends VectorElement {
     this.strokeAlpha = 1.0,
     this.strokeWidth = 1.0,
     this.strokeCap = StrokeCap.butt,
-    this.strokeJoin = StrokeJoin.bevel,
+    this.strokeJoin = StrokeJoin.miter,
     this.strokeMiterLimit = 4.0,
     this.trimStart = 0.0,
     this.trimEnd = 1.0,

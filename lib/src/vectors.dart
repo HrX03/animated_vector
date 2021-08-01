@@ -678,7 +678,7 @@ class AnimatedVectors {
 
   static final AnimatedVectorData visibilityToggle = AnimatedVectorData(
     viewportSize: const Size.square(24),
-    duration: const Duration(milliseconds: 900),
+    duration: const Duration(milliseconds: 2000),
     root: RootVectorElement(
       elements: [
         PathElement(
