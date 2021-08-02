@@ -493,7 +493,7 @@ class ShapeshifterConverter {
         case "group":
           final GroupElement element = GroupElement(
             translateX: child["translateX"]?.toDouble() ?? 0.0,
-            translateY: child["translateY"] ?? 0.0,
+            translateY: child["translateY"]?.toDouble() ?? 0.0,
             scaleX: child["scaleX"]?.toDouble() ?? 1.0,
             scaleY: child["scaleY"]?.toDouble() ?? 1.0,
             pivotX: child["pivotX"]?.toDouble() ?? 0.0,
@@ -558,7 +558,7 @@ class ShapeshifterConverter {
         .where((a) => a.layerId == layerId && a.propertyName == propertyName)
         .map(
           (a) => AnimationProperty<T>(
-            tween: a.tween as Tween<T>,
+            tween: a.tween as ValueLerp<T>,
             interval: AnimationInterval(
               start: Duration(milliseconds: a.startTime),
               end: Duration(milliseconds: a.endTime),
@@ -621,7 +621,7 @@ class ShapeshifterConverter {
 class _JsonAnimationProperty<T> {
   final String layerId;
   final String propertyName;
-  final Tween<T?> tween;
+  final ValueLerp<T?> tween;
   final int startTime;
   final int endTime;
   final Curve interpolator;
@@ -654,7 +654,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: PathDataTween(begin: from, end: to),
+          tween: PathDataLerp(begin: from, end: to),
         );
       case "color":
         final Color from = _colorFromHex(json.get<String>("fromValue"))!;
@@ -665,7 +665,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: ColorTween(begin: from, end: to),
+          tween: ColorLerp(begin: from, end: to),
         );
       case "number":
         final double from = json.get<num>("fromValue").toDouble();
@@ -676,7 +676,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: Tween<double>(begin: from, end: to),
+          tween: ValueLerp<double>(begin: from, end: to),
         );
       default:
         throw UnsupportedAnimationProperty(type);

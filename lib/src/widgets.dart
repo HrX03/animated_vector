@@ -141,9 +141,8 @@ class _AnimatedVectorBuilder extends StatelessWidget {
                 ? color ?? Theme.of(context).iconTheme.color ?? Colors.black
                 : null,
           ),
-          child: SizedBox.fromSize(
-            size: size ?? vector.viewportSize,
-          ),
+          isComplex: true,
+          child: SizedBox.fromSize(size: size ?? vector.viewportSize),
         );
 
         return child;
@@ -247,6 +246,8 @@ class _AnimatedVectorPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _AnimatedVectorPainter old) {
-    return vector != old.vector || progress != old.progress;
+    return vector != old.vector ||
+        progress != old.progress ||
+        colorOverride != old.colorOverride;
   }
 }

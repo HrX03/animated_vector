@@ -9,8 +9,16 @@ import 'package:flutter/foundation.dart';
 
 typedef AnimationPropertySequence<T> = List<AnimationProperty<T>>;
 
-class AnimationProperties<T extends VectorElement> {
+abstract class AnimationProperties<T extends VectorElement> {
   const AnimationProperties();
+
+  void checkForIntervalValidity() {
+    if (!_checkForIntervalValidityInternal()) {
+      throw Exception("Intervals are invalid for these properties");
+    }
+  }
+
+  bool _checkForIntervalValidityInternal();
 
   static bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
     if (properties == null) return true;
@@ -34,7 +42,7 @@ class AnimationProperties<T extends VectorElement> {
     T defaultValue, {
     bool goDown = false,
   }) {
-    final List<Tween<T>> tweens = properties.map((p) => p.tween).toList();
+    final List<ValueLerp<T>> tweens = properties.map((p) => p.tween).toList();
     T? value;
 
     for (int i = startIndex;
@@ -55,6 +63,11 @@ class RootVectorAnimationProperties
   final AnimationPropertySequence<double>? alpha;
 
   const RootVectorAnimationProperties({this.alpha});
+
+  @override
+  bool _checkForIntervalValidityInternal() {
+    return AnimationProperties.checkForIntervalsValidity(alpha);
+  }
 
   @override
   int get hashCode => alpha.hashCode;
@@ -87,6 +100,17 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
     this.pivotY,
     this.rotation,
   });
+
+  @override
+  bool _checkForIntervalValidityInternal() {
+    return AnimationProperties.checkForIntervalsValidity(translateX) &&
+        AnimationProperties.checkForIntervalsValidity(translateY) &&
+        AnimationProperties.checkForIntervalsValidity(scaleX) &&
+        AnimationProperties.checkForIntervalsValidity(scaleY) &&
+        AnimationProperties.checkForIntervalsValidity(pivotX) &&
+        AnimationProperties.checkForIntervalsValidity(pivotY) &&
+        AnimationProperties.checkForIntervalsValidity(rotation);
+  }
 
   @override
   int get hashCode => hashValues(
@@ -126,7 +150,7 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   final AnimationPropertySequence<double>? trimEnd;
   final AnimationPropertySequence<double>? trimOffset;
 
-  PathAnimationProperties({
+  const PathAnimationProperties({
     this.pathData,
     this.fillColor,
     this.fillAlpha,
@@ -136,15 +160,20 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
     this.trimStart,
     this.trimEnd,
     this.trimOffset,
-  })  : assert(AnimationProperties.checkForIntervalsValidity(pathData)),
-        assert(AnimationProperties.checkForIntervalsValidity(fillColor)),
-        assert(AnimationProperties.checkForIntervalsValidity(fillAlpha)),
-        assert(AnimationProperties.checkForIntervalsValidity(strokeColor)),
-        assert(AnimationProperties.checkForIntervalsValidity(strokeAlpha)),
-        assert(AnimationProperties.checkForIntervalsValidity(strokeWidth)),
-        assert(AnimationProperties.checkForIntervalsValidity(trimStart)),
-        assert(AnimationProperties.checkForIntervalsValidity(trimEnd)),
-        assert(AnimationProperties.checkForIntervalsValidity(trimOffset));
+  });
+
+  @override
+  bool _checkForIntervalValidityInternal() {
+    return AnimationProperties.checkForIntervalsValidity(pathData) &&
+        AnimationProperties.checkForIntervalsValidity(fillColor) &&
+        AnimationProperties.checkForIntervalsValidity(fillAlpha) &&
+        AnimationProperties.checkForIntervalsValidity(strokeColor) &&
+        AnimationProperties.checkForIntervalsValidity(strokeAlpha) &&
+        AnimationProperties.checkForIntervalsValidity(strokeWidth) &&
+        AnimationProperties.checkForIntervalsValidity(trimStart) &&
+        AnimationProperties.checkForIntervalsValidity(trimEnd) &&
+        AnimationProperties.checkForIntervalsValidity(trimOffset);
+  }
 
   @override
   int get hashCode => hashValues(
@@ -183,6 +212,11 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   const ClipPathAnimationProperties({this.pathData});
 
   @override
+  bool _checkForIntervalValidityInternal() {
+    return AnimationProperties.checkForIntervalsValidity(pathData);
+  }
+
+  @override
   int get hashCode => pathData.hashCode;
 
   @override
@@ -196,7 +230,7 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
 }
 
 class AnimationProperty<T> {
-  final Tween<T> tween;
+  final ValueLerp<T> tween;
   final AnimationInterval interval;
   final Curve curve;
 
@@ -206,13 +240,11 @@ class AnimationProperty<T> {
     this.curve = Curves.linear,
   });
 
-  T evaluate(T? defaultValue, Duration baseDuration, double t) {
+  T evaluate(T defaultValue, Duration baseDuration, double t) {
     final Curve c = calculateIntervalCurve(baseDuration);
 
     final double curvedT = c.transform(t);
-    tween.begin = tween.begin ?? defaultValue;
-    tween.end = tween.end ?? defaultValue;
-    return tween.transform(curvedT);
+    return tween.transform(defaultValue, defaultValue, curvedT);
   }
 
   Interval calculateIntervalCurve(Duration baseDuration) {
@@ -354,10 +386,61 @@ class AnimationTimeline<T> {
     final double begin = resolved.first;
     final double end = resolved.last;
     t = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
-    final tween = matchingProperty.tween;
-    tween.begin ??= beginDefaultValue;
-    tween.end ??= endDefaultValue;
 
-    return tween.transform(matchingProperty.curve.transform(t))!;
+    return matchingProperty.tween.transform(
+      beginDefaultValue,
+      endDefaultValue,
+      matchingProperty.curve.transform(t),
+    )!;
+  }
+}
+
+class ValueLerp<T> {
+  final T? begin;
+  final T? end;
+
+  const ValueLerp({
+    this.begin,
+    this.end,
+  });
+
+  @override
+  int get hashCode => begin.hashCode ^ end.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is ValueLerp) {
+      return begin == other.begin && end == other.end;
+    }
+    return false;
+  }
+
+  T transform(T defaultBegin, T defaultEnd, double t) {
+    return Tween<T>(
+      begin: begin ?? defaultBegin,
+      end: end ?? defaultEnd,
+    ).transform(t);
+  }
+}
+
+class ColorLerp extends ValueLerp<Color> {
+  const ColorLerp({
+    Color? begin,
+    Color? end,
+  }) : super(begin: begin, end: end);
+
+  @override
+  Color transform(Color defaultBegin, Color defaultEnd, double t) {
+    return Color.lerp(begin ?? defaultBegin, end ?? defaultEnd, t)!;
+  }
+}
+
+class PathDataLerp extends ValueLerp<PathData> {
+  const PathDataLerp({PathData? begin, PathData? end})
+      : super(begin: begin, end: end);
+
+  @override
+  PathData transform(PathData defaultBegin, PathData defaultEnd, double t) {
+    return PathData.lerp(begin ?? defaultBegin, end ?? defaultEnd, t);
   }
 }

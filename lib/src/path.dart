@@ -1,35 +1,19 @@
-import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:animated_vector/src/extensions.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_parsing/path_parsing.dart';
 
 typedef PathCommands = List<PathCommand>;
 
 class PathData {
-  final PathCommands operations;
+  final PathCommands _operations;
 
-  const PathData(this.operations);
+  const PathData(this._operations);
 
-  factory PathData.parse(String svg) {
-    if (svg == '') {
-      return const PathData([]);
-    }
+  PathCommands get operations => _operations;
 
-    if (!svg.toUpperCase().startsWith("M")) {
-      svg = "M 0 0 $svg";
-    }
-
-    final SvgPathStringSource parser = SvgPathStringSource(svg);
-    final _PathCommandPathProxy path = _PathCommandPathProxy();
-    final SvgPathNormalizer normalizer = SvgPathNormalizer();
-    for (PathSegmentData seg in parser.parseSegments()) {
-      normalizer.emitSegment(seg, path);
-    }
-    return PathData(path.operations);
-  }
+  const factory PathData.parse(String svg) = PathDataParse;
 
   static PathData? tryParse(String svg) {
     try {
@@ -44,11 +28,7 @@ class PathData {
     final PathCommands interpolatedOperations = [];
 
     for (int i = 0; i < a.operations.length; i++) {
-      interpolatedOperations.add(PathCommand.lerp(
-        a.operations[i],
-        b.operations[i],
-        t,
-      ));
+      interpolatedOperations.add(a.operations[i].lerp(b.operations[i], t));
     }
 
     return PathData(interpolatedOperations);
@@ -57,13 +37,10 @@ class PathData {
   bool checkForCompatibility(PathData other) {
     if (operations.length != other.operations.length) return false;
 
-    for (int i = 0;
-        i < math.min(operations.length, other.operations.length);
-        i++) {
+    for (int i = 0; i < operations.length; i++) {
       final PathCommand aItem = operations[i];
       final PathCommand bItem = operations[i];
       if (aItem.type != bItem.type) return false;
-      if (aItem.points.length != bItem.points.length) return false;
     }
     return true;
   }
@@ -78,30 +55,7 @@ class PathData {
     final Path base = Path();
 
     for (final PathCommand operation in operations) {
-      switch (operation.type) {
-        case PathCommandType.moveTo:
-          final double x = operation.points[0];
-          final double y = operation.points[1];
-          base.moveTo(x, y);
-          break;
-        case PathCommandType.lineTo:
-          final double x = operation.points[0];
-          final double y = operation.points[1];
-          base.lineTo(x, y);
-          break;
-        case PathCommandType.curveTo:
-          final double x1 = operation.points[0];
-          final double y1 = operation.points[1];
-          final double x2 = operation.points[2];
-          final double y2 = operation.points[3];
-          final double x = operation.points[4];
-          final double y = operation.points[5];
-          base.cubicTo(x1, y1, x2, y2, x, y);
-          break;
-        case PathCommandType.close:
-          base.close();
-          break;
-      }
+      operation.applyToPath(base);
     }
 
     if (trimStart == 0.0 && trimEnd == 1.0) return base;
@@ -150,107 +104,239 @@ class PathData {
   }
 }
 
-class PathDataTween extends Tween<PathData> {
-  PathDataTween({PathData? begin, PathData? end})
-      : super(begin: begin, end: end);
+class PathDataParse extends PathData {
+  final String svg;
+
+  const PathDataParse(this.svg) : super(const []);
 
   @override
-  PathData lerp(double t) {
-    return PathData.lerp(begin!, end!, t);
+  PathCommands get operations {
+    String _svg = svg;
+    if (_svg == '') {
+      return [];
+    }
+
+    if (!_svg.toUpperCase().startsWith("M")) {
+      _svg = "M 0 0 $svg";
+    }
+
+    final SvgPathStringSource parser = SvgPathStringSource(_svg);
+    final _PathCommandPathProxy path = _PathCommandPathProxy();
+    final SvgPathNormalizer normalizer = SvgPathNormalizer();
+    for (PathSegmentData seg in parser.parseSegments()) {
+      normalizer.emitSegment(seg, path);
+    }
+    return path.operations;
+  }
+}
+
+abstract class PathCommand {
+  final PathCommandType type;
+
+  const PathCommand(this.type);
+
+  PathCommand lerp(PathCommand other, double progress);
+
+  void applyToPath(Path path);
+}
+
+class PathMoveTo extends PathCommand {
+  final double x;
+  final double y;
+
+  const PathMoveTo(this.x, this.y) : super(PathCommandType.moveTo);
+
+  @override
+  PathMoveTo lerp(PathCommand other, double progress) {
+    assert(type == other.type);
+    if (other is! PathMoveTo) {
+      throw PathCommandsIncompatibleException(PathMoveTo, other.runtimeType);
+    }
+    progress = progress.clamp(0.0, 1.0);
+
+    return PathMoveTo(
+      lerpDouble(x, other.x, progress)!,
+      lerpDouble(y, other.y, progress)!,
+    );
   }
 
   @override
-  int get hashCode => hashValues(begin.hashCode, end.hashCode);
+  void applyToPath(Path path) {
+    path.moveTo(x, y);
+  }
+
+  @override
+  String toString() => "M ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
+
+  @override
+  int get hashCode => hashValues(x.hashCode, y.hashCode, type.hashCode);
 
   @override
   bool operator ==(Object other) {
-    if (other is PathDataTween) {
-      return begin == other.begin && end == other.end;
+    if (other is PathMoveTo) {
+      return type == other.type && x == other.x && y == other.y;
     }
 
     return false;
   }
 }
 
-class PathCommand {
-  final PathCommandType type;
-  final List<double> points;
+class PathLineTo extends PathCommand {
+  final double x;
+  final double y;
 
-  PathCommand._raw(
-    this.type,
-    this.points,
-  );
+  const PathLineTo(this.x, this.y) : super(PathCommandType.lineTo);
 
-  PathCommand.moveTo(
-    double x,
-    double y,
-  )   : type = PathCommandType.moveTo,
-        points = [x, y];
-
-  PathCommand.lineTo(
-    double x,
-    double y,
-  )   : type = PathCommandType.lineTo,
-        points = [x, y];
-
-  PathCommand.curveTo(
-    double x,
-    double y,
-    double x1,
-    double y1,
-    double x2,
-    double y2,
-  )   : type = PathCommandType.curveTo,
-        points = [x1, y1, x2, y2, x, y];
-
-  const PathCommand.close()
-      : type = PathCommandType.close,
-        points = const [];
-
-  static PathCommand lerp(PathCommand start, PathCommand end, double progress) {
-    assert(progress >= 0 && progress <= 1);
-    assert(start.type == end.type);
-    assert(start.points.length == end.points.length);
-
-    final List<double> interpolatedPoints = [];
-
-    for (int i = 0; i < math.min(start.points.length, end.points.length); i++) {
-      interpolatedPoints.add(
-        lerpDouble(
-          start.points[i],
-          end.points[i],
-          progress,
-        )!,
-      );
+  @override
+  PathLineTo lerp(PathCommand other, double progress) {
+    assert(type == other.type);
+    if (other is! PathLineTo) {
+      throw PathCommandsIncompatibleException(PathLineTo, other.runtimeType);
     }
+    progress = progress.clamp(0.0, 1.0);
 
-    return PathCommand._raw(start.type, interpolatedPoints);
+    return PathLineTo(
+      lerpDouble(x, other.x, progress)!,
+      lerpDouble(y, other.y, progress)!,
+    );
   }
 
   @override
-  int get hashCode => hashValues(type.hashCode, points.hashCode);
+  void applyToPath(Path path) {
+    path.lineTo(x, y);
+  }
+
+  @override
+  String toString() => "L ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
+
+  @override
+  int get hashCode => hashValues(x.hashCode, y.hashCode, type.hashCode);
 
   @override
   bool operator ==(Object other) {
-    if (other is PathCommand) {
-      return type == other.type && listEquals(points, other.points);
+    if (other is PathLineTo) {
+      return type == other.type && x == other.x && y == other.y;
     }
 
     return false;
   }
+}
+
+class PathCurveTo extends PathCommand {
+  final double x1;
+  final double y1;
+  final double x2;
+  final double y2;
+  final double x3;
+  final double y3;
+
+  const PathCurveTo(
+    this.x1,
+    this.y1,
+    this.x2,
+    this.y2,
+    this.x3,
+    this.y3,
+  ) : super(PathCommandType.curveTo);
+
+  @override
+  PathCurveTo lerp(PathCommand other, double progress) {
+    assert(type == other.type);
+    if (other is! PathCurveTo) {
+      throw PathCommandsIncompatibleException(PathCurveTo, other.runtimeType);
+    }
+    progress = progress.clamp(0.0, 1.0);
+
+    return PathCurveTo(
+      lerpDouble(x1, other.x1, progress)!,
+      lerpDouble(y1, other.y1, progress)!,
+      lerpDouble(x2, other.x2, progress)!,
+      lerpDouble(y2, other.y2, progress)!,
+      lerpDouble(x3, other.x3, progress)!,
+      lerpDouble(y3, other.y3, progress)!,
+    );
+  }
+
+  @override
+  void applyToPath(Path path) {
+    path.cubicTo(x1, y1, x2, y2, x3, y3);
+  }
+
+  @override
+  String toString() =>
+      "C ${x1.eventuallyAsInt} ${y1.eventuallyAsInt} ${x2.eventuallyAsInt} ${y2.eventuallyAsInt} ${x3.eventuallyAsInt} ${y3.eventuallyAsInt}";
+
+  @override
+  int get hashCode => hashValues(
+        x1.hashCode,
+        y1.hashCode,
+        x2.hashCode,
+        y2.hashCode,
+        x3.hashCode,
+        y3.hashCode,
+        type.hashCode,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is PathCurveTo) {
+      return type == other.type &&
+          x1 == other.x1 &&
+          y1 == other.y1 &&
+          x2 == other.x2 &&
+          y2 == other.y2 &&
+          x3 == other.x3 &&
+          y3 == other.y3;
+    }
+
+    return false;
+  }
+}
+
+class PathClose extends PathCommand {
+  const PathClose() : super(PathCommandType.close);
+
+  @override
+  PathClose lerp(PathCommand other, double progress) {
+    assert(type == other.type);
+    if (other is! PathClose) {
+      throw PathCommandsIncompatibleException(PathClose, other.runtimeType);
+    }
+    progress = progress.clamp(0.0, 1.0);
+
+    return const PathClose();
+  }
+
+  @override
+  void applyToPath(Path path) {
+    path.close();
+  }
+
+  @override
+  String toString() => "Z";
+
+  @override
+  int get hashCode => type.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is PathClose) {
+      return type == other.type;
+    }
+
+    return false;
+  }
+}
+
+class PathCommandsIncompatibleException implements Exception {
+  final Type expectedType;
+  final Type receivedType;
+
+  const PathCommandsIncompatibleException(this.expectedType, this.receivedType);
 
   @override
   String toString() {
-    switch (type) {
-      case PathCommandType.moveTo:
-        return "M ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt}";
-      case PathCommandType.lineTo:
-        return "L ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt}";
-      case PathCommandType.curveTo:
-        return "C ${points[0].eventuallyAsInt} ${points[1].eventuallyAsInt} ${points[2].eventuallyAsInt} ${points[3].eventuallyAsInt} ${points[4].eventuallyAsInt} ${points[5].eventuallyAsInt}";
-      case PathCommandType.close:
-        return "Z";
-    }
+    return "Tried to lerp two incompatible PathCommands, a $expectedType was needed but got a $receivedType";
   }
 }
 
@@ -266,7 +352,7 @@ class _PathCommandPathProxy implements PathProxy {
 
   @override
   void close() {
-    operations.add(const PathCommand.close());
+    operations.add(const PathClose());
   }
 
   @override
@@ -278,16 +364,16 @@ class _PathCommandPathProxy implements PathProxy {
     double x3,
     double y3,
   ) {
-    operations.add(PathCommand.curveTo(x3, y3, x1, y1, x2, y2));
+    operations.add(PathCurveTo(x1, y1, x2, y2, x3, y3));
   }
 
   @override
   void lineTo(double x, double y) {
-    operations.add(PathCommand.lineTo(x, y));
+    operations.add(PathLineTo(x, y));
   }
 
   @override
   void moveTo(double x, double y) {
-    operations.add(PathCommand.moveTo(x, y));
+    operations.add(PathMoveTo(x, y));
   }
 }

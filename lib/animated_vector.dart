@@ -5,6 +5,5 @@ export 'src/data.dart';
 export 'src/vectors.dart';
 export 'src/path.dart';
 export 'src/provider.dart';
-export 'src/pub_extensions.dart';
 export 'src/shapeshifter.dart';
 export 'src/widgets.dart';

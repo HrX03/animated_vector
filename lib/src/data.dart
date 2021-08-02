@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/path.dart';
+import 'package:animated_vector/src/shapeshifter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
@@ -35,6 +36,10 @@ class AnimatedVectorData {
     }
 
     return false;
+  }
+
+  Map<String, dynamic> toJson(String name) {
+    return ShapeshifterConverter.toJson(this, name);
   }
 }
 
@@ -79,6 +84,8 @@ class RootVectorElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
+    properties.checkForIntervalValidity();
+
     final double alpha =
         evaluateProperties(properties.alpha, this.alpha, baseDuration, t)!;
 
@@ -156,6 +163,8 @@ class GroupElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
+    properties.checkForIntervalValidity();
+
     final double translateX = evaluateProperties(
         properties.translateX, this.translateX, baseDuration, t)!;
     final double translateY = evaluateProperties(
@@ -191,12 +200,12 @@ class GroupElement extends VectorElement {
     );
 
     Matrix4 transformMatrix = Matrix4.identity();
+    transformMatrix.translate(evaluated.translateX, evaluated.translateY);
     transformMatrix = transformMatrix.clone()
       ..translate(evaluated.pivotX, evaluated.pivotY)
-      ..multiply(Matrix4.rotationZ(evaluated.rotation * math.pi / 180))
+      ..rotateZ(evaluated.rotation * math.pi / 180)
+      ..scale(evaluated.scaleX, evaluated.scaleY)
       ..translate(-evaluated.pivotX, -evaluated.pivotY);
-    transformMatrix.translate(evaluated.translateX, evaluated.translateY);
-    transformMatrix.scale(evaluated.scaleX, evaluated.scaleY);
 
     canvas.save();
     canvas.transform(transformMatrix.storage);
@@ -252,7 +261,7 @@ class PathElement extends VectorElement {
   final double trimOffset;
   final PathAnimationProperties properties;
 
-  PathElement({
+  const PathElement({
     required this.pathData,
     this.fillColor,
     this.fillAlpha = 1.0,
@@ -265,9 +274,8 @@ class PathElement extends VectorElement {
     this.trimStart = 0.0,
     this.trimEnd = 1.0,
     this.trimOffset = 0.0,
-    PathAnimationProperties? properties,
-  })  : properties = properties ?? PathAnimationProperties(),
-        assert(trimStart >= 0 && trimStart <= 1),
+    this.properties = const PathAnimationProperties(),
+  })  : assert(trimStart >= 0 && trimStart <= 1),
         assert(trimEnd >= 0 && trimEnd <= 1),
         assert(trimOffset >= 0 && trimOffset <= 1);
 
@@ -276,6 +284,8 @@ class PathElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
+    properties.checkForIntervalValidity();
+
     final PathData pathData = evaluateProperties(
         properties.pathData, this.pathData, baseDuration, t)!;
     final Color? fillColor = evaluateProperties(
@@ -399,6 +409,8 @@ class ClipPathElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
+    properties.checkForIntervalValidity();
+
     final PathData pathData = evaluateProperties(
         properties.pathData, this.pathData, baseDuration, t)!;
 
