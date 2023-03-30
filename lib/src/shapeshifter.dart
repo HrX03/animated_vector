@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:animated_vector/animated_vector.dart';
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/curves.dart';
 import 'package:animated_vector/src/data.dart';
 import 'package:animated_vector/src/extensions.dart';
+import 'package:animated_vector/src/path.dart';
 import 'package:flutter/animation.dart';
 
-class ShapeshifterConverter {
+abstract final class ShapeshifterConverter {
   const ShapeshifterConverter._();
 
   static AnimatedVectorData toAVD(String rawJson) {
@@ -745,16 +745,12 @@ Color? _colorFromHex(String? hex) {
   if (hex == null) return null;
 
   String cleanHex = hex.replaceAll("#", "");
-  if (cleanHex.length == 6) {
-    // ex. #4a5ccc -> #FF4a5ccc0
-    cleanHex = ["FF", cleanHex].join();
-  } else if (cleanHex.length == 3) {
-    // ex. #ccd -> #FFccdccd
-    cleanHex = ["FF", cleanHex, cleanHex].join();
-  } else if (cleanHex.length == 2) {
-    // ex. #2a -> #FF2a2a2a
-    cleanHex = ["FF", cleanHex, cleanHex, cleanHex].join();
-  }
+  cleanHex = switch (cleanHex.length) {
+    6 => ["FF", cleanHex].join(),
+    3 => ["FF", cleanHex, cleanHex].join(),
+    2 => ["FF", cleanHex, cleanHex, cleanHex].join(),
+    _ => cleanHex,
+  };
   final int? colorValue = int.tryParse(cleanHex, radix: 16);
 
   if (colorValue == null) return null;

@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/path.dart';
@@ -21,7 +20,7 @@ class AnimatedVectorData {
   });
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         root.hashCode,
         duration.hashCode,
         viewportSize.hashCode,
@@ -84,7 +83,7 @@ class RootVectorElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
-    properties.checkForIntervalValidity();
+    properties.checkForValidity();
 
     final double alpha =
         evaluateProperties(properties.alpha, this.alpha, baseDuration, t)!;
@@ -117,7 +116,7 @@ class RootVectorElement extends VectorElement {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         alpha.hashCode,
         elements.hashCode,
         properties.hashCode,
@@ -163,7 +162,7 @@ class GroupElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
-    properties.checkForIntervalValidity();
+    properties.checkForValidity();
 
     final double translateX = evaluateProperties(
         properties.translateX, this.translateX, baseDuration, t)!;
@@ -216,7 +215,7 @@ class GroupElement extends VectorElement {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         translateX.hashCode,
         translateY.hashCode,
         scaleX.hashCode,
@@ -284,7 +283,7 @@ class PathElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
-    properties.checkForIntervalValidity();
+    properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
         properties.pathData, this.pathData, baseDuration, t)!;
@@ -357,7 +356,7 @@ class PathElement extends VectorElement {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         pathData.hashCode,
         fillColor.hashCode,
         fillAlpha.hashCode,
@@ -409,7 +408,7 @@ class ClipPathElement extends VectorElement {
     double t, {
     Duration baseDuration = const Duration(milliseconds: 300),
   }) {
-    properties.checkForIntervalValidity();
+    properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
         properties.pathData, this.pathData, baseDuration, t)!;
@@ -428,7 +427,7 @@ class ClipPathElement extends VectorElement {
   }
 
   @override
-  int get hashCode => hashValues(pathData.hashCode, properties.hashCode);
+  int get hashCode => Object.hash(pathData.hashCode, properties.hashCode);
 
   @override
   bool operator ==(Object other) {

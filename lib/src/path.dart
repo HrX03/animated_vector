@@ -169,7 +169,7 @@ class PathMoveTo extends PathCommand {
   String toString() => "M ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
 
   @override
-  int get hashCode => hashValues(x.hashCode, y.hashCode, type.hashCode);
+  int get hashCode => Object.hash(x.hashCode, y.hashCode, type.hashCode);
 
   @override
   bool operator ==(Object other) {
@@ -210,7 +210,7 @@ class PathLineTo extends PathCommand {
   String toString() => "L ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
 
   @override
-  int get hashCode => hashValues(x.hashCode, y.hashCode, type.hashCode);
+  int get hashCode => Object.hash(x.hashCode, y.hashCode, type.hashCode);
 
   @override
   bool operator ==(Object other) {
@@ -267,7 +267,7 @@ class PathCurveTo extends PathCommand {
       "C ${x1.eventuallyAsInt} ${y1.eventuallyAsInt} ${x2.eventuallyAsInt} ${y2.eventuallyAsInt} ${x3.eventuallyAsInt} ${y3.eventuallyAsInt}";
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         x1.hashCode,
         y1.hashCode,
         x2.hashCode,

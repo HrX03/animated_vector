@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:animated_vector/src/data.dart';
 import 'package:animated_vector/src/extensions.dart';
 import 'package:animated_vector/src/path.dart';
@@ -12,13 +10,13 @@ typedef AnimationPropertySequence<T> = List<AnimationProperty<T>>;
 abstract class AnimationProperties<T extends VectorElement> {
   const AnimationProperties();
 
-  void checkForIntervalValidity() {
-    if (!_checkForIntervalValidityInternal()) {
-      throw Exception("Intervals are invalid for these properties");
-    }
+  void checkForValidity() {
+    if (checkForIntervalValidity()) return;
+
+    throw Exception("Intervals are invalid for these properties");
   }
 
-  bool _checkForIntervalValidityInternal();
+  bool checkForIntervalValidity();
 
   static bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
     if (properties == null) return true;
@@ -26,11 +24,9 @@ abstract class AnimationProperties<T extends VectorElement> {
     Duration lastValidEndDuration = Duration.zero;
 
     for (final AnimationProperty property in properties) {
-      if (property.interval.start >= lastValidEndDuration) {
-        lastValidEndDuration = property.interval.end;
-        continue;
-      }
-      return false;
+      if (property.interval.start < lastValidEndDuration) return false;
+
+      lastValidEndDuration = property.interval.end;
     }
 
     return true;
@@ -65,7 +61,7 @@ class RootVectorAnimationProperties
   const RootVectorAnimationProperties({this.alpha});
 
   @override
-  bool _checkForIntervalValidityInternal() {
+  bool checkForIntervalValidity() {
     return AnimationProperties.checkForIntervalsValidity(alpha);
   }
 
@@ -102,7 +98,7 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   });
 
   @override
-  bool _checkForIntervalValidityInternal() {
+  bool checkForIntervalValidity() {
     return AnimationProperties.checkForIntervalsValidity(translateX) &&
         AnimationProperties.checkForIntervalsValidity(translateY) &&
         AnimationProperties.checkForIntervalsValidity(scaleX) &&
@@ -113,7 +109,7 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         translateX,
         translateY,
         scaleX,
@@ -163,7 +159,7 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   });
 
   @override
-  bool _checkForIntervalValidityInternal() {
+  bool checkForIntervalValidity() {
     return AnimationProperties.checkForIntervalsValidity(pathData) &&
         AnimationProperties.checkForIntervalsValidity(fillColor) &&
         AnimationProperties.checkForIntervalsValidity(fillAlpha) &&
@@ -176,7 +172,7 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         pathData,
         fillColor,
         fillAlpha,
@@ -212,7 +208,7 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   const ClipPathAnimationProperties({this.pathData});
 
   @override
-  bool _checkForIntervalValidityInternal() {
+  bool checkForIntervalValidity() {
     return AnimationProperties.checkForIntervalsValidity(pathData);
   }
 
@@ -261,7 +257,7 @@ class AnimationProperty<T> {
   }
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         tween.hashCode,
         interval.hashCode,
         curve.hashCode,
@@ -314,7 +310,7 @@ class AnimationInterval {
   }
 
   @override
-  int get hashCode => hashValues(start.hashCode, end.hashCode);
+  int get hashCode => Object.hash(start.hashCode, end.hashCode);
 
   @override
   bool operator ==(Object other) {
