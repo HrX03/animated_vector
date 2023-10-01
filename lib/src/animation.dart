@@ -334,7 +334,7 @@ class AnimationTimeline<T> {
   );
 
   T? evaluate(double t) {
-    AnimationProperty<T?>? matchingProperty = timeline.firstWhereOrNull(
+    final AnimationProperty<T?>? matchingProperty = timeline.firstWhereOrNull(
       (element) => element.interval.isBetween(t, baseDuration),
     );
     T? beginDefaultValue;
@@ -346,12 +346,15 @@ class AnimationTimeline<T> {
 
         final List<double> resolved = property.interval.resolve(baseDuration);
         final double end = resolved.last;
-        double interval = t - end;
+        final interval = t - end;
         if (!interval.isNegative) {
           return property.tween.end ??
               AnimationProperties.getNearestDefaultForTween(
-                  timeline, i, defaultValue,
-                  goDown: true) ??
+                timeline,
+                i,
+                defaultValue,
+                goDown: true,
+              ) ??
               defaultValue;
         }
       }
@@ -381,12 +384,12 @@ class AnimationTimeline<T> {
         matchingProperty.interval.resolve(baseDuration);
     final double begin = resolved.first;
     final double end = resolved.last;
-    t = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
+    final newT = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
 
     return matchingProperty.tween.transform(
       beginDefaultValue,
       endDefaultValue,
-      matchingProperty.curve.transform(t),
+      matchingProperty.curve.transform(newT),
     )!;
   }
 }
@@ -420,10 +423,7 @@ class ValueLerp<T> {
 }
 
 class ColorLerp extends ValueLerp<Color> {
-  const ColorLerp({
-    Color? begin,
-    Color? end,
-  }) : super(begin: begin, end: end);
+  const ColorLerp({super.begin, super.end});
 
   @override
   Color transform(Color defaultBegin, Color defaultEnd, double t) {
@@ -432,8 +432,7 @@ class ColorLerp extends ValueLerp<Color> {
 }
 
 class PathDataLerp extends ValueLerp<PathData> {
-  const PathDataLerp({PathData? begin, PathData? end})
-      : super(begin: begin, end: end);
+  const PathDataLerp({super.begin, super.end});
 
   @override
   PathData transform(PathData defaultBegin, PathData defaultEnd, double t) {

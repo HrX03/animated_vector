@@ -21,18 +21,18 @@ abstract final class ShapeshifterConverter {
         json.get<Map<String, dynamic>>("timeline").get("animation");
     final List<_JsonAnimationProperty> blocks = animation
         .get<List<dynamic>>("blocks")
-        .map((e) => _JsonAnimationProperty.fromJson(e))
+        .map((e) => _JsonAnimationProperty.fromJson(e as Map<String, dynamic>))
         .toList();
     final List<dynamic> children = vectorLayer.get("children");
 
     final AnimatedVectorData data = AnimatedVectorData(
       viewportSize: Size(
-        vectorLayer.get("width").toDouble(),
-        vectorLayer.get("height").toDouble(),
+        vectorLayer.get<num>("width").toDouble(),
+        vectorLayer.get<num>("height").toDouble(),
       ),
       duration: Duration(milliseconds: animation.get("duration")),
       root: RootVectorElement(
-        alpha: vectorLayer["alpha"]?.toDouble() ?? 1.0,
+        alpha: vectorLayer.maybeGet<num>("alpha")?.toDouble() ?? 1.0,
         properties: RootVectorAnimationProperties(
           alpha: _parseJsonAnimationProperties<double>(
             blocks,
@@ -417,17 +417,21 @@ abstract final class ShapeshifterConverter {
         case "path":
           final PathElement element = PathElement(
             pathData: PathData.parse(child.get<String>("pathData")),
-            fillColor: _colorFromHex(child["fillColor"]),
-            fillAlpha: child["fillAlpha"]?.toDouble() ?? 1.0,
-            strokeColor: _colorFromHex(child["strokeColor"]),
-            strokeAlpha: child["strokeAlpha"]?.toDouble() ?? 1.0,
-            strokeWidth: child["strokeWidth"]?.toDouble() ?? 1.0,
-            strokeCap: _strokeCapFromString(child["strokeLinecap"]),
-            strokeJoin: _strokeJoinFromString(child["strokeLinejoin"]),
-            strokeMiterLimit: child["strokeMiterLimit"]?.toDouble() ?? 4.0,
-            trimStart: child["trimPathStart"]?.toDouble() ?? 0.0,
-            trimEnd: child["trimPathEnd"]?.toDouble() ?? 1.0,
-            trimOffset: child["trimPathOffset"]?.toDouble() ?? 0.0,
+            fillColor: _colorFromHex(child.maybeGet<String>("fillColor")),
+            fillAlpha: child.maybeGet<num>("fillAlpha")?.toDouble() ?? 1.0,
+            strokeColor: _colorFromHex(child.maybeGet<String>("strokeColor")),
+            strokeAlpha: child.maybeGet<num>("strokeAlpha")?.toDouble() ?? 1.0,
+            strokeWidth: child.maybeGet<num>("strokeWidth")?.toDouble() ?? 1.0,
+            strokeCap:
+                _strokeCapFromString(child.maybeGet<String>("strokeLinecap")),
+            strokeJoin:
+                _strokeJoinFromString(child.maybeGet<String>("strokeLinejoin")),
+            strokeMiterLimit:
+                child.maybeGet<num>("strokeMiterLimit")?.toDouble() ?? 4.0,
+            trimStart: child.maybeGet<num>("trimPathStart")?.toDouble() ?? 0.0,
+            trimEnd: child.maybeGet<num>("trimPathEnd")?.toDouble() ?? 1.0,
+            trimOffset:
+                child.maybeGet<num>("trimPathOffset")?.toDouble() ?? 0.0,
             properties: PathAnimationProperties(
               pathData: _parseJsonAnimationProperties<PathData>(
                 animations,
@@ -477,7 +481,6 @@ abstract final class ShapeshifterConverter {
             ),
           );
           elements.add(element);
-          break;
         case "mask":
           final ClipPathElement element = ClipPathElement(
             pathData: PathData.parse(child.get<String>("pathData")),
@@ -490,16 +493,15 @@ abstract final class ShapeshifterConverter {
             ),
           );
           elements.add(element);
-          break;
         case "group":
           final GroupElement element = GroupElement(
-            translateX: child["translateX"]?.toDouble() ?? 0.0,
-            translateY: child["translateY"]?.toDouble() ?? 0.0,
-            scaleX: child["scaleX"]?.toDouble() ?? 1.0,
-            scaleY: child["scaleY"]?.toDouble() ?? 1.0,
-            pivotX: child["pivotX"]?.toDouble() ?? 0.0,
-            pivotY: child["pivotY"]?.toDouble() ?? 0.0,
-            rotation: child["rotation"]?.toDouble() ?? 0.0,
+            translateX: child.maybeGet<num>("translateX")?.toDouble() ?? 0.0,
+            translateY: child.maybeGet<num>("translateY")?.toDouble() ?? 0.0,
+            scaleX: child.maybeGet<num>("scaleX")?.toDouble() ?? 1.0,
+            scaleY: child.maybeGet<num>("scaleY")?.toDouble() ?? 1.0,
+            pivotX: child.maybeGet<num>("pivotX")?.toDouble() ?? 0.0,
+            pivotY: child.maybeGet<num>("pivotY")?.toDouble() ?? 0.0,
+            rotation: child.maybeGet<num>("rotation")?.toDouble() ?? 0.0,
             elements: _elementsFromJson(
               child.get<List<dynamic>>("children").cast<Map<String, dynamic>>(),
               animations,
@@ -543,7 +545,6 @@ abstract final class ShapeshifterConverter {
             ),
           );
           elements.add(element);
-          break;
       }
     }
 
@@ -785,13 +786,17 @@ class MissingPropertyException implements Exception {
   }
 }
 
-extension SafeMapGet<K> on Map<K, dynamic> {
+extension MapGet<K> on Map<K, dynamic> {
   T get<T>(K key) {
     if (!containsKey(key)) {
       throw MissingPropertyException(key.toString());
     }
 
     return this[key]! as T;
+  }
+
+  T? maybeGet<T>(K key) {
+    return this[key] as T?;
   }
 }
 

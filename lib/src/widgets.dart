@@ -21,8 +21,8 @@ class AnimatedVector extends StatelessWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
-  }) : super(key: key) {
+    super.key,
+  }) {
     _child = _getChildForProvider(vector: vector);
   }
 
@@ -32,7 +32,7 @@ class AnimatedVector extends StatelessWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
+    super.key,
   })  : onDataLoaded = null,
         _child = _AnimatedVectorBuilder(
           vector: data,
@@ -40,8 +40,7 @@ class AnimatedVector extends StatelessWidget {
           color: color,
           applyColor: applyColor,
           size: size,
-        ),
-        super(key: key);
+        );
 
   AnimatedVector.fromFile(
     File file, {
@@ -50,8 +49,8 @@ class AnimatedVector extends StatelessWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
-  })  : _child = _AsyncAnimatedVectorBuilder(
+    super.key,
+  }) : _child = _AsyncAnimatedVectorBuilder(
           vector: FileAnimatedVectorData(file),
           progress: progress,
           onDataLoaded: onDataLoaded,
@@ -59,8 +58,7 @@ class AnimatedVector extends StatelessWidget {
           applyColor: applyColor,
           size: size,
           key: key,
-        ),
-        super(key: key);
+        );
 
   AnimatedVector.fromAsset(
     String assetName, {
@@ -71,8 +69,8 @@ class AnimatedVector extends StatelessWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
-  })  : _child = _AsyncAnimatedVectorBuilder(
+    super.key,
+  }) : _child = _AsyncAnimatedVectorBuilder(
           vector: AssetAnimatedVectorData(
             assetName,
             bundle: bundle,
@@ -84,8 +82,7 @@ class AnimatedVector extends StatelessWidget {
           applyColor: applyColor,
           size: size,
           key: key,
-        ),
-        super(key: key);
+        );
 
   Widget _getChildForProvider({required AnimatedVectorDataProvider vector}) {
     if (vector is DirectAnimatedVectorData) {
@@ -126,15 +123,14 @@ class _AnimatedVectorBuilder extends StatelessWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: progress,
       builder: (context, child) {
-        Widget child = CustomPaint(
+        return CustomPaint(
           painter: _AnimatedVectorPainter(
             vector: vector,
             progress: progress.value,
@@ -145,8 +141,6 @@ class _AnimatedVectorBuilder extends StatelessWidget {
           isComplex: true,
           child: SizedBox.fromSize(size: size ?? vector.viewportSize),
         );
-
-        return child;
       },
     );
   }
@@ -167,8 +161,8 @@ class _AsyncAnimatedVectorBuilder extends StatefulWidget {
     this.color,
     this.applyColor = false,
     this.size,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _AsyncAnimatedVectorBuilderState createState() =>
@@ -193,7 +187,7 @@ class _AsyncAnimatedVectorBuilderState
     }
   }
 
-  void _loadData() async {
+  Future<void> _loadData() async {
     _loadedData = await widget.vector.load();
     widget.onDataLoaded?.call(_loadedData!);
     setState(() {});

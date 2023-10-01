@@ -165,9 +165,17 @@ class GroupElement extends VectorElement {
     properties.checkForValidity();
 
     final double translateX = evaluateProperties(
-        properties.translateX, this.translateX, baseDuration, t)!;
+      properties.translateX,
+      this.translateX,
+      baseDuration,
+      t,
+    )!;
     final double translateY = evaluateProperties(
-        properties.translateY, this.translateY, baseDuration, t)!;
+      properties.translateY,
+      this.translateY,
+      baseDuration,
+      t,
+    )!;
     final double scaleX =
         evaluateProperties(properties.scaleX, this.scaleX, baseDuration, t)!;
     final double scaleY =
@@ -177,7 +185,11 @@ class GroupElement extends VectorElement {
     final double pivotY =
         evaluateProperties(properties.pivotY, this.pivotY, baseDuration, t)!;
     final double rotation = evaluateProperties(
-        properties.rotation, this.rotation, baseDuration, t)!;
+      properties.rotation,
+      this.rotation,
+      baseDuration,
+      t,
+    )!;
 
     return GroupElement(
       translateX: translateX,
@@ -286,23 +298,55 @@ class PathElement extends VectorElement {
     properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
-        properties.pathData, this.pathData, baseDuration, t)!;
+      properties.pathData,
+      this.pathData,
+      baseDuration,
+      t,
+    )!;
     final Color? fillColor = evaluateProperties(
-        properties.fillColor, this.fillColor, baseDuration, t);
+      properties.fillColor,
+      this.fillColor,
+      baseDuration,
+      t,
+    );
     final double fillAlpha = evaluateProperties(
-        properties.fillAlpha, this.fillAlpha, baseDuration, t)!;
+      properties.fillAlpha,
+      this.fillAlpha,
+      baseDuration,
+      t,
+    )!;
     final Color? strokeColor = evaluateProperties(
-        properties.strokeColor, this.strokeColor, baseDuration, t);
+      properties.strokeColor,
+      this.strokeColor,
+      baseDuration,
+      t,
+    );
     final double strokeAlpha = evaluateProperties(
-        properties.strokeAlpha, this.strokeAlpha, baseDuration, t)!;
+      properties.strokeAlpha,
+      this.strokeAlpha,
+      baseDuration,
+      t,
+    )!;
     final double strokeWidth = evaluateProperties(
-        properties.strokeWidth, this.strokeWidth, baseDuration, t)!;
+      properties.strokeWidth,
+      this.strokeWidth,
+      baseDuration,
+      t,
+    )!;
     final double trimStart = evaluateProperties(
-        properties.trimStart, this.trimStart, baseDuration, t)!;
+      properties.trimStart,
+      this.trimStart,
+      baseDuration,
+      t,
+    )!;
     final double trimEnd =
         evaluateProperties(properties.trimEnd, this.trimEnd, baseDuration, t)!;
     final double trimOffset = evaluateProperties(
-        properties.trimOffset, this.trimOffset, baseDuration, t)!;
+      properties.trimOffset,
+      this.trimOffset,
+      baseDuration,
+      t,
+    )!;
 
     return PathElement(
       pathData: pathData,
@@ -411,7 +455,11 @@ class ClipPathElement extends VectorElement {
     properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
-        properties.pathData, this.pathData, baseDuration, t)!;
+      properties.pathData,
+      this.pathData,
+      baseDuration,
+      t,
+    )!;
 
     return ClipPathElement(pathData: pathData);
   }

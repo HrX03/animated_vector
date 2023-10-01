@@ -77,7 +77,6 @@ class AnimatedVectors {
           strokeColor: Color(0xFF000000),
           strokeWidth: 1.8,
           trimStart: 0.48,
-          trimEnd: 1.0,
           properties: PathAnimationProperties(
             trimStart: [
               AnimationProperty(
@@ -100,7 +99,7 @@ class AnimatedVectors {
               ),
             ],
           ),
-        )
+        ),
       ],
     ),
   );
@@ -162,7 +161,6 @@ class AnimatedVectors {
           pathData: PathData.parse("M 18 6 L 6 18"),
           strokeColor: Color(0xFF000000),
           strokeWidth: 1.8,
-          trimEnd: 1.0,
           properties: PathAnimationProperties(
             trimEnd: [
               AnimationProperty(
@@ -203,7 +201,7 @@ class AnimatedVectors {
               ),
             ],
           ),
-        )
+        ),
       ],
     ),
   );
@@ -980,7 +978,6 @@ class AnimatedVectors {
           ),
           strokeColor: Color(0xFF000000),
           strokeWidth: 2,
-          trimStart: 0,
           trimEnd: 0.185,
           properties: PathAnimationProperties(
             trimStart: [
@@ -1009,7 +1006,6 @@ class AnimatedVectors {
           ),
           strokeColor: Color(0xFF000000),
           strokeWidth: 2,
-          trimEnd: 1,
           properties: PathAnimationProperties(
             trimEnd: [
               AnimationProperty(
@@ -1027,9 +1023,7 @@ class AnimatedVectors {
             translateX: [
               AnimationProperty(
                 tween: ValueLerp<double>(begin: 8, end: 8),
-                interval: AnimationInterval(
-                  end: Duration(milliseconds: 0),
-                ),
+                interval: AnimationInterval(end: Duration.zero),
               ),
               AnimationProperty(
                 tween: ValueLerp<double>(end: 0),
@@ -1053,9 +1047,7 @@ class AnimatedVectors {
                 trimEnd: [
                   AnimationProperty(
                     tween: ValueLerp<double>(end: 0),
-                    interval: AnimationInterval(
-                      end: Duration(milliseconds: 0),
-                    ),
+                    interval: AnimationInterval(end: Duration.zero),
                   ),
                   AnimationProperty(
                     tween: ValueLerp<double>(end: 1),
@@ -1079,9 +1071,7 @@ class AnimatedVectors {
                 trimEnd: [
                   AnimationProperty(
                     tween: ValueLerp<double>(end: 0),
-                    interval: AnimationInterval(
-                      end: Duration(milliseconds: 0),
-                    ),
+                    interval: AnimationInterval(end: Duration.zero),
                   ),
                   AnimationProperty(
                     tween: ValueLerp<double>(end: 1),

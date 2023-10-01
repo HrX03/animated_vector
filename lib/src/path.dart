@@ -15,15 +15,7 @@ class PathData {
 
   const factory PathData.parse(String svg) = PathDataParse;
 
-  static PathData? tryParse(String svg) {
-    try {
-      return PathData.parse(svg);
-    } on StateError {
-      return null;
-    }
-  }
-
-  static PathData lerp(PathData a, PathData b, double t) {
+  factory PathData.lerp(PathData a, PathData b, double t) {
     assert(a.checkForCompatibility(b));
     final PathCommands interpolatedOperations = [];
 
@@ -112,9 +104,7 @@ class PathDataParse extends PathData {
   @override
   PathCommands get operations {
     String svg = this.svg;
-    if (svg == '') {
-      return [];
-    }
+    if (svg == '') return [];
 
     if (!svg.toUpperCase().startsWith("M")) {
       svg = "M 0 0 ${this.svg}";
@@ -123,7 +113,7 @@ class PathDataParse extends PathData {
     final SvgPathStringSource parser = SvgPathStringSource(svg);
     final _PathCommandPathProxy path = _PathCommandPathProxy();
     final SvgPathNormalizer normalizer = SvgPathNormalizer();
-    for (PathSegmentData seg in parser.parseSegments()) {
+    for (final seg in parser.parseSegments()) {
       normalizer.emitSegment(seg, path);
     }
     return path.operations;
@@ -152,11 +142,11 @@ class PathMoveTo extends PathCommand {
     if (other is! PathMoveTo) {
       throw PathCommandsIncompatibleException(PathMoveTo, other.runtimeType);
     }
-    progress = progress.clamp(0.0, 1.0);
+    final clampedProgress = progress.clamp(0.0, 1.0);
 
     return PathMoveTo(
-      lerpDouble(x, other.x, progress)!,
-      lerpDouble(y, other.y, progress)!,
+      lerpDouble(x, other.x, clampedProgress)!,
+      lerpDouble(y, other.y, clampedProgress)!,
     );
   }
 
@@ -193,11 +183,11 @@ class PathLineTo extends PathCommand {
     if (other is! PathLineTo) {
       throw PathCommandsIncompatibleException(PathLineTo, other.runtimeType);
     }
-    progress = progress.clamp(0.0, 1.0);
+    final clampedProgress = progress.clamp(0.0, 1.0);
 
     return PathLineTo(
-      lerpDouble(x, other.x, progress)!,
-      lerpDouble(y, other.y, progress)!,
+      lerpDouble(x, other.x, clampedProgress)!,
+      lerpDouble(y, other.y, clampedProgress)!,
     );
   }
 
@@ -210,7 +200,7 @@ class PathLineTo extends PathCommand {
   String toString() => "L ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
 
   @override
-  int get hashCode => Object.hash(x.hashCode, y.hashCode, type.hashCode);
+  int get hashCode => Object.hash(x, y, type);
 
   @override
   bool operator ==(Object other) {
@@ -245,15 +235,15 @@ class PathCurveTo extends PathCommand {
     if (other is! PathCurveTo) {
       throw PathCommandsIncompatibleException(PathCurveTo, other.runtimeType);
     }
-    progress = progress.clamp(0.0, 1.0);
+    final clampedProgress = progress.clamp(0.0, 1.0);
 
     return PathCurveTo(
-      lerpDouble(x1, other.x1, progress)!,
-      lerpDouble(y1, other.y1, progress)!,
-      lerpDouble(x2, other.x2, progress)!,
-      lerpDouble(y2, other.y2, progress)!,
-      lerpDouble(x3, other.x3, progress)!,
-      lerpDouble(y3, other.y3, progress)!,
+      lerpDouble(x1, other.x1, clampedProgress)!,
+      lerpDouble(y1, other.y1, clampedProgress)!,
+      lerpDouble(x2, other.x2, clampedProgress)!,
+      lerpDouble(y2, other.y2, clampedProgress)!,
+      lerpDouble(x3, other.x3, clampedProgress)!,
+      lerpDouble(y3, other.y3, clampedProgress)!,
     );
   }
 
@@ -267,15 +257,7 @@ class PathCurveTo extends PathCommand {
       "C ${x1.eventuallyAsInt} ${y1.eventuallyAsInt} ${x2.eventuallyAsInt} ${y2.eventuallyAsInt} ${x3.eventuallyAsInt} ${y3.eventuallyAsInt}";
 
   @override
-  int get hashCode => Object.hash(
-        x1.hashCode,
-        y1.hashCode,
-        x2.hashCode,
-        y2.hashCode,
-        x3.hashCode,
-        y3.hashCode,
-        type.hashCode,
-      );
+  int get hashCode => Object.hash(x1, y1, x2, y2, x3, y3, type);
 
   @override
   bool operator ==(Object other) {
@@ -302,7 +284,6 @@ class PathClose extends PathCommand {
     if (other is! PathClose) {
       throw PathCommandsIncompatibleException(PathClose, other.runtimeType);
     }
-    progress = progress.clamp(0.0, 1.0);
 
     return const PathClose();
   }

@@ -44,15 +44,15 @@ class _BounceCurve extends Curve {
   double transformInternal(double t) {
     double bounceFn(double t) => t * t * 8;
 
-    t *= 1.1226;
-    if (t < 0.3535) {
-      return bounceFn(t);
-    } else if (t < 0.7408) {
-      return bounceFn(t - 0.54719) + 0.7;
-    } else if (t < 0.9644) {
-      return bounceFn(t - 0.8526) + 0.9;
+    final multipliedT = t * 1.1226;
+    if (multipliedT < 0.3535) {
+      return bounceFn(multipliedT);
+    } else if (multipliedT < 0.7408) {
+      return bounceFn(multipliedT - 0.54719) + 0.7;
+    } else if (multipliedT < 0.9644) {
+      return bounceFn(multipliedT - 0.8526) + 0.9;
     } else {
-      return bounceFn(t - 1.0435) + 0.95;
+      return bounceFn(multipliedT - 1.0435) + 0.95;
     }
   }
 }

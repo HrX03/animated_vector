@@ -100,7 +100,7 @@ List<_ExecutionEntry> _buildExecutionEntries(List<BaseSequenceItem> items) {
 
   for (final item in items) {
     switch (item) {
-      case SequenceItem item:
+      case final SequenceItem item:
         slots.add(
           _ExecutionEntry.item(
             repetitionsLeft: _EntryPropCounter(item.repeatCount),
@@ -112,7 +112,7 @@ List<_ExecutionEntry> _buildExecutionEntries(List<BaseSequenceItem> items) {
             ),
           ),
         );
-      case GroupedSequenceItem group:
+      case final GroupedSequenceItem group:
         final childSlots = _buildExecutionEntries(group.children);
         slots.add(
           _ExecutionEntry.group(
@@ -227,11 +227,6 @@ sealed class _ExecutionBaseItem {
     required this.nextOnComplete,
     required this.tag,
   });
-
-  @override
-  String toString() {
-    return "$runtimeType {$repeatCount $nextOnComplete $tag}";
-  }
 }
 
 class _ExecutionItem extends _ExecutionBaseItem {
