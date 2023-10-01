@@ -1,123 +1,15 @@
-import 'dart:io';
-
 import 'package:animated_vector/src/data.dart';
-import 'package:animated_vector/src/provider.dart';
 import 'package:animated_vector/src/sequence.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedVector extends StatelessWidget {
-  final Animation<double> progress;
-  final DataLoadedCallback? onDataLoaded;
-  final Size? size;
-  final Color? color;
-  final bool applyColor;
-
-  late final Widget _child;
-
-  AnimatedVector({
-    required AnimatedVectorDataProvider vector,
-    required this.progress,
-    this.onDataLoaded,
-    this.color,
-    this.applyColor = false,
-    this.size,
-    super.key,
-  }) {
-    _child = _getChildForProvider(vector: vector);
-  }
-
-  AnimatedVector.fromData(
-    AnimatedVectorData data, {
-    required this.progress,
-    this.color,
-    this.applyColor = false,
-    this.size,
-    super.key,
-  })  : onDataLoaded = null,
-        _child = _AnimatedVectorBuilder(
-          vector: data,
-          progress: progress,
-          color: color,
-          applyColor: applyColor,
-          size: size,
-        );
-
-  AnimatedVector.fromFile(
-    File file, {
-    required this.progress,
-    this.onDataLoaded,
-    this.color,
-    this.applyColor = false,
-    this.size,
-    super.key,
-  }) : _child = _AsyncAnimatedVectorBuilder(
-          vector: FileAnimatedVectorData(file),
-          progress: progress,
-          onDataLoaded: onDataLoaded,
-          color: color,
-          applyColor: applyColor,
-          size: size,
-          key: key,
-        );
-
-  AnimatedVector.fromAsset(
-    String assetName, {
-    AssetBundle? bundle,
-    String? package,
-    required this.progress,
-    this.onDataLoaded,
-    this.color,
-    this.applyColor = false,
-    this.size,
-    super.key,
-  }) : _child = _AsyncAnimatedVectorBuilder(
-          vector: AssetAnimatedVectorData(
-            assetName,
-            bundle: bundle,
-            package: package,
-          ),
-          progress: progress,
-          onDataLoaded: onDataLoaded,
-          color: color,
-          applyColor: applyColor,
-          size: size,
-          key: key,
-        );
-
-  Widget _getChildForProvider({required AnimatedVectorDataProvider vector}) {
-    if (vector is DirectAnimatedVectorData) {
-      return _AnimatedVectorBuilder(
-        vector: vector.data,
-        progress: progress,
-        color: color,
-        applyColor: applyColor,
-        size: size,
-      );
-    }
-
-    return _AsyncAnimatedVectorBuilder(
-      vector: vector,
-      progress: progress,
-      onDataLoaded: onDataLoaded,
-      color: color,
-      applyColor: applyColor,
-      size: size,
-      key: key,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) => _child;
-}
-
-class _AnimatedVectorBuilder extends StatelessWidget {
   final AnimatedVectorData vector;
   final Animation<double> progress;
   final Size? size;
   final Color? color;
   final bool applyColor;
 
-  const _AnimatedVectorBuilder({
+  const AnimatedVector({
     required this.vector,
     required this.progress,
     this.color,
@@ -142,67 +34,6 @@ class _AnimatedVectorBuilder extends StatelessWidget {
           child: SizedBox.fromSize(size: size ?? vector.viewportSize),
         );
       },
-    );
-  }
-}
-
-class _AsyncAnimatedVectorBuilder extends StatefulWidget {
-  final AnimatedVectorDataProvider vector;
-  final Animation<double> progress;
-  final DataLoadedCallback? onDataLoaded;
-  final Size? size;
-  final Color? color;
-  final bool applyColor;
-
-  const _AsyncAnimatedVectorBuilder({
-    required this.vector,
-    required this.progress,
-    this.onDataLoaded,
-    this.color,
-    this.applyColor = false,
-    this.size,
-    super.key,
-  });
-
-  @override
-  _AsyncAnimatedVectorBuilderState createState() =>
-      _AsyncAnimatedVectorBuilderState();
-}
-
-class _AsyncAnimatedVectorBuilderState
-    extends State<_AsyncAnimatedVectorBuilder> {
-  AnimatedVectorData? _loadedData;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  @override
-  void didUpdateWidget(covariant _AsyncAnimatedVectorBuilder old) {
-    super.didUpdateWidget(old);
-    if (widget.vector != old.vector) {
-      _loadData();
-    }
-  }
-
-  Future<void> _loadData() async {
-    _loadedData = await widget.vector.load();
-    widget.onDataLoaded?.call(_loadedData!);
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_loadedData == null) return SizedBox.fromSize(size: widget.size);
-
-    return _AnimatedVectorBuilder(
-      vector: _loadedData!,
-      progress: widget.progress,
-      color: widget.color,
-      applyColor: widget.applyColor,
-      size: widget.size,
     );
   }
 }
@@ -344,8 +175,8 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedVector.fromData(
-      _machine.currentItem.data,
+    return AnimatedVector(
+      vector: _machine.currentItem.data,
       progress: _animationController,
     );
   }

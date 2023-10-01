@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:animated_vector/src/animation.dart';
@@ -5,6 +6,7 @@ import 'package:animated_vector/src/path.dart';
 import 'package:animated_vector/src/shapeshifter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 typedef VectorElements = List<VectorElement>;
 
@@ -18,6 +20,24 @@ class AnimatedVectorData {
     required this.duration,
     required this.viewportSize,
   });
+
+  static Future<AnimatedVectorData> loadFromFile(File file) async {
+    return ShapeshifterConverter.toAVD(await file.readAsString());
+  }
+
+  static Future<AnimatedVectorData> loadFromAsset(
+    String assetName, {
+    AssetBundle? bundle,
+    String? package,
+  }) {
+    final assetKey =
+        package != null ? "packages/$package/$assetName" : assetName;
+
+    return (bundle ?? rootBundle).loadStructuredData(
+      assetKey,
+      (value) async => ShapeshifterConverter.toAVD(value),
+    );
+  }
 
   @override
   int get hashCode => Object.hash(root, duration, viewportSize);
