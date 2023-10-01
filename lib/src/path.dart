@@ -159,7 +159,7 @@ class PathMoveTo extends PathCommand {
   String toString() => "M ${x.eventuallyAsInt} ${y.eventuallyAsInt}";
 
   @override
-  int get hashCode => Object.hash(x.hashCode, y.hashCode, type.hashCode);
+  int get hashCode => Object.hash(x, y, type);
 
   @override
   bool operator ==(Object other) {

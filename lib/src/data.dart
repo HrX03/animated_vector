@@ -20,11 +20,7 @@ class AnimatedVectorData {
   });
 
   @override
-  int get hashCode => Object.hash(
-        root.hashCode,
-        duration.hashCode,
-        viewportSize.hashCode,
-      );
+  int get hashCode => Object.hash(root, duration, viewportSize);
 
   @override
   bool operator ==(Object other) {
@@ -116,11 +112,7 @@ class RootVectorElement extends VectorElement {
   }
 
   @override
-  int get hashCode => Object.hash(
-        alpha.hashCode,
-        elements.hashCode,
-        properties.hashCode,
-      );
+  int get hashCode => Object.hash(alpha, elements, properties);
 
   @override
   bool operator ==(Object other) {
@@ -228,15 +220,15 @@ class GroupElement extends VectorElement {
 
   @override
   int get hashCode => Object.hash(
-        translateX.hashCode,
-        translateY.hashCode,
-        scaleX.hashCode,
-        scaleY.hashCode,
-        pivotX.hashCode,
-        pivotY.hashCode,
-        rotation.hashCode,
-        elements.hashCode,
-        properties.hashCode,
+        translateX,
+        translateY,
+        scaleX,
+        scaleY,
+        pivotX,
+        pivotY,
+        rotation,
+        elements,
+        properties,
       );
 
   @override
@@ -401,19 +393,19 @@ class PathElement extends VectorElement {
 
   @override
   int get hashCode => Object.hash(
-        pathData.hashCode,
-        fillColor.hashCode,
-        fillAlpha.hashCode,
-        strokeColor.hashCode,
-        strokeAlpha.hashCode,
-        strokeWidth.hashCode,
-        strokeCap.hashCode,
-        strokeJoin.hashCode,
-        strokeMiterLimit.hashCode,
-        trimStart.hashCode,
-        trimEnd.hashCode,
-        trimOffset.hashCode,
-        properties.hashCode,
+        pathData,
+        fillColor,
+        fillAlpha,
+        strokeColor,
+        strokeAlpha,
+        strokeWidth,
+        strokeCap,
+        strokeJoin,
+        strokeMiterLimit,
+        trimStart,
+        trimEnd,
+        trimOffset,
+        properties,
       );
 
   @override
@@ -475,7 +467,7 @@ class ClipPathElement extends VectorElement {
   }
 
   @override
-  int get hashCode => Object.hash(pathData.hashCode, properties.hashCode);
+  int get hashCode => Object.hash(pathData, properties);
 
   @override
   bool operator ==(Object other) {

@@ -257,11 +257,7 @@ class AnimationProperty<T> {
   }
 
   @override
-  int get hashCode => Object.hash(
-        tween.hashCode,
-        interval.hashCode,
-        curve.hashCode,
-      );
+  int get hashCode => Object.hash(tween, interval, curve);
 
   @override
   bool operator ==(Object other) {
@@ -310,7 +306,7 @@ class AnimationInterval {
   }
 
   @override
-  int get hashCode => Object.hash(start.hashCode, end.hashCode);
+  int get hashCode => Object.hash(start, end);
 
   @override
   bool operator ==(Object other) {
