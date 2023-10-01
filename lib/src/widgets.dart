@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animated_vector/src/data.dart';
 import 'package:animated_vector/src/provider.dart';
+import 'package:animated_vector/src/sequence.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedVector extends StatelessWidget {
@@ -249,5 +250,109 @@ class _AnimatedVectorPainter extends CustomPainter {
     return vector != old.vector ||
         progress != old.progress ||
         colorOverride != old.colorOverride;
+  }
+}
+
+class AnimatedSequenceController {
+  _AnimatedSequenceState? _state;
+
+  void skip() {
+    _state?.skip();
+  }
+
+  void stop() {
+    _state?._stopSignaled = true;
+  }
+}
+
+class AnimatedSequence extends StatefulWidget {
+  final List<BaseSequenceItem> items;
+  final AnimatedSequenceController controller;
+  final bool autostart;
+
+  const AnimatedSequence({
+    required this.items,
+    required this.controller,
+    this.autostart = true,
+    super.key,
+  });
+
+  @override
+  State<AnimatedSequence> createState() => _AnimatedSequenceState();
+}
+
+class _AnimatedSequenceState extends State<AnimatedSequence>
+    with SingleTickerProviderStateMixin {
+  late final _machine = SequenceMachine(widget.items);
+  late final AnimationController _animationController =
+      AnimationController(vsync: this);
+
+  bool _stopSignaled = false;
+  bool _waitingForSkip = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller._state = this;
+    _animationController.addStatusListener(_animationStatusListener);
+    if (widget.autostart) tick();
+  }
+
+  @override
+  void dispose() {
+    _animationController.removeStatusListener(_animationStatusListener);
+    _animationController.removeStatusListener(_waitForSkip);
+    super.dispose();
+  }
+
+  void _animationStatusListener(AnimationStatus status) {
+    if (status != AnimationStatus.completed) return;
+
+    if (!_stopSignaled) tick();
+
+    _stopSignaled = false;
+  }
+
+  void tick() {
+    final shouldAnimate = _machine.tick();
+    if (!shouldAnimate) return;
+
+    _animationController.value = 0;
+    _animationController.duration = _machine.currentItem.data.duration;
+    setState(() {});
+    _animationController.forward();
+  }
+
+  void skip([bool forceSkip = false]) {
+    if (!_machine.currentItem.skipMidAnimation &&
+        !forceSkip &&
+        _animationController.isAnimating) {
+      if (_waitingForSkip) return;
+      _waitingForSkip = true;
+      _animationController.addStatusListener(_waitForSkip);
+      return;
+    }
+
+    _machine.skip();
+    _animationController.value = 0;
+    _animationController.duration = _machine.currentItem.data.duration;
+    setState(() {});
+    _animationController.forward();
+  }
+
+  void _waitForSkip(AnimationStatus status) {
+    if (status != AnimationStatus.completed) return;
+
+    skip(true);
+    _animationController.removeStatusListener(_waitForSkip);
+    _waitingForSkip = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedVector.fromData(
+      _machine.currentItem.data,
+      progress: _animationController,
+    );
   }
 }

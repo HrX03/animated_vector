@@ -100,16 +100,16 @@ class AssetAnimatedVectorData extends AnimatedVectorDataProvider {
 
   @override
   Future<AnimatedVectorData> _load() async {
-    final AssetBundle _bundle = bundle ?? rootBundle;
+    final AssetBundle bundle = this.bundle ?? rootBundle;
 
-    return _bundle.loadStructuredData(
+    return bundle.loadStructuredData(
       assetKey,
       (value) async => ShapeshifterConverter.toAVD(value),
     );
   }
 
   @override
-  int get hashCode => assetName.hashCode ^ bundle.hashCode ^ package.hashCode;
+  int get hashCode => Object.hash(assetName, bundle, package);
 
   @override
   bool operator ==(Object other) {

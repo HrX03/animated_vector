@@ -111,16 +111,16 @@ class PathDataParse extends PathData {
 
   @override
   PathCommands get operations {
-    String _svg = svg;
-    if (_svg == '') {
+    String svg = this.svg;
+    if (svg == '') {
       return [];
     }
 
-    if (!_svg.toUpperCase().startsWith("M")) {
-      _svg = "M 0 0 $svg";
+    if (!svg.toUpperCase().startsWith("M")) {
+      svg = "M 0 0 ${this.svg}";
     }
 
-    final SvgPathStringSource parser = SvgPathStringSource(_svg);
+    final SvgPathStringSource parser = SvgPathStringSource(svg);
     final _PathCommandPathProxy path = _PathCommandPathProxy();
     final SvgPathNormalizer normalizer = SvgPathNormalizer();
     for (PathSegmentData seg in parser.parseSegments()) {
