@@ -15,4 +15,6 @@ jobs:
           channel: master
       - uses: bluefireteam/flutter-gh-pages@v7
         with:
+          workingDir: example
+          baseHref: /animated_vector/
           customArgs: --wasm
