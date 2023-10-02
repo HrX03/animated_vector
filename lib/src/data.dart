@@ -222,10 +222,9 @@ class GroupElement extends VectorElement {
       baseDuration: duration,
     );
 
-    Matrix4 transformMatrix = Matrix4.identity();
-    transformMatrix.translate(evaluated.translateX, evaluated.translateY);
-    transformMatrix = transformMatrix.clone()
+    final transformMatrix = Matrix4.identity()
       ..translate(evaluated.pivotX, evaluated.pivotY)
+      ..translate(evaluated.translateX, evaluated.translateY)
       ..rotateZ(evaluated.rotation * math.pi / 180)
       ..scale(evaluated.scaleX, evaluated.scaleY)
       ..translate(-evaluated.pivotX, -evaluated.pivotY);

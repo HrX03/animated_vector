@@ -416,7 +416,6 @@ class AnimatedVectors {
           elements: [
             GroupElement(
               rotation: 135,
-              translateY: 3,
               properties: GroupAnimationProperties(
                 rotation: [
                   AnimationProperty(
@@ -429,15 +428,19 @@ class AnimatedVectors {
                 ],
               ),
               elements: [
-                PathElement(
-                  pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
-                  fillColor: Color(0xFF000000),
+                GroupElement(
+                  translateY: 3,
+                  elements: [
+                    PathElement(
+                      pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
+                      fillColor: Color(0xFF000000),
+                    ),
+                  ],
                 ),
               ],
             ),
             GroupElement(
               rotation: 45,
-              translateY: -3,
               properties: GroupAnimationProperties(
                 rotation: [
                   AnimationProperty(
@@ -450,9 +453,14 @@ class AnimatedVectors {
                 ],
               ),
               elements: [
-                PathElement(
-                  pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
-                  fillColor: Color(0xFF000000),
+                GroupElement(
+                  translateY: -3,
+                  elements: [
+                    PathElement(
+                      pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
+                      fillColor: Color(0xFF000000),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -484,7 +492,6 @@ class AnimatedVectors {
           elements: [
             GroupElement(
               rotation: 45,
-              translateY: 3,
               properties: GroupAnimationProperties(
                 rotation: [
                   AnimationProperty(
@@ -497,15 +504,19 @@ class AnimatedVectors {
                 ],
               ),
               elements: [
-                PathElement(
-                  pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
-                  fillColor: Color(0xFF000000),
+                GroupElement(
+                  translateY: 3,
+                  elements: [
+                    PathElement(
+                      pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
+                      fillColor: Color(0xFF000000),
+                    ),
+                  ],
                 ),
               ],
             ),
             GroupElement(
               rotation: 135,
-              translateY: -3,
               properties: GroupAnimationProperties(
                 rotation: [
                   AnimationProperty(
@@ -518,9 +529,14 @@ class AnimatedVectors {
                 ],
               ),
               elements: [
-                PathElement(
-                  pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
-                  fillColor: Color(0xFF000000),
+                GroupElement(
+                  translateY: -3,
+                  elements: [
+                    PathElement(
+                      pathData: PathData.parse("M 1,-4 L 1,4 L -1,4 L -1,-4 Z"),
+                      fillColor: Color(0xFF000000),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -851,30 +867,38 @@ class AnimatedVectors {
     root: RootVectorElement(
       elements: [
         GroupElement(
+          rotation: 180,
           scaleX: 3.34,
           scaleY: 3.34,
-          translateX: 100.295,
-          translateY: 98.94466,
-          rotation: 180,
-          pivotX: 100,
-          pivotY: 100,
+          translateX: 99.705,
+          translateY: 101.05534,
           elements: [
-            PathElement(
-              pathData: PathData.parse(
-                "M 9.3330078125,14.0 c 0.0,0.0 4.6669921875,0.0 4.6669921875,0.0 c 0.0,0.0 0.0,-28.0 0.0,-28.0 c 0.0,0.0 -4.6669921875,0.0 -4.6669921875,0.0 c 0.0,0.0 0.0,28.0 0.0,28.0 Z",
-              ),
-              fillColor: Color(0xFF000000),
+            GroupElement(
+              translateX: -14.25,
+              translateY: -14.25,
+              elements: [
+                GroupElement(
+                  translateX: 14.25,
+                  translateY: 14.25,
+                  elements: [
+                    PathElement(
+                      pathData: PathData.parse(
+                        "M 9.3330078125,14.0 c 0.0,0.0 4.6669921875,0.0 4.6669921875,0.0 c 0.0,0.0 0.0,-28.0 0.0,-28.0 c 0.0,0.0 -4.6669921875,0.0 -4.6669921875,0.0 c 0.0,0.0 0.0,28.0 0.0,28.0 Z",
+                      ),
+                      fillColor: Color(0xFF000000),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
         GroupElement(
+          rotation: 180,
           scaleX: 3.34,
           scaleY: 3.34,
-          translateX: 100.295,
-          translateY: 98.94466,
-          rotation: 180,
-          pivotX: 100,
-          pivotY: 100,
+          translateX: 99.705,
+          translateY: 101.05534,
           elements: [
             GroupElement(
               translateX: -14.25,
@@ -902,10 +926,10 @@ class AnimatedVectors {
                                 "M 10,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
                               ),
                             ),
+                            curve: Curves.fastOutSlowIn,
                             interval: AnimationInterval(
                               end: Duration(milliseconds: 333),
                             ),
-                            curve: Curves.fastOutSlowIn,
                           ),
                         ],
                       ),
@@ -917,13 +941,11 @@ class AnimatedVectors {
           ],
         ),
         GroupElement(
+          rotation: 180,
           scaleX: 3.34,
           scaleY: 3.34,
-          translateX: 53.535,
-          translateY: 98.94466,
-          rotation: 180,
-          pivotX: 100,
-          pivotY: 100,
+          translateX: 146.465,
+          translateY: 101.05534,
           elements: [
             GroupElement(
               translateX: -0.25,
@@ -951,10 +973,10 @@ class AnimatedVectors {
                                 "M -14,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
                               ),
                             ),
+                            curve: Curves.fastOutSlowIn,
                             interval: AnimationInterval(
                               end: Duration(milliseconds: 333),
                             ),
-                            curve: Curves.fastOutSlowIn,
                           ),
                         ],
                       ),
