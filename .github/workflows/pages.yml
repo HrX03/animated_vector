@@ -17,4 +17,3 @@ jobs:
         with:
           workingDir: example
           baseHref: /animated_vector/
-          customArgs: --wasm
