@@ -15,6 +15,10 @@ class ExampleApp extends StatelessWidget {
       theme: ThemeData(
         colorSchemeSeed: Colors.blue,
       ),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.blue,
+        brightness: Brightness.dark,
+      ),
       home: const ExampleHomePage(),
     );
   }
@@ -28,48 +32,91 @@ class ExampleHomePage extends StatefulWidget {
 }
 
 class _ExampleHomePageState extends State<ExampleHomePage> {
+  double _iconSize = 32;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("animated_vector example"),
       ),
-      body: const Center(
+      body: Center(
         child: Wrap(
+          alignment: WrapAlignment.center,
           children: [
             AnimatedVectorButton(
               item: AnimatedVectors.arrowToDrawer,
               reverseItem: AnimatedVectors.drawerToArrow,
+              size: _iconSize,
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.closeToSearch,
               reverseItem: AnimatedVectors.searchToClose,
+              size: _iconSize,
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.collapseToExpand,
               reverseItem: AnimatedVectors.expandToCollapse,
+              size: _iconSize,
             ),
-            AnimatedVectorButton(item: AnimatedVectors.crossToTick),
+            AnimatedVectorButton(
+              item: AnimatedVectors.crossToTick,
+              size: _iconSize,
+            ),
             AnimatedVectorButton(
               item: AnimatedVectors.minusToPlus,
               reverseItem: AnimatedVectors.plusToMinus,
+              size: _iconSize,
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.musicPrevious,
               resetOnClick: false,
+              size: _iconSize,
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.musicNext,
               resetOnClick: false,
+              size: _iconSize,
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.pauseToPlay,
               reverseItem: AnimatedVectors.playToPause,
+              size: _iconSize,
             ),
-            AnimatedVectorButton(item: AnimatedVectors.searchToBack),
-            AnimatedVectorButton(item: AnimatedVectors.visibilityToggle),
-            AnimatedVectorJumpCarousel(),
+            AnimatedVectorButton(
+              item: AnimatedVectors.searchToBack,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: AnimatedVectors.visibilityToggle,
+              size: _iconSize,
+            ),
+            AnimatedVectorJumpCarousel(size: _iconSize),
           ],
+        ),
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 64,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              const Text("Icon size"),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Slider(
+                  value: _iconSize,
+                  onChanged: (value) =>
+                      setState(() => _iconSize = value.roundToDouble()),
+                  divisions: 56 - 16,
+                  min: 16,
+                  max: 56,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(_iconSize.round().toString()),
+            ],
+          ),
         ),
       ),
     );
@@ -80,11 +127,13 @@ class AnimatedVectorButton extends StatefulWidget {
   final AnimatedVectorData item;
   final AnimatedVectorData? reverseItem;
   final bool resetOnClick;
+  final double size;
 
   const AnimatedVectorButton({
     required this.item,
     this.reverseItem,
     this.resetOnClick = true,
+    required this.size,
     super.key,
   });
 
@@ -108,7 +157,17 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
 
   @override
   Widget build(BuildContext context) {
+    final size = widget.item.viewportSize.aspectRatio == 1.0
+        ? Size.square(widget.size)
+        : () {
+            final min = widget.item.viewportSize.shortestSide;
+            final ratio = widget.size / min;
+
+            return widget.item.viewportSize * ratio;
+          }();
+
     return IconButton(
+      iconSize: widget.size,
       onPressed: () {
         if (widget.reverseItem != null) {
           _controller.skip();
@@ -131,20 +190,23 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
               ],
               autostart: false,
               controller: _controller,
+              size: size,
+              applyColor: true,
             )
           : AnimatedVector(
               vector: widget.item,
               progress: _ac,
-              size: widget.item.viewportSize.aspectRatio == 1.0
-                  ? const Size.square(24)
-                  : null,
+              size: size,
+              applyColor: true,
             ),
     );
   }
 }
 
 class AnimatedVectorJumpCarousel extends StatefulWidget {
-  const AnimatedVectorJumpCarousel({super.key});
+  final double size;
+
+  const AnimatedVectorJumpCarousel({required this.size, super.key});
 
   @override
   State<AnimatedVectorJumpCarousel> createState() =>
@@ -158,6 +220,7 @@ class _AnimatedVectorJumpCarouselState
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      iconSize: widget.size,
       onPressed: () {
         controller.jumpTo("loopend");
       },
@@ -185,6 +248,8 @@ class _AnimatedVectorJumpCarouselState
           ),
         ],
         controller: controller,
+        applyColor: true,
+        size: Size.square(widget.size),
       ),
     );
   }
