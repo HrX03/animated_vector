@@ -99,11 +99,17 @@ class AnimatedSequence extends StatefulWidget {
   final List<SequenceEntry> items;
   final AnimatedSequenceController controller;
   final bool autostart;
+  final Size? size;
+  final Color? colorOverride;
+  final bool applyColor;
 
   const AnimatedSequence({
     required this.items,
     required this.controller,
     this.autostart = true,
+    this.size,
+    this.colorOverride,
+    this.applyColor = false,
     super.key,
   });
 
@@ -210,9 +216,13 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
 
   @override
   Widget build(BuildContext context) {
+    final color = widget.colorOverride ?? _machine.currentItem.colorOverride;
     return AnimatedVector(
       vector: _machine.currentItem.data,
       progress: _animationController,
+      size: widget.size,
+      color: color,
+      applyColor: widget.applyColor || color != null,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:animated_vector/animated_vector.dart';
 import 'package:collection/collection.dart';
 
@@ -215,6 +217,12 @@ sealed class SequenceEntry {
 class SequenceItem extends SequenceEntry {
   /// The vector data this sequence item holds
   final AnimatedVectorData data;
+
+  /// An optional color that will override the color of this item vector data
+  final Color? colorOverride;
+
+  /// Used to jump to a specific item in a sequence using the
+  /// [AnimatedSequenceController.jumpTo] method
   final String? tag;
 
   const SequenceItem(
@@ -222,6 +230,7 @@ class SequenceItem extends SequenceEntry {
     super.repeatCount,
     super.skipMidAnimation,
     super.nextOnComplete,
+    this.colorOverride,
     this.tag,
   });
 
@@ -231,6 +240,7 @@ class SequenceItem extends SequenceEntry {
         skipMidAnimation,
         nextOnComplete,
         data,
+        colorOverride,
         tag,
       );
 
@@ -241,6 +251,7 @@ class SequenceItem extends SequenceEntry {
           skipMidAnimation == other.skipMidAnimation &&
           nextOnComplete == other.nextOnComplete &&
           data == other.data &&
+          colorOverride == other.colorOverride &&
           tag == other.tag;
     }
 
