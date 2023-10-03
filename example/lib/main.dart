@@ -68,6 +68,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             ),
             AnimatedVectorButton(item: AnimatedVectors.searchToBack),
             AnimatedVectorButton(item: AnimatedVectors.visibilityToggle),
+            AnimatedVectorJumpCarousel(),
           ],
         ),
       ),
@@ -138,6 +139,53 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
                   ? const Size.square(24)
                   : null,
             ),
+    );
+  }
+}
+
+class AnimatedVectorJumpCarousel extends StatefulWidget {
+  const AnimatedVectorJumpCarousel({super.key});
+
+  @override
+  State<AnimatedVectorJumpCarousel> createState() =>
+      _AnimatedVectorJumpCarouselState();
+}
+
+class _AnimatedVectorJumpCarouselState
+    extends State<AnimatedVectorJumpCarousel> {
+  final controller = AnimatedSequenceController();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        controller.jumpTo("loopend");
+      },
+      icon: AnimatedSequence(
+        items: const [
+          SequenceGroup(
+            repeatCount: null,
+            children: [
+              SequenceItem(AnimatedVectors.arrowToDrawer, nextOnComplete: true),
+              SequenceItem(AnimatedVectors.drawerToArrow, nextOnComplete: true),
+              SequenceItem(AnimatedVectors.plusToMinus, nextOnComplete: true),
+              SequenceItem(AnimatedVectors.minusToPlus, nextOnComplete: true),
+              SequenceItem(AnimatedVectors.searchToClose, nextOnComplete: true),
+              SequenceItem(AnimatedVectors.closeToSearch, nextOnComplete: true),
+            ],
+          ),
+          SequenceItem(
+            AnimatedVectors.pauseToPlay,
+            nextOnComplete: true,
+            tag: "loopend",
+          ),
+          SequenceItem(
+            AnimatedVectors.playToPause,
+            nextOnComplete: true,
+          ),
+        ],
+        controller: controller,
+      ),
     );
   }
 }

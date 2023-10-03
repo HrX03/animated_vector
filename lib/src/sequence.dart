@@ -1,36 +1,37 @@
 import 'package:animated_vector/animated_vector.dart';
+import 'package:collection/collection.dart';
 
 typedef SequenceData = String;
 
 class SequenceMachine {
-  final List<BaseSequenceItem> sequence;
-  final List<_ExecutionEntry> _instructions;
-  late final _ExecutionEntry _masterGroup;
-  final List<int> _execStack = [];
+  final List<SequenceEntry> sequence;
+  late final List<_ExecutionEntry> _instructions;
+  late final Map<String, int> _tagMap;
+
   int _currIndex = 0;
   bool _voidTickExecuted = false;
   bool _execHalted = false;
   bool _forceExec = false;
+  int? _requestedIndex;
 
-  SequenceMachine(this.sequence)
-      : _instructions = _buildExecutionEntries(sequence) {
-    _masterGroup = _ExecutionEntry.group(
-      repetitionsLeft: _EntryPropCounter(1),
-      groupItemsLeft: _EntryPropCounter(sequence.length, true),
-      item: const _ExecutionGroupItem(
-        repeatCount: 1,
-        nextOnComplete: false,
-        tag: null,
+  SequenceMachine(this.sequence) {
+    final (entries, tags) = _buildExecutionEntries(sequence);
+    _instructions = entries;
+    _tagMap = tags;
+
+    _instructions.add(
+      (
+        repetitionsLeft: _EntryPropCounter(1),
+        item: _ExecutionGroupBoundary(
+          start: 0,
+          nextOnComplete: _instructions.last.item.nextOnComplete,
+        ),
       ),
     );
-    _resolve();
   }
 
   SequenceItem get currentItem => (_currentEntry.item as _ExecutionItem).sItem;
-
   _ExecutionEntry get _currentEntry => _instructions[_currIndex];
-  _ExecutionEntry get _stackTop =>
-      _execStack.isNotEmpty ? _instructions[_execStack.last] : _masterGroup;
 
   bool tick() {
     // we forcefully clean up the _forceExec flag as it could be dirty if skip is called instead of tick.
@@ -38,43 +39,47 @@ class SequenceMachine {
     final forceExec = _forceExec;
     _forceExec = false;
 
+    final requestedIndex = _requestedIndex;
+    _requestedIndex = null;
+
     if (_execHalted) return false;
     if (!_voidTickExecuted) {
       _voidTickExecuted = true;
       return true;
     }
 
-    if (!_currentEntry.repetitionsLeft.decrease()) return true;
+    assert(_currentEntry.item is _ExecutionItem);
 
+    if (!_currentEntry.repetitionsLeft.decrease()) return true;
     _currentEntry.repetitionsLeft.reset();
 
-    if (!_stackTop.groupItemsLeft!.decrease()) {
-      if (!_currentEntry.item.nextOnComplete) {
-        _execHalted = true;
-        if (!forceExec) return false;
-      }
-      if (_currIndex + 1 < _instructions.length) {
-        _currIndex++;
-      } else {
-        _masterGroup.groupItemsLeft!.reset();
-        _masterGroup.repetitionsLeft.reset();
-        _currIndex = 0;
-      }
-      _resolve();
-      return true;
-    }
-    _stackTop.groupItemsLeft!.reset();
-
-    if (!_stackTop.repetitionsLeft.decrease()) {
-      _currIndex = _execStack.isNotEmpty ? _execStack.last + 1 : 0;
-      return true;
+    if (!_currentEntry.item.nextOnComplete && !forceExec) {
+      _execHalted = true;
+      return false;
     }
 
-    _stackTop.repetitionsLeft.reset();
-    _execStack.removeLast();
+    if (requestedIndex != null) {
+      _currIndex = requestedIndex;
+    } else {
+      _currIndex++;
+    }
+    if (_currentEntry.item is! _ExecutionGroupBoundary) return true;
 
-    _stackTop.groupItemsLeft!.decrease();
-    return tick();
+    final group = _currentEntry.item as _ExecutionGroupBoundary;
+    if (!_currentEntry.repetitionsLeft.decrease()) {
+      _currIndex = group.start;
+      return true;
+    }
+    _currentEntry.repetitionsLeft.reset();
+    if (!_currentEntry.item.nextOnComplete && !forceExec) {
+      _currIndex--;
+      _execHalted = true;
+      return false;
+    }
+
+    final newIndex = _currIndex + 1;
+    _currIndex = newIndex >= _instructions.length ? 0 : newIndex;
+    return true;
   }
 
   void skip() {
@@ -83,96 +88,92 @@ class SequenceMachine {
     tick();
   }
 
-  void _resolve() {
-    switch (_currentEntry.item) {
-      case _ExecutionGroupItem():
-        _execStack.add(_currIndex);
-        _currIndex++;
-        _resolve();
-      case _ExecutionItem():
-        break;
-    }
+  void jumpTo(String tag) {
+    _requestedIndex = _tagMap[tag];
+    skip();
+  }
+
+  bool hasTag(String tag) {
+    return _tagMap.containsKey(tag);
   }
 }
 
-List<_ExecutionEntry> _buildExecutionEntries(List<BaseSequenceItem> items) {
-  final List<_ExecutionEntry> slots = [];
+(List<_ExecutionEntry>, Map<String, int>) _buildExecutionEntries(
+  List<SequenceEntry> items,
+) {
+  final List<_ExecutionEntry> entries = [];
+  final Map<String, int> tags = {};
 
   for (final item in items) {
+    final currentIndex = entries.length;
     switch (item) {
       case final SequenceItem item:
-        slots.add(
-          _ExecutionEntry.item(
+        entries.add(
+          (
             repetitionsLeft: _EntryPropCounter(item.repeatCount),
             item: _ExecutionItem(
               sItem: item,
-              repeatCount: item.repeatCount,
               nextOnComplete: item.nextOnComplete,
-              tag: item.tag,
             ),
           ),
         );
-      case final GroupedSequenceItem group:
-        final childSlots = _buildExecutionEntries(group.children);
-        slots.add(
-          _ExecutionEntry.group(
+
+        if (item.tag == null) continue;
+        _insertTag(tags, item.tag!, currentIndex);
+      case final SequenceGroup group:
+        final (newEntries, newTags) = _buildExecutionEntries(group.children);
+        entries.addAll(newEntries);
+
+        for (final MapEntry(:key, :value) in newTags.entries) {
+          _insertTag(tags, key, currentIndex + value);
+        }
+
+        entries.add(
+          (
             repetitionsLeft: _EntryPropCounter(item.repeatCount),
-            groupItemsLeft: _EntryPropCounter(group.children.length, true),
-            item: _ExecutionGroupItem(
-              repeatCount: item.repeatCount,
+            item: _ExecutionGroupBoundary(
+              start: currentIndex,
               nextOnComplete: item.nextOnComplete,
-              tag: item.tag,
             ),
           ),
         );
-        slots.addAll(childSlots);
     }
   }
 
-  return slots;
+  return (entries, tags);
 }
 
-class _ExecutionEntry {
-  final _EntryPropCounter repetitionsLeft;
-  final _EntryPropCounter? groupItemsLeft;
-  final _ExecutionBaseItem item;
-
-  _ExecutionEntry.item({
-    required this.repetitionsLeft,
-    required this.item,
-  }) : groupItemsLeft = null;
-
-  _ExecutionEntry.group({
-    required this.repetitionsLeft,
-    required this.groupItemsLeft,
-    required this.item,
-  });
+void _insertTag(Map<String, int> origin, String tag, int index) {
+  if (origin.containsKey(tag)) {
+    throw Exception("Duplicate key found in sequence: $tag");
+  }
+  origin[tag] = index;
 }
+
+typedef _ExecutionEntry = ({
+  _EntryPropCounter repetitionsLeft,
+  _ExecutionBaseItem item,
+});
 
 class _EntryPropCounter {
   final int? count;
-
-  // usually the counter will signal its end in the same cycle as it hits zero.
-  // if this flag is set to true then another decrease call will be needed to be signaled as complete
-  final bool signalUnderZero;
   int? _counter;
 
-  _EntryPropCounter(this.count, [this.signalUnderZero = false])
-      : _counter = count;
+  _EntryPropCounter(this.count) : _counter = count;
 
-  // returns a bool to signal whether the counter is considered completed, like reaching the end of an iterable
+  // returns a bool to signal whether the counter is considered completed, like
+  // reaching the end of an iterable
   bool decrease() {
     if (_counter == null) return false;
-    if (signalUnderZero && _counter! < 0) return false;
     _counter = _counter! - 1;
 
-    return !signalUnderZero ? _counter! <= 0 : _counter! < 0;
+    return _counter! <= 0;
   }
 
   void reset() => _counter = count;
 }
 
-sealed class BaseSequenceItem {
+sealed class SequenceEntry {
   /// The numbers of time to repeat this animation before being marked as complete.
   /// If this value is set to null the animation will loop until manually skipped.
   final int? repeatCount;
@@ -182,68 +183,119 @@ sealed class BaseSequenceItem {
   /// before jumping ahead
   final bool skipMidAnimation;
 
+  /// Whether to automatically jump to the next item in the sequence once this item
+  /// has finished playing
   final bool nextOnComplete;
-  final String? tag;
 
-  const BaseSequenceItem({
+  const SequenceEntry({
     this.repeatCount = 1,
     this.skipMidAnimation = true,
     this.nextOnComplete = false,
-    this.tag,
   });
+
+  @override
+  int get hashCode => Object.hash(
+        repeatCount,
+        skipMidAnimation,
+        nextOnComplete,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is SequenceItem) {
+      return repeatCount == other.repeatCount &&
+          skipMidAnimation == other.skipMidAnimation &&
+          nextOnComplete == other.nextOnComplete;
+    }
+
+    return false;
+  }
 }
 
-class SequenceItem extends BaseSequenceItem {
+class SequenceItem extends SequenceEntry {
+  /// The vector data this sequence item holds
   final AnimatedVectorData data;
+  final String? tag;
 
   const SequenceItem(
     this.data, {
     super.repeatCount,
     super.skipMidAnimation,
     super.nextOnComplete,
-    super.tag,
+    this.tag,
   });
+
+  @override
+  int get hashCode => Object.hash(
+        repeatCount,
+        skipMidAnimation,
+        nextOnComplete,
+        data,
+        tag,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is SequenceItem) {
+      return repeatCount == other.repeatCount &&
+          skipMidAnimation == other.skipMidAnimation &&
+          nextOnComplete == other.nextOnComplete &&
+          data == other.data &&
+          tag == other.tag;
+    }
+
+    return false;
+  }
 }
 
-class GroupedSequenceItem extends BaseSequenceItem {
-  final List<BaseSequenceItem> children;
+class SequenceGroup extends SequenceEntry {
+  final List<SequenceEntry> children;
 
-  const GroupedSequenceItem({
+  const SequenceGroup({
     required this.children,
     super.repeatCount,
     super.skipMidAnimation,
     super.nextOnComplete,
-    super.tag,
   });
+
+  @override
+  int get hashCode => Object.hash(
+        repeatCount,
+        skipMidAnimation,
+        nextOnComplete,
+        children,
+      );
+
+  @override
+  bool operator ==(Object other) {
+    if (other is SequenceGroup) {
+      return repeatCount == other.repeatCount &&
+          skipMidAnimation == other.skipMidAnimation &&
+          nextOnComplete == other.nextOnComplete &&
+          const ListEquality().equals(children, other.children);
+    }
+
+    return false;
+  }
 }
 
 sealed class _ExecutionBaseItem {
-  final int? repeatCount;
   final bool nextOnComplete;
-  final String? tag;
 
-  const _ExecutionBaseItem({
-    required this.repeatCount,
-    required this.nextOnComplete,
-    required this.tag,
-  });
+  const _ExecutionBaseItem({required this.nextOnComplete});
 }
 
 class _ExecutionItem extends _ExecutionBaseItem {
   final SequenceItem sItem;
 
-  const _ExecutionItem({
-    required this.sItem,
-    required super.repeatCount,
-    required super.nextOnComplete,
-    required super.tag,
-  });
+  const _ExecutionItem({required this.sItem, required super.nextOnComplete});
 }
 
-class _ExecutionGroupItem extends _ExecutionBaseItem {
-  const _ExecutionGroupItem({
-    required super.repeatCount,
+class _ExecutionGroupBoundary extends _ExecutionBaseItem {
+  final int start;
+
+  const _ExecutionGroupBoundary({
+    required this.start,
     required super.nextOnComplete,
-    required super.tag,
   });
 }

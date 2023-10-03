@@ -1,5 +1,6 @@
 import 'package:animated_vector/src/data.dart';
 import 'package:animated_vector/src/sequence.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedVector extends StatelessWidget {
@@ -88,10 +89,14 @@ class AnimatedSequenceController {
   void stop() {
     _state?._stopSignaled = true;
   }
+
+  void jumpTo(String tag) {
+    _state?.skip(tag: tag);
+  }
 }
 
 class AnimatedSequence extends StatefulWidget {
-  final List<BaseSequenceItem> items;
+  final List<SequenceEntry> items;
   final AnimatedSequenceController controller;
   final bool autostart;
 
@@ -108,12 +113,14 @@ class AnimatedSequence extends StatefulWidget {
 
 class _AnimatedSequenceState extends State<AnimatedSequence>
     with SingleTickerProviderStateMixin {
-  late final _machine = SequenceMachine(widget.items);
+  late List<SequenceEntry> _items = List.of(widget.items);
+  late SequenceMachine _machine = SequenceMachine(_items);
   late final AnimationController _animationController =
       AnimationController(vsync: this);
 
   bool _stopSignaled = false;
   bool _waitingForSkip = false;
+  String? _requestedTag;
 
   @override
   void initState() {
@@ -128,6 +135,22 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
     _animationController.removeStatusListener(_animationStatusListener);
     _animationController.removeStatusListener(_waitForSkip);
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedSequence old) {
+    const equality = ListEquality();
+    if (!equality.equals(_items, old.items)) {
+      _items = List.of(widget.items);
+      _machine = SequenceMachine(_items);
+
+      _stopSignaled = false;
+      _waitingForSkip = false;
+      _requestedTag = null;
+
+      if (widget.autostart) tick();
+    }
+    super.didUpdateWidget(old);
   }
 
   void _animationStatusListener(AnimationStatus status) {
@@ -148,17 +171,27 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
     _animationController.forward();
   }
 
-  void skip([bool forceSkip = false]) {
+  void skip({String? tag, bool forceSkip = false}) {
+    if (tag != null && !_machine.hasTag(tag)) {
+      throw Exception("Tag not found in sequence: $tag");
+    }
+
     if (!_machine.currentItem.skipMidAnimation &&
         !forceSkip &&
         _animationController.isAnimating) {
       if (_waitingForSkip) return;
       _waitingForSkip = true;
+      _requestedTag = tag;
       _animationController.addStatusListener(_waitForSkip);
       return;
     }
 
-    _machine.skip();
+    if (tag != null) {
+      _machine.jumpTo(tag);
+    } else {
+      _machine.skip();
+    }
+
     _animationController.value = 0;
     _animationController.duration = _machine.currentItem.data.duration;
     setState(() {});
@@ -168,7 +201,9 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
   void _waitForSkip(AnimationStatus status) {
     if (status != AnimationStatus.completed) return;
 
-    skip(true);
+    skip(tag: _requestedTag, forceSkip: true);
+    _requestedTag = null;
+
     _animationController.removeStatusListener(_waitForSkip);
     _waitingForSkip = false;
   }
