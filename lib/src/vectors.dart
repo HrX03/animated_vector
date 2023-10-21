@@ -692,7 +692,7 @@ class AnimatedVectors {
 
   static const AnimatedVectorData visibilityToggle = AnimatedVectorData(
     viewportSize: Size.square(24),
-    duration: Duration(milliseconds: 2000),
+    duration: Duration(milliseconds: 320),
     root: RootVectorElement(
       elements: [
         PathElement(
@@ -707,8 +707,7 @@ class AnimatedVectors {
                   ),
                 ),
                 interval: AnimationInterval(
-                  start: Duration(milliseconds: 268),
-                  end: Duration(milliseconds: 1539),
+                  end: Duration(milliseconds: 320),
                 ),
                 curve: Curves.fastOutSlowIn,
               ),
@@ -728,8 +727,7 @@ class AnimatedVectors {
                   ),
                 ),
                 interval: AnimationInterval(
-                  start: Duration(milliseconds: 268),
-                  end: Duration(milliseconds: 1539),
+                  end: Duration(milliseconds: 320),
                 ),
                 curve: Curves.fastOutSlowIn,
               ),
