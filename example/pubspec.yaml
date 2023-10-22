@@ -8,12 +8,23 @@ environment:
 
 dependencies:
   animated_vector:
-    path: ../packages/animated_vector
+    git:
+      url: https://github.com/HrX03/animated_vector
+      path: packages/animated_vector
+  animated_vector_annotations:
+    git:
+      url: https://github.com/HrX03/animated_vector
+      path: packages/animated_vector_annotations
 
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  animated_vector_gen:
+    git:
+      url: https://github.com/HrX03/animated_vector
+      path: packages/animated_vector_gen
+  build_runner: ^2.4.6
   flutter_test:
     sdk: flutter
 

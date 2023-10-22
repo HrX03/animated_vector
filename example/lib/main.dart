@@ -1,4 +1,5 @@
 import 'package:animated_vector/animated_vector.dart';
+import 'package:example/custom.dart';
 import 'package:example/digits.dart';
 import 'package:flutter/material.dart';
 
@@ -90,6 +91,14 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             ),
             AnimatedVectorButton(
               item: AnimatedVectors.visibilityToggle,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: CustomVectors.addTransition,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: CustomVectors.appsToClose,
               size: _iconSize,
             ),
             AnimatedVectorJumpCarousel(size: _iconSize),
