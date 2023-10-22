@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:animated_vector/animated_vector.dart';
+import 'package:animated_vector/src/data.dart';
 import 'package:collection/collection.dart';
 
 typedef SequenceData = String;

@@ -1,0 +1,5 @@
+name: animated_vector
+
+packages:
+  - example
+  - packages/*

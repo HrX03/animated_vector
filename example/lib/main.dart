@@ -1,4 +1,5 @@
 import 'package:animated_vector/animated_vector.dart';
+import 'package:example/digits.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -92,6 +93,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               size: _iconSize,
             ),
             AnimatedVectorJumpCarousel(size: _iconSize),
+            AnimatedDigitSwitcher(size: _iconSize),
           ],
         ),
       ),
@@ -249,6 +251,39 @@ class _AnimatedVectorJumpCarouselState
         ],
         controller: controller,
         applyColor: true,
+        size: Size.square(widget.size),
+      ),
+    );
+  }
+}
+
+class AnimatedDigitSwitcher extends StatefulWidget {
+  final double size;
+
+  const AnimatedDigitSwitcher({
+    required this.size,
+    super.key,
+  });
+
+  @override
+  State<AnimatedDigitSwitcher> createState() => _AnimatedDigitSwitcherState();
+}
+
+class _AnimatedDigitSwitcherState extends State<AnimatedDigitSwitcher> {
+  final controller = AnimatedSequenceController();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      iconSize: widget.size,
+      onPressed: () {
+        controller.skip();
+      },
+      icon: AnimatedSequence(
+        items: digitSequence,
+        controller: controller,
+        applyColor: true,
+        autostart: false,
         size: Size.square(widget.size),
       ),
     );

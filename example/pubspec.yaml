@@ -1,6 +1,6 @@
 name: example
 description: Example app for animated_vector
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   animated_vector:
-    path: ../
-    
+    path: ../packages/animated_vector
+
   flutter:
     sdk: flutter
 
