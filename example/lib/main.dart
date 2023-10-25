@@ -103,6 +103,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
             ),
             AnimatedVectorJumpCarousel(size: _iconSize),
             AnimatedDigitSwitcher(size: _iconSize),
+            AnimatedDownloadCarousel(size: _iconSize),
           ],
         ),
       ),
@@ -177,9 +178,8 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
             return widget.item.viewportSize * ratio;
           }();
 
-    return IconButton(
-      iconSize: widget.size,
-      onPressed: () {
+    return _Button(
+      onTap: () {
         if (widget.reverseItem != null) {
           _controller.skip();
         } else if (widget.resetOnClick) {
@@ -193,7 +193,7 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
           _ac.forward();
         }
       },
-      icon: widget.reverseItem != null
+      child: widget.reverseItem != null
           ? AnimatedSequence(
               items: [
                 SequenceItem(widget.item),
@@ -230,12 +230,11 @@ class _AnimatedVectorJumpCarouselState
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: widget.size,
-      onPressed: () {
+    return _Button(
+      onTap: () {
         controller.jumpTo("loopend");
       },
-      icon: AnimatedSequence(
+      child: AnimatedSequence(
         items: const [
           SequenceGroup(
             repeatCount: null,
@@ -266,6 +265,35 @@ class _AnimatedVectorJumpCarouselState
   }
 }
 
+class AnimatedDownloadCarousel extends StatefulWidget {
+  final double size;
+
+  const AnimatedDownloadCarousel({required this.size, super.key});
+
+  @override
+  State<AnimatedDownloadCarousel> createState() =>
+      _AnimatedDownloadCarouselState();
+}
+
+class _AnimatedDownloadCarouselState extends State<AnimatedDownloadCarousel> {
+  final controller = AnimatedSequenceController();
+
+  @override
+  Widget build(BuildContext context) {
+    return _Button(
+      onTap: () {
+        controller.skip();
+      },
+      child: AnimatedSequence(
+        items: CustomSequences.download,
+        controller: controller,
+        applyColor: true,
+        size: Size.square(widget.size),
+      ),
+    );
+  }
+}
+
 class AnimatedDigitSwitcher extends StatefulWidget {
   final double size;
 
@@ -283,17 +311,42 @@ class _AnimatedDigitSwitcherState extends State<AnimatedDigitSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: widget.size,
-      onPressed: () {
+    return _Button(
+      onTap: () {
         controller.skip();
       },
-      icon: AnimatedSequence(
+      child: AnimatedSequence(
         items: digitSequence,
         controller: controller,
         applyColor: true,
         autostart: false,
         size: Size.square(widget.size),
+      ),
+    );
+  }
+}
+
+class _Button extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+
+  const _Button({
+    required this.child,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        customBorder: const StadiumBorder(),
+        onTap: onTap,
+        radius: 32,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: child,
+        ),
       ),
     );
   }

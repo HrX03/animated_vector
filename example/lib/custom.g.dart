@@ -666,3 +666,381 @@ const AnimatedVectorData _$addTransition = AnimatedVectorData(
     ],
   ),
 );
+
+const AnimatedVectorData _$downloadStart = AnimatedVectorData(
+  viewportSize: Size(24, 24),
+  duration: Duration(milliseconds: 600),
+  root: RootVectorElement(
+    elements: [
+      GroupElement(
+        elements: [
+          ClipPathElement(
+            pathData: PathData.parse(
+              'M 5 3 L 19 3 L 19 3 L 5 3 Z',
+            ),
+            properties: ClipPathAnimationProperties(
+              pathData: [
+                AnimationProperty<PathData>(
+                  tween: PathDataLerp(
+                    begin: PathData.parse(
+                      'M 5 3 L 19 3 L 19 3 L 5 3 Z',
+                    ),
+                    end: PathData.parse(
+                      'M 5 3 L 19 3 L 19 16 L 5 16 Z',
+                    ),
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 19 9 L 15 9 L 15 3 L 9 3 L 9 9 L 5 9 L 12 16 L 19 9 Z',
+            ),
+            fillColor: Color(0xFF000000),
+            fillAlpha: 0.2,
+          ),
+        ],
+      ),
+      GroupElement(
+        elements: [
+          PathElement(
+            pathData: PathData.parse(
+              'M 5 19 L 19 19',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeAlpha: 0.2,
+            strokeWidth: 2.0,
+            trimEnd: 0.0,
+            properties: PathAnimationProperties(
+              trimEnd: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+);
+
+const AnimatedVectorData _$downloadLoop = AnimatedVectorData(
+  viewportSize: Size(24, 24),
+  duration: Duration(milliseconds: 1100),
+  root: RootVectorElement(
+    elements: [
+      GroupElement(
+        elements: [
+          PathElement(
+            pathData: PathData.parse(
+              'M 19 9 L 15 9 L 15 3 L 9 3 L 9 9 L 5 9 L 12 16 L 19 9 Z',
+            ),
+            fillColor: Color(0xFF000000),
+            fillAlpha: 0.2,
+          ),
+          ClipPathElement(
+            pathData: PathData.parse(
+              'M 19 9 L 15 9 L 15 3 L 9 3 L 9 9 L 5 9 L 12 16 L 19 9 Z',
+            ),
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 12 3 L 12 16',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeWidth: 14.0,
+            trimEnd: 0.0,
+            properties: PathAnimationProperties(
+              trimStart: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 150),
+                    end: Duration(milliseconds: 450),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 700),
+                    end: Duration(milliseconds: 1000),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+              ],
+              trimEnd: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 300),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 500),
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 550),
+                    end: Duration(milliseconds: 850),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      GroupElement(
+        elements: [
+          PathElement(
+            pathData: PathData.parse(
+              'M 5 19 L 19 19',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeAlpha: 0.2,
+            strokeWidth: 2.0,
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 5 19 L 19 19',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeWidth: 2.0,
+            trimEnd: 0.0,
+            properties: PathAnimationProperties(
+              trimStart: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 150),
+                    end: Duration(milliseconds: 450),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 700),
+                    end: Duration(milliseconds: 1000),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+              ],
+              trimEnd: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 300),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 550),
+                    end: Duration(milliseconds: 850),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+);
+
+const AnimatedVectorData _$downloadEnd = AnimatedVectorData(
+  viewportSize: Size(24, 24),
+  duration: Duration(milliseconds: 1100),
+  root: RootVectorElement(
+    elements: [
+      GroupElement(
+        elements: [
+          ClipPathElement(
+            pathData: PathData.parse(
+              'M 5 3 L 19 3 L 19 16 L 5 16 Z',
+            ),
+            properties: ClipPathAnimationProperties(
+              pathData: [
+                AnimationProperty<PathData>(
+                  tween: PathDataLerp(
+                    begin: PathData.parse(
+                      'M 5 3 L 19 3 L 19 16 L 5 16 Z',
+                    ),
+                    end: PathData.parse(
+                      'M 5 16 L 19 16 L 19 16 L 5 16 Z',
+                    ),
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 300),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 19 9 L 15 9 L 15 3 L 9 3 L 9 9 L 5 9 L 12 16 L 19 9 Z',
+            ),
+            fillColor: Color(0xFF000000),
+            fillAlpha: 0.2,
+          ),
+        ],
+      ),
+      GroupElement(
+        elements: [
+          PathElement(
+            pathData: PathData.parse(
+              'M 5 19 L 19 19',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeAlpha: 0.2,
+            strokeWidth: 2.0,
+            properties: PathAnimationProperties(
+              strokeAlpha: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.2,
+                    end: 0.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 500),
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 5 19 L 19 19',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeWidth: 2.0,
+            trimEnd: 0.0,
+            properties: PathAnimationProperties(
+              trimStart: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 800),
+                    end: Duration(milliseconds: 1100),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+              ],
+              trimEnd: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+          PathElement(
+            pathData: PathData.parse(
+              'M 4.57 9.66 L 9.53 14.6 L 19.42 4.71',
+            ),
+            strokeColor: Color(0xFF000000),
+            strokeWidth: 2.0,
+            trimEnd: 0.0,
+            properties: PathAnimationProperties(
+              trimStart: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    start: Duration(milliseconds: 800),
+                    end: Duration(milliseconds: 1100),
+                  ),
+                  curve: ShapeshifterCurves.accelerateDecelerate,
+                ),
+              ],
+              trimEnd: [
+                AnimationProperty<double>(
+                  tween: ValueLerp<double>(
+                    begin: 0.0,
+                    end: 1.0,
+                  ),
+                  interval: AnimationInterval(
+                    end: Duration(milliseconds: 500),
+                  ),
+                  curve: ShapeshifterCurves.fastOutSlowIn,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      PathElement(
+        pathData: PathData.parse(
+          'M 4.12 12.705 L 9 17.585 L 20.295 6.295',
+        ),
+        strokeWidth: 2.0,
+      ),
+    ],
+  ),
+);
