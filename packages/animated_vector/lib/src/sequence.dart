@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:animated_vector/src/data.dart';
 import 'package:collection/collection.dart';
 
-typedef SequenceData = String;
-
 class SequenceMachine {
   final List<SequenceEntry> sequence;
   late final List<_ExecutionEntry> _instructions;
@@ -52,7 +50,7 @@ class SequenceMachine {
 
     assert(_currentEntry.item is _ExecutionItem);
 
-    if (!_currentEntry.repetitionsLeft.decrease()) return true;
+    if (!_currentEntry.repetitionsLeft.decrease() && !forceExec) return true;
     _currentEntry.repetitionsLeft.reset();
 
     if (!_currentEntry.item.nextOnComplete && !forceExec) {
