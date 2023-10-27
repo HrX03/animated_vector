@@ -4,13 +4,21 @@ import 'package:animated_vector/src/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_parsing/path_parsing.dart';
 
+/// A list of commands to build a path. Refer to [PathCommand] for more info
 typedef PathCommands = List<PathCommand>;
 
+/// A class that represents [svg path data](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d).
+///
+/// The default constructor uses a list of [PathCommand] to build its path.
+/// To parse a path from SVG data use [PathData.parse].
+///
+/// To retrieve the operations stored within use the [PathData.operations] getter.
 class PathData {
   final PathCommands _operations;
 
   const PathData(this._operations);
 
+  /// The currently stored operations for this PathData
   PathCommands get operations => _operations;
 
   const factory PathData.parse(String svg) = PathDataParse;
@@ -26,6 +34,10 @@ class PathData {
     return PathData(interpolatedOperations);
   }
 
+  /// Check whether two paths can be interpolated between each other.
+  ///
+  /// Two paths are considered compatible if they have the same amount of commands
+  /// and each pair of commands is of the same type.
   bool checkForCompatibility(PathData other) {
     if (operations.length != other.operations.length) return false;
 
@@ -37,6 +49,12 @@ class PathData {
     return true;
   }
 
+  /// Convert this PathData into a dart:ui [Path] object.
+  /// This can then be used to paint inside a [Canvas] with [Canvas.drawPath].
+  ///
+  /// The three optional parameters [trimStart], [trimEnd] and [trimOffset] work
+  /// especially best with stroked paths, they are used to cut the path using these
+  /// points as percentages.
   Path toPath({
     double trimStart = 0.0,
     double trimEnd = 1.0,
@@ -96,13 +114,41 @@ class PathData {
   }
 }
 
+/// A cache for [PathDataParse] classes to avoid parsing and computing the svg
+/// path each time the operations array is requested.
+///
+/// Use the [PathCache.instance] to access the singleton instance instead of building
+/// a new instance.
+final class PathCache {
+  final Expando<PathCommands> _cache = Expando<PathCommands>();
+
+  /// The singleton instance that [PathDataParse.operations] uses.
+  /// Avoid building fresh instances where possible.
+  static final PathCache instance = PathCache();
+
+  /// Get stored [PathCommands] using a [PathDataParse] instance as [key].
+  /// [onCacheMiss] will be called if there is no associated commands inside the
+  /// cache for the specificed [key].
+  PathCommands get(PathDataParse key, PathCommands Function() onCacheMiss) {
+    return _cache[key] ?? (_cache[key] = onCacheMiss());
+  }
+}
+
+/// A specialized instance of [PathData] that is able to
+/// build a list of [PathCommand] using the path data inside [svg].
+/// This is the class that is used by [PathData.parse]
 class PathDataParse extends PathData {
   final String svg;
 
   const PathDataParse(this.svg) : super(const []);
 
+  /// The list of operations computed from the [svg] path data.
+  /// Calling this the first time will cause the svg to be computed, afterwards
+  /// a cached version of the commands list will be used instead.
   @override
-  PathCommands get operations {
+  PathCommands get operations => PathCache.instance.get(this, _parse);
+
+  PathCommands _parse() {
     String svg = this.svg;
     if (svg == '') return [];
 
@@ -118,22 +164,57 @@ class PathDataParse extends PathData {
     }
     return path.operations;
   }
+
+  @override
+  int get hashCode => svg.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is PathDataParse) {
+      return svg == other.svg;
+    }
+
+    return false;
+  }
+
+  @override
+  String toString() {
+    return svg;
+  }
 }
 
-abstract class PathCommand {
+/// A command inside inside a [PathData] instance.
+/// Four types are available:
+/// - [PathMoveTo], equivalent to the move to command or M in svg
+/// - [PathLineTo], equivalent to the line to command or L in svg
+/// - [PathCurveTo], equivalent to the cubic command or C in svg
+/// - [PathClose], equivalent to the close command or Z in svg
+sealed class PathCommand {
+  /// The type of path command between move, line, cubic and close.
+  /// Used to check for compatibility between commands.
   final PathCommandType type;
 
+  /// Construct a new instance of [PathCommand] with a specific [type].
   const PathCommand(this.type);
 
+  /// Interpolates between this and another command.
+  /// The two commands must be of the same [type].
   PathCommand lerp(PathCommand other, double progress);
 
+  /// Apply this command to the passed in [path].
   void applyToPath(Path path);
 }
 
+/// Represents an absolute [move to path command](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#moveto_path_commands).
+/// The point to move to is represented by its [x] and [y] coordinates.
 class PathMoveTo extends PathCommand {
+  /// The x coordinate of the point to move to.
   final double x;
+
+  /// The y coordinate of the point to move to.
   final double y;
 
+  /// Construct a new instance of [PathMoveTo]. Its [type] is [PathCommandType.moveTo].
   const PathMoveTo(this.x, this.y) : super(PathCommandType.moveTo);
 
   @override
@@ -171,10 +252,17 @@ class PathMoveTo extends PathCommand {
   }
 }
 
+/// Represents an absolute [line to path command](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#lineto_path_commands).
+/// The point to draw a line to is represented by its [x] and [y] coordinates.
+/// The first point of the line is represented by the last drawn point.
 class PathLineTo extends PathCommand {
+  /// The x coordinate of the point to move to.
   final double x;
+
+  /// The y coordinate of the point to move to.
   final double y;
 
+  /// Construct a new instance of [PathLineTo]. Its [type] is [PathCommandType.lineTo].
   const PathLineTo(this.x, this.y) : super(PathCommandType.lineTo);
 
   @override
@@ -212,14 +300,30 @@ class PathLineTo extends PathCommand {
   }
 }
 
+/// Represents an absolute [cubic to path command](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#cubic_b%C3%A9zier_curve).
+/// The cubic will use [x1] and [y1] as its first control point, [x2] and [y2]
+/// as its second control point and [x3] and [y3] as its end point.
+/// The first point of the curve is represented by the last drawn point.
 class PathCurveTo extends PathCommand {
+  /// The x coordinate of the first control point.
   final double x1;
+
+  /// The y coordinate of the first control point.
   final double y1;
+
+  /// The x coordinate of the second control point.
   final double x2;
+
+  /// The y coordinate of the second control point.
   final double y2;
+
+  /// The x coordinate of the curve end point.
   final double x3;
+
+  /// The y coordinate of the curve end point.
   final double y3;
 
+  /// Construct a new instance of [PathCurveTo]. Its [type] is [PathCommandType.curveTo].
   const PathCurveTo(
     this.x1,
     this.y1,
@@ -275,7 +379,10 @@ class PathCurveTo extends PathCommand {
   }
 }
 
+/// Represents a [close path command](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d#closepath).
+/// The path will draw a line between the last point and the last move to directive.
 class PathClose extends PathCommand {
+  /// Construct a new instance of [PathClose]. Its [type] is [PathCommandType.close].
   const PathClose() : super(PathCommandType.close);
 
   @override
@@ -309,10 +416,16 @@ class PathClose extends PathCommand {
   }
 }
 
+/// Thrown when two [PathCommand] don't match types between each other.
+/// Usually thrown by [PathCommand.lerp]
 class PathCommandsIncompatibleException implements Exception {
+  /// The type of the source command, the expected one
   final Type expectedType;
+
+  /// The type of the other command, the one which is matched onto the first one
   final Type receivedType;
 
+  /// Build a new [PathCommandsIncompatibleException] instance.
   const PathCommandsIncompatibleException(this.expectedType, this.receivedType);
 
   @override
@@ -321,6 +434,8 @@ class PathCommandsIncompatibleException implements Exception {
   }
 }
 
+/// The type of a [PathCommand].
+/// Used for compatibility checks between commands to interpolate paths.
 enum PathCommandType {
   moveTo,
   lineTo,
