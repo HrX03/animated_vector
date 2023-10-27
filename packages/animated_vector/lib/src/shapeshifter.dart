@@ -8,9 +8,23 @@ import 'package:animated_vector/src/extensions.dart';
 import 'package:animated_vector/src/path.dart';
 import 'package:flutter/animation.dart';
 
+/// Utility class to interface with [Shape Shifter](shapeshifter.design).
+///
+/// It can take in a json saved from Shape Shifter and convert it to an
+/// [AnimatedVectorData] at runtime using [ShapeshifterConverter.toAVD]
+/// or convert an already built [AnimatedVectorData] to json string data using
+/// [ShapeshifterConverter.toJson].
+///
+/// This class is not recommended for loading in JSON files and instead
+/// [animated_vector_gen](https://pub.dev/packages/animated_vector_gen) is suggested
+/// to be used instead.
 abstract final class ShapeshifterConverter {
   const ShapeshifterConverter._();
 
+  /// Convert a json file download from Shape Shifter to an instance of [AnimatedVectorData].
+  ///
+  /// This method is recommended only when static code generation with [animated_vector_gen](https://pub.dev/packages/animated_vector_gen)
+  /// can't be achieved (for example when dynamically loading in files).
   static AnimatedVectorData toAVD(String rawJson) {
     final Map<String, dynamic> json =
         jsonDecode(rawJson) as Map<String, dynamic>;
@@ -50,6 +64,7 @@ abstract final class ShapeshifterConverter {
     return data;
   }
 
+  /// Convert an [AnimatedVectorData] to a json file that Shape Shifter can open and edit.
   static Map<String, dynamic> toJson(AnimatedVectorData data, String name) {
     final Map<String, dynamic> documentRoot = {"version": 1};
     final _UniqueID idGen = _UniqueID();
@@ -764,29 +779,41 @@ String _colorToHex(Color color) {
   return "#$radixString";
 }
 
+/// Exception thrown when [ShapeshifterConverter.toAVD] finds an animation property
+/// that refers to a property the lib was not built to handle.
+///
+/// Usually happens with corrupted or misconstructed json files.
 class UnsupportedAnimationProperty implements Exception {
+  /// The property that was not recognized by the converter.
   final String property;
 
+  /// Builds a new [UnsupportedAnimationProperty].
   const UnsupportedAnimationProperty(this.property);
 
   @override
   String toString() {
-    return "The property '$property' is not handled from the lib or not valid";
+    return "The property '$property' is not handled by the lib or not valid";
   }
 }
 
+/// Exception thrown when [ShapeshifterConverter.toAVD] needs a property to be found
+/// inside the json file but couldn't.
+///
+/// Usually happens with corrupted or misconstructed json files.
 class MissingPropertyException implements Exception {
+  /// The property that was not found by the converter.
   final String property;
 
+  /// Builds a new [MissingPropertyException].
   const MissingPropertyException(this.property);
 
   @override
   String toString() {
-    return "MissingPropertyException: The provided json doesn't have required property '$property'";
+    return "The provided json doesn't have required property '$property'";
   }
 }
 
-extension MapGet<K> on Map<K, dynamic> {
+extension<K> on Map<K, dynamic> {
   T get<T>(K key) {
     if (!containsKey(key)) {
       throw MissingPropertyException(key.toString());
