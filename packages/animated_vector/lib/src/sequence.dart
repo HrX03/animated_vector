@@ -3,8 +3,13 @@ import 'dart:ui';
 import 'package:animated_vector/src/data.dart';
 import 'package:collection/collection.dart';
 
+/// An internal utility for the [AnimatedSequence] widget.
+/// It manages the state of a [sequence] and handles transitions and configurations.
 class SequenceMachine {
+  /// The sequence to execute. This field will be read once and then converted
+  /// to a list of sequential instructions similar to assembly instructions.
   final List<SequenceEntry> sequence;
+
   late final List<_ExecutionEntry> _instructions;
   late final Map<String, int> _tagMap;
 
@@ -14,6 +19,8 @@ class SequenceMachine {
   bool _forceExec = false;
   int? _requestedIndex;
 
+  /// Builds a new instance of [SequenceMachine] with the provided [sequence].
+  /// If tags are assigned to any item inside the sequence they must be unique.
   SequenceMachine(this.sequence) {
     final (entries, tags) = _buildExecutionEntries(sequence);
     _instructions = entries;
@@ -33,6 +40,26 @@ class SequenceMachine {
   SequenceItem get currentItem => (_currentEntry.item as _ExecutionItem).sItem;
   _ExecutionEntry get _currentEntry => _instructions[_currIndex];
 
+  /// Tick the machine.
+  ///
+  /// The first tick executes nothing but initializes the machine, it's used to
+  /// execute the animation of the first item without immediately jumping to the
+  /// next one.
+  ///
+  /// A tick causes the left repetitions for the current item to decrease and, if
+  /// they hit zero, the machine will be moved forward in the same tick.
+  ///
+  /// Groups aren't exposed through the [currentItem] getter and they are only used
+  /// as markers in the execution entry list. They follow the same rules as individual
+  /// items for repetitions and they'll eventually repeat each time inside themselves.
+  ///
+  /// If any item is marked as `nextOnComplete: false` then the execution is forcefully
+  /// stopped and any other call to [tick] will not move the machine.
+  /// The only way to exit this state is by calling [skip] or [jumpTo].
+  ///
+  /// When the end of the execution list is reached the machine will stop unless
+  /// the last item has `nextOnComplete` set to `true`, in that case it will
+  /// automatically restart.
   bool tick() {
     // we forcefully clean up the _forceExec flag as it could be dirty if skip is called instead of tick.
     // if we don't do this the next call to tick would actually move the machine even if nextOnComplete is false
@@ -82,17 +109,28 @@ class SequenceMachine {
     return true;
   }
 
+  /// Forcefully skip ahead to the next sequence item, discarding eventual left
+  /// repetitions.
+  ///
+  /// To skip to a precise item in the sequence list give the item a tag and use
+  /// [jumpTo] with said tag.
   void skip() {
     _execHalted = false;
     _forceExec = true;
     tick();
   }
 
+  /// Jumps to the specific item with the tag [tag].
+  /// If the tag is not found inside the sequence list then this call will be ignored.
+  /// To be sure that the [tag] exists use [hasTag].
+  ///
+  /// Behaves the same way as [skip].
   void jumpTo(String tag) {
     _requestedIndex = _tagMap[tag];
     skip();
   }
 
+  /// Returns whether the sequence list has an item with tag [tag].
   bool hasTag(String tag) {
     return _tagMap.containsKey(tag);
   }
@@ -173,9 +211,15 @@ class _EntryPropCounter {
   void reset() => _counter = count;
 }
 
+/// Represents an entry inside [AnimatedSequence] or [SequenceMachine].
+///
+/// The class has two implementers:
+/// - [SequenceItem]: A single animated vector that sits inside the sequence
+/// - [SequenceGroup]: Groups multiple [SequenceEntry]s into one configurable block
 sealed class SequenceEntry {
   /// The numbers of time to repeat this animation before being marked as complete.
   /// If this value is set to null the animation will loop until manually skipped.
+  /// This value must be a greater than 0 integer.
   final int? repeatCount;
 
   /// If this flag is set to true any call to [AnimatedSequenceController.skip] will
@@ -187,11 +231,13 @@ sealed class SequenceEntry {
   /// has finished playing
   final bool nextOnComplete;
 
+  /// Abstract super constructor.
+  /// repeatCount must either be null or greater than zero.
   const SequenceEntry({
     this.repeatCount = 1,
     this.skipMidAnimation = true,
     this.nextOnComplete = false,
-  });
+  }) : assert(repeatCount == null || repeatCount > 0);
 
   @override
   int get hashCode => Object.hash(
@@ -212,6 +258,10 @@ sealed class SequenceEntry {
   }
 }
 
+/// Single item version of [SequenceEntry].
+///
+/// Requires a single [AnimatedVectorData] to be provided and optionally a
+/// [colorOverride] and a [tag].
 class SequenceItem extends SequenceEntry {
   /// The vector data this sequence item holds
   final AnimatedVectorData data;
@@ -223,6 +273,8 @@ class SequenceItem extends SequenceEntry {
   /// [AnimatedSequenceController.jumpTo] method
   final String? tag;
 
+  /// Builds an instance of [SequenceItem].
+  /// The [data] argument is required, [repeatCount] must be greater than zero.
   const SequenceItem(
     this.data, {
     super.repeatCount,
@@ -257,9 +309,15 @@ class SequenceItem extends SequenceEntry {
   }
 }
 
+/// A subclass of [SequenceEntry] that treats multiple [SequenceEntry]s as a single one.
+///
+/// The properties set in the class will be checked only after the last item of
+/// [children] will be done executing.
 class SequenceGroup extends SequenceEntry {
   final List<SequenceEntry> children;
 
+  /// Builds an instance of [SequenceGroup].
+  /// The [children] argument is required, [repeatCount] must be greater than zero.
   const SequenceGroup({
     required this.children,
     super.repeatCount,
