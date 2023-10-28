@@ -61,13 +61,12 @@ class AnimatedVectorData {
 abstract class VectorElement {
   const VectorElement();
 
-  VectorElement evaluate(double progress, Duration animationDuration);
-
   void paint(
     Canvas canvas,
     Size size,
     double progress,
     Duration animationDuration,
+    Matrix4 transform,
   );
 }
 
@@ -83,33 +82,26 @@ class RootVectorElement extends VectorElement {
   });
 
   @override
-  RootVectorElement evaluate(double progress, Duration animationDuration) {
-    final evaluated = properties.evaluate(
-      progress,
-      animationDuration,
-      defaultAlpha: alpha,
-    );
-
-    return RootVectorElement(
-      alpha: evaluated.alpha!,
-      elements: elements,
-    );
-  }
-
-  @override
-  void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final RootVectorElement evaluated = evaluate(progress, duration);
+  void paint(
+    Canvas canvas,
+    Size size,
+    double progress,
+    Duration duration,
+    Matrix4 transform,
+  ) {
+    final evaluated =
+        properties.evaluate(progress, duration, defaultAlpha: alpha);
 
     canvas.saveLayer(
       Offset.zero & size,
       Paint()
         ..colorFilter = ColorFilter.mode(
-          const Color(0xFFFFFFFF).withOpacity(evaluated.alpha),
+          const Color(0xFFFFFFFF).withOpacity(evaluated.alpha!),
           BlendMode.modulate,
         ),
     );
-    for (final VectorElement element in evaluated.elements) {
-      element.paint(canvas, size, progress, duration);
+    for (final VectorElement element in elements) {
+      element.paint(canvas, size, progress, duration, transform);
     }
     canvas.restore();
   }
@@ -153,10 +145,16 @@ class GroupElement extends VectorElement {
   });
 
   @override
-  GroupElement evaluate(double progress, Duration animationDuration) {
+  void paint(
+    Canvas canvas,
+    Size size,
+    double progress,
+    Duration duration,
+    Matrix4 transform,
+  ) {
     final evaluated = properties.evaluate(
       progress,
-      animationDuration,
+      duration,
       defaultTranslateX: translateX,
       defaultTranslateY: translateY,
       defaultScaleX: scaleX,
@@ -166,35 +164,16 @@ class GroupElement extends VectorElement {
       defaultRotation: rotation,
     );
 
-    return GroupElement(
-      translateX: evaluated.translateX!,
-      translateY: evaluated.translateY!,
-      scaleX: evaluated.scaleX!,
-      scaleY: evaluated.scaleY!,
-      pivotX: evaluated.pivotX!,
-      pivotY: evaluated.pivotY!,
-      rotation: evaluated.rotation!,
-      elements: elements,
-    );
-  }
-
-  @override
-  void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final GroupElement evaluated = evaluate(progress, duration);
-
-    final transformMatrix = Matrix4.identity()
-      ..translate(evaluated.pivotX, evaluated.pivotY)
-      ..translate(evaluated.translateX, evaluated.translateY)
-      ..rotateZ(evaluated.rotation * math.pi / 180)
+    final transformMatrix = transform.clone()
+      ..translate(evaluated.pivotX, evaluated.pivotY!)
+      ..translate(evaluated.translateX, evaluated.translateY!)
+      ..rotateZ(evaluated.rotation! * math.pi / 180)
       ..scale(evaluated.scaleX, evaluated.scaleY)
-      ..translate(-evaluated.pivotX, -evaluated.pivotY);
+      ..translate(-evaluated.pivotX!, -evaluated.pivotY!);
 
-    canvas.save();
-    canvas.transform(transformMatrix.storage);
-    for (final VectorElement element in evaluated.elements) {
-      element.paint(canvas, size, progress, duration);
+    for (final VectorElement element in elements) {
+      element.paint(canvas, size, progress, duration, transformMatrix);
     }
-    canvas.restore();
   }
 
   @override
@@ -262,14 +241,20 @@ class PathElement extends VectorElement {
         assert(trimOffset >= 0 && trimOffset <= 1);
 
   @override
-  PathElement evaluate(double progress, Duration animationDuration) {
+  void paint(
+    Canvas canvas,
+    Size size,
+    double progress,
+    Duration duration,
+    Matrix4 transform,
+  ) {
     final evaluated = properties.evaluate(
       progress,
-      animationDuration,
+      duration,
       defaultPathData: pathData,
-      defaultFillColor: fillColor,
+      defaultFillColor: this.fillColor,
       defaultFillAlpha: fillAlpha,
-      defaultStrokeColor: strokeColor,
+      defaultStrokeColor: this.strokeColor,
       defaultStrokeAlpha: strokeAlpha,
       defaultStrokeWidth: strokeWidth,
       defaultTrimStart: trimStart,
@@ -277,51 +262,33 @@ class PathElement extends VectorElement {
       defaultTrimOffset: trimOffset,
     );
 
-    return PathElement(
-      pathData: evaluated.pathData!,
-      fillColor: evaluated.fillColor,
-      fillAlpha: evaluated.fillAlpha!,
-      strokeColor: evaluated.strokeColor,
-      strokeAlpha: evaluated.strokeAlpha!,
-      strokeWidth: evaluated.strokeWidth!,
-      strokeCap: strokeCap,
-      strokeJoin: strokeJoin,
-      strokeMiterLimit: strokeMiterLimit,
-      trimStart: evaluated.trimStart!,
-      trimEnd: evaluated.trimEnd!,
-      trimOffset: evaluated.trimOffset!,
-    );
-  }
-
-  @override
-  void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final PathElement evaluated = evaluate(progress, duration);
-
     final Color fillColor = evaluated.fillColor ?? const Color(0x00000000);
     final Color strokeColor = evaluated.strokeColor ?? const Color(0x00000000);
 
-    if (evaluated.strokeWidth > 0 && evaluated.strokeColor != null) {
+    if (evaluated.strokeWidth! > 0 && evaluated.strokeColor != null) {
       canvas.drawPath(
-        evaluated.pathData.toPath(
-          trimStart: evaluated.trimStart,
-          trimEnd: evaluated.trimEnd,
-          trimOffset: evaluated.trimOffset,
-        ),
+        evaluated.pathData!
+            .toPath(
+              trimStart: evaluated.trimStart!,
+              trimEnd: evaluated.trimEnd!,
+              trimOffset: evaluated.trimOffset!,
+            )
+            .transform(transform.storage),
         Paint()
           ..color = strokeColor
-              .withOpacity(strokeColor.opacity * evaluated.strokeAlpha)
-          ..strokeWidth = evaluated.strokeWidth
-          ..strokeCap = evaluated.strokeCap
-          ..strokeJoin = evaluated.strokeJoin
-          ..strokeMiterLimit = evaluated.strokeMiterLimit
+              .withOpacity(strokeColor.opacity * evaluated.strokeAlpha!)
+          ..strokeWidth = evaluated.strokeWidth!
+          ..strokeCap = strokeCap
+          ..strokeJoin = strokeJoin
+          ..strokeMiterLimit = strokeMiterLimit
           ..style = PaintingStyle.stroke,
       );
     }
     canvas.drawPath(
-      evaluated.pathData.toPath(),
+      evaluated.pathData!.toPath().transform(transform.storage),
       Paint()
         ..color =
-            fillColor.withOpacity(fillColor.opacity * evaluated.fillAlpha),
+            fillColor.withOpacity(fillColor.opacity * evaluated.fillAlpha!),
     );
   }
 
@@ -374,21 +341,20 @@ class ClipPathElement extends VectorElement {
   });
 
   @override
-  ClipPathElement evaluate(double progress, Duration animationDuration) {
+  void paint(
+    Canvas canvas,
+    Size size,
+    double progress,
+    Duration duration,
+    Matrix4 transform,
+  ) {
     final evaluated = properties.evaluate(
       progress,
-      animationDuration,
+      duration,
       defaultPathData: pathData,
     );
 
-    return ClipPathElement(pathData: evaluated.pathData!);
-  }
-
-  @override
-  void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final ClipPathElement evaluated = evaluate(progress, duration);
-
-    canvas.clipPath(evaluated.pathData.toPath());
+    canvas.clipPath(evaluated.pathData!.toPath().transform(transform.storage));
   }
 
   @override

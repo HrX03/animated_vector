@@ -67,7 +67,13 @@ class _AnimatedVectorPainter extends CustomPainter {
           ),
       );
     }
-    vector.root.paint(canvas, vector.viewportSize, progress, vector.duration);
+    vector.root.paint(
+      canvas,
+      vector.viewportSize,
+      progress,
+      vector.duration,
+      Matrix4.identity(),
+    );
     if (colorOverride != null) canvas.restore();
   }
 
