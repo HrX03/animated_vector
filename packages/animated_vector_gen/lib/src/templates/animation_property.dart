@@ -2,7 +2,7 @@ import 'package:animated_vector_gen/src/templates/template.dart';
 import 'package:animated_vector_gen/src/templates/utils.dart';
 
 class AnimationPropertyTemplate<T> extends Template {
-  final LerpTemplate<T> tween;
+  final TweenTemplate<T> tween;
   final ValueType type;
   final int? start;
   final int end;
@@ -31,12 +31,12 @@ class AnimationPropertyTemplate<T> extends Template {
   }
 }
 
-class LerpTemplate<T> extends Template {
+class TweenTemplate<T> extends Template {
   final ValueType type;
   final T? begin;
   final T? end;
 
-  const LerpTemplate({
+  const TweenTemplate({
     required this.type,
     required this.begin,
     required this.end,
@@ -44,7 +44,7 @@ class LerpTemplate<T> extends Template {
 
   @override
   String? build() {
-    return buildConstructorCall(type.lerpName, {
+    return buildConstructorCall(type.className, {
       "begin": wrapWithConstructor(begin, type),
       "end": wrapWithConstructor(end, type),
     });

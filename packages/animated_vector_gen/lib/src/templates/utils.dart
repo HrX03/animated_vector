@@ -35,14 +35,14 @@ String? wrapWithConstructor(Object? value, ValueType type) {
 }
 
 enum ValueType {
-  color("Color", "ColorLerp"),
-  pathData("PathData", "PathDataLerp"),
-  number("double", "ValueLerp<double>");
+  color("Color", "ConstColorTween"),
+  pathData("PathData", "ConstPathDataTween"),
+  number("double", "ConstTween<double>");
 
   final String typeName;
-  final String lerpName;
+  final String className;
 
-  const ValueType(this.typeName, this.lerpName);
+  const ValueType(this.typeName, this.className);
 }
 
 T? handleDefault<T>(T? value, T defaultValue) {

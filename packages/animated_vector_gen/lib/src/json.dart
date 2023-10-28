@@ -134,7 +134,7 @@ List<AnimationPropertyTemplate<T>> _parseProperties<T>(
       .where((a) => a.layerId == layerId && a.propertyName == propertyName)
       .map(
         (a) => AnimationPropertyTemplate<T>(
-          tween: LerpTemplate<T>(
+          tween: TweenTemplate<T>(
             begin: a.begin as T,
             end: a.end as T,
             type: a.type,
@@ -220,28 +220,28 @@ class _JsonAnimationProperty<T> {
   static String _interpolatorFromString(String interpolator) {
     switch (interpolator) {
       case "FAST_OUT_SLOW_IN":
-        return "ShapeshifterCurves.fastOutSlowIn";
+        return "ShapeShifterCurves.fastOutSlowIn";
       case "FAST_OUT_LINEAR_IN":
-        return "ShapeshifterCurves.fastOutLinearIn";
+        return "ShapeShifterCurves.fastOutLinearIn";
       case "LINEAR_OUT_SLOW_IN":
-        return "ShapeshifterCurves.linearOutSlowIn";
+        return "ShapeShifterCurves.linearOutSlowIn";
       case "ACCELERATE_DECELERATE":
-        return "ShapeshifterCurves.accelerateDecelerate";
+        return "ShapeShifterCurves.accelerateDecelerate";
       case "ACCELERATE":
-        return "ShapeshifterCurves.accelerate";
+        return "ShapeShifterCurves.accelerate";
       case "DECELERATE":
-        return "ShapeshifterCurves.decelerate";
+        return "ShapeShifterCurves.decelerate";
       case "ANTICIPATE":
-        return "ShapeshifterCurves.anticipate";
+        return "ShapeShifterCurves.anticipate";
       case "OVERSHOOT":
-        return "ShapeshifterCurves.overshoot";
+        return "ShapeShifterCurves.overshoot";
       case "BOUNCE":
-        return "ShapeshifterCurves.bounce";
+        return "ShapeShifterCurves.bounce";
       case "ANTICIPATE_OVERSHOOT":
-        return "ShapeshifterCurves.anticipateOvershoot";
+        return "ShapeShifterCurves.anticipateOvershoot";
       case "LINEAR":
       default:
-        return "ShapeshifterCurves.linear";
+        return "ShapeShifterCurves.linear";
     }
   }
 }
@@ -283,7 +283,7 @@ class MissingPropertyException implements Exception {
   }
 }
 
-extension MapGet<K> on Map<K, dynamic> {
+extension _MapGet<K> on Map<K, dynamic> {
   T get<T>(K key) {
     if (!containsKey(key)) {
       throw MissingPropertyException(key.toString());
