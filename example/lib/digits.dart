@@ -92,7 +92,7 @@ const zeroToOne = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _one),
+                  tween: ConstPathDataTween(end: _one),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -121,7 +121,7 @@ const oneToTwo = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _two),
+                  tween: ConstPathDataTween(end: _two),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -150,7 +150,7 @@ const twoToThree = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _three),
+                  tween: ConstPathDataTween(end: _three),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -179,7 +179,7 @@ const threeToFour = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _four),
+                  tween: ConstPathDataTween(end: _four),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -208,7 +208,7 @@ const fourToFive = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _five),
+                  tween: ConstPathDataTween(end: _five),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -237,7 +237,7 @@ const fiveToSix = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _six),
+                  tween: ConstPathDataTween(end: _six),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -266,7 +266,7 @@ const sixToSeven = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _seven),
+                  tween: ConstPathDataTween(end: _seven),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -295,7 +295,7 @@ const sevenToEight = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _eight),
+                  tween: ConstPathDataTween(end: _eight),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -324,7 +324,7 @@ const eightToNine = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _nine),
+                  tween: ConstPathDataTween(end: _nine),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
@@ -353,7 +353,7 @@ const nineToZero = AnimatedVectorData(
             properties: PathAnimationProperties(
               pathData: [
                 AnimationProperty(
-                  tween: PathDataLerp(end: _zero),
+                  tween: ConstPathDataTween(end: _zero),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
                 ),
