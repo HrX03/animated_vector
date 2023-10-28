@@ -11,12 +11,12 @@ abstract class AnimationProperties<T extends VectorElement> {
   const AnimationProperties();
 
   void checkForValidity() {
-    if (checkForIntervalValidity()) return;
+    if (checkedFields.every(checkForIntervalsValidity)) return;
 
     throw Exception("Intervals are invalid for these properties");
   }
 
-  bool checkForIntervalValidity();
+  List<AnimationPropertySequence?> get checkedFields;
 
   static bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
     if (properties == null) return true;
@@ -38,7 +38,7 @@ abstract class AnimationProperties<T extends VectorElement> {
     T defaultValue, {
     bool goDown = false,
   }) {
-    final List<ValueLerp<T>> tweens = properties.map((p) => p.tween).toList();
+    final List<ConstTween<T>> tweens = properties.map((p) => p.tween).toList();
     T? value;
 
     for (int i = startIndex;
@@ -61,12 +61,10 @@ class RootVectorAnimationProperties
   const RootVectorAnimationProperties({this.alpha});
 
   @override
-  bool checkForIntervalValidity() {
-    return AnimationProperties.checkForIntervalsValidity(alpha);
-  }
+  List<AnimationPropertySequence?> get checkedFields => [alpha];
 
   @override
-  int get hashCode => alpha.hashCode;
+  int get hashCode => Object.hashAll(checkedFields);
 
   @override
   bool operator ==(Object other) {
@@ -98,18 +96,7 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   });
 
   @override
-  bool checkForIntervalValidity() {
-    return AnimationProperties.checkForIntervalsValidity(translateX) &&
-        AnimationProperties.checkForIntervalsValidity(translateY) &&
-        AnimationProperties.checkForIntervalsValidity(scaleX) &&
-        AnimationProperties.checkForIntervalsValidity(scaleY) &&
-        AnimationProperties.checkForIntervalsValidity(pivotX) &&
-        AnimationProperties.checkForIntervalsValidity(pivotY) &&
-        AnimationProperties.checkForIntervalsValidity(rotation);
-  }
-
-  @override
-  int get hashCode => Object.hash(
+  List<AnimationPropertySequence?> get checkedFields => [
         translateX,
         translateY,
         scaleX,
@@ -117,7 +104,10 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
         pivotX,
         pivotY,
         rotation,
-      );
+      ];
+
+  @override
+  int get hashCode => Object.hashAll(checkedFields);
 
   @override
   bool operator ==(Object other) {
@@ -159,20 +149,7 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   });
 
   @override
-  bool checkForIntervalValidity() {
-    return AnimationProperties.checkForIntervalsValidity(pathData) &&
-        AnimationProperties.checkForIntervalsValidity(fillColor) &&
-        AnimationProperties.checkForIntervalsValidity(fillAlpha) &&
-        AnimationProperties.checkForIntervalsValidity(strokeColor) &&
-        AnimationProperties.checkForIntervalsValidity(strokeAlpha) &&
-        AnimationProperties.checkForIntervalsValidity(strokeWidth) &&
-        AnimationProperties.checkForIntervalsValidity(trimStart) &&
-        AnimationProperties.checkForIntervalsValidity(trimEnd) &&
-        AnimationProperties.checkForIntervalsValidity(trimOffset);
-  }
-
-  @override
-  int get hashCode => Object.hash(
+  List<AnimationPropertySequence?> get checkedFields => [
         pathData,
         fillColor,
         fillAlpha,
@@ -182,7 +159,10 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
         trimStart,
         trimEnd,
         trimOffset,
-      );
+      ];
+
+  @override
+  int get hashCode => Object.hashAll(checkedFields);
 
   @override
   bool operator ==(Object other) {
@@ -208,12 +188,10 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   const ClipPathAnimationProperties({this.pathData});
 
   @override
-  bool checkForIntervalValidity() {
-    return AnimationProperties.checkForIntervalsValidity(pathData);
-  }
+  List<AnimationPropertySequence?> get checkedFields => [pathData];
 
   @override
-  int get hashCode => pathData.hashCode;
+  int get hashCode => Object.hashAll(checkedFields);
 
   @override
   bool operator ==(Object other) {
@@ -226,7 +204,7 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
 }
 
 class AnimationProperty<T> {
-  final ValueLerp<T> tween;
+  final ConstTween<T> tween;
   final AnimationInterval interval;
   final Curve curve;
 
@@ -240,7 +218,8 @@ class AnimationProperty<T> {
     final Curve c = calculateIntervalCurve(baseDuration);
 
     final double curvedT = c.transform(t);
-    return tween.transform(defaultValue, defaultValue, curvedT);
+    final resolvedTween = tween.copyWithDefaults(defaultValue, defaultValue);
+    return resolvedTween.transform(curvedT);
   }
 
   Interval calculateIntervalCurve(Duration baseDuration) {
@@ -381,57 +360,85 @@ class AnimationTimeline<T> {
     final double begin = resolved.first;
     final double end = resolved.last;
     final newT = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
+    final resolvedTween = matchingProperty.tween
+        .copyWithDefaults(beginDefaultValue, endDefaultValue);
 
-    return matchingProperty.tween.transform(
-      beginDefaultValue,
-      endDefaultValue,
-      matchingProperty.curve.transform(newT),
-    )!;
+    return resolvedTween.transform(matchingProperty.curve.transform(newT))!;
   }
 }
 
-class ValueLerp<T> {
+class ConstTween<T> extends Animatable<T> {
   final T? begin;
   final T? end;
 
-  const ValueLerp({
+  const ConstTween({
     this.begin,
     this.end,
   });
 
   @override
-  int get hashCode => begin.hashCode ^ end.hashCode;
+  int get hashCode => Object.hash(begin, end);
 
   @override
   bool operator ==(Object other) {
-    if (other is ValueLerp) {
+    if (other is ConstTween) {
       return begin == other.begin && end == other.end;
     }
     return false;
   }
 
-  T transform(T defaultBegin, T defaultEnd, double t) {
+  @override
+  T transform(double t) {
     return Tween<T>(
-      begin: begin ?? defaultBegin,
-      end: end ?? defaultEnd,
+      begin: begin,
+      end: end,
     ).transform(t);
   }
-}
 
-class ColorLerp extends ValueLerp<Color> {
-  const ColorLerp({super.begin, super.end});
-
-  @override
-  Color transform(Color defaultBegin, Color defaultEnd, double t) {
-    return Color.lerp(begin ?? defaultBegin, end ?? defaultEnd, t)!;
+  ConstTween<T> copyWithDefaults(T begin, T end) {
+    return ConstTween<T>(
+      begin: this.begin ?? begin,
+      end: this.end ?? end,
+    );
   }
 }
 
-class PathDataLerp extends ValueLerp<PathData> {
-  const PathDataLerp({super.begin, super.end});
+class ConsteColorTween extends ConstTween<Color> {
+  const ConsteColorTween({super.begin, super.end});
 
   @override
-  PathData transform(PathData defaultBegin, PathData defaultEnd, double t) {
-    return PathData.lerp(begin ?? defaultBegin, end ?? defaultEnd, t);
+  Color transform(double t) {
+    assert(begin != null);
+    assert(end != null);
+
+    return Color.lerp(begin, end, t)!;
+  }
+
+  @override
+  ConsteColorTween copyWithDefaults(Color begin, Color end) {
+    return ConsteColorTween(
+      begin: this.begin ?? begin,
+      end: this.end ?? end,
+    );
+  }
+}
+
+class ConstPathDataTween extends ConstTween<PathData> {
+  const ConstPathDataTween({super.begin, super.end});
+
+  @override
+  PathData transform(double t) {
+    assert(begin != null);
+    assert(end != null);
+
+    return PathData.lerp(begin!, end!, t);
+  }
+
+  @override
+  ConstPathDataTween copyWithDefaults(PathData begin, PathData end) {
+    return ConstPathDataTween(
+      begin: this.begin ?? begin,
+      end: this.end ?? end,
+    );
   }
 }

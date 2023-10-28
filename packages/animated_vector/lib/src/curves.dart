@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:animated_vector/src/path.dart';
 import 'package:flutter/animation.dart';
 
-abstract final class ShapeshifterCurves {
-  const ShapeshifterCurves._();
+abstract final class ShapeShifterCurves {
+  const ShapeShifterCurves._();
 
   static const Curve linear = Curves.linear;
   static const Curve fastOutSlowIn = Curves.fastOutSlowIn;

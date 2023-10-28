@@ -22,7 +22,7 @@ class AnimatedVectorData {
   });
 
   static Future<AnimatedVectorData> loadFromFile(File file) async {
-    return ShapeshifterConverter.toAVD(await file.readAsString());
+    return ShapeShifterConverter.toAVD(await file.readAsString());
   }
 
   static Future<AnimatedVectorData> loadFromAsset(
@@ -35,7 +35,7 @@ class AnimatedVectorData {
 
     return (bundle ?? rootBundle).loadStructuredData(
       assetKey,
-      (value) async => ShapeshifterConverter.toAVD(value),
+      (value) async => ShapeShifterConverter.toAVD(value),
     );
   }
 
@@ -54,17 +54,14 @@ class AnimatedVectorData {
   }
 
   Map<String, dynamic> toJson(String name) {
-    return ShapeshifterConverter.toJson(this, name);
+    return ShapeShifterConverter.toJson(this, name);
   }
 }
 
 abstract class VectorElement {
   const VectorElement();
 
-  VectorElement evaluate(
-    double t, {
-    Duration baseDuration = const Duration(milliseconds: 300),
-  });
+  VectorElement evaluate(double t, Duration baseDuration);
 
   void paint(Canvas canvas, Size size, double progress, Duration duration);
 
@@ -95,10 +92,7 @@ class RootVectorElement extends VectorElement {
   });
 
   @override
-  RootVectorElement evaluate(
-    double t, {
-    Duration baseDuration = const Duration(milliseconds: 300),
-  }) {
+  RootVectorElement evaluate(double t, Duration baseDuration) {
     properties.checkForValidity();
 
     final double alpha =
@@ -112,10 +106,7 @@ class RootVectorElement extends VectorElement {
 
   @override
   void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final RootVectorElement evaluated = evaluate(
-      progress,
-      baseDuration: duration,
-    );
+    final RootVectorElement evaluated = evaluate(progress, duration);
 
     canvas.saveLayer(
       Offset.zero & size,
@@ -170,10 +161,7 @@ class GroupElement extends VectorElement {
   });
 
   @override
-  GroupElement evaluate(
-    double t, {
-    Duration baseDuration = const Duration(milliseconds: 300),
-  }) {
+  GroupElement evaluate(double t, Duration baseDuration) {
     properties.checkForValidity();
 
     final double translateX = evaluateProperties(
@@ -217,10 +205,7 @@ class GroupElement extends VectorElement {
 
   @override
   void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final GroupElement evaluated = evaluate(
-      progress,
-      baseDuration: duration,
-    );
+    final GroupElement evaluated = evaluate(progress, duration);
 
     final transformMatrix = Matrix4.identity()
       ..translate(evaluated.pivotX, evaluated.pivotY)
@@ -302,10 +287,7 @@ class PathElement extends VectorElement {
         assert(trimOffset >= 0 && trimOffset <= 1);
 
   @override
-  PathElement evaluate(
-    double t, {
-    Duration baseDuration = const Duration(milliseconds: 300),
-  }) {
+  PathElement evaluate(double t, Duration baseDuration) {
     properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
@@ -377,10 +359,7 @@ class PathElement extends VectorElement {
 
   @override
   void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final PathElement evaluated = evaluate(
-      progress,
-      baseDuration: duration,
-    );
+    final PathElement evaluated = evaluate(progress, duration);
 
     final Color fillColor = evaluated.fillColor ?? const Color(0x00000000);
     final Color strokeColor = evaluated.strokeColor ?? const Color(0x00000000);
@@ -459,10 +438,7 @@ class ClipPathElement extends VectorElement {
   });
 
   @override
-  ClipPathElement evaluate(
-    double t, {
-    Duration baseDuration = const Duration(milliseconds: 300),
-  }) {
+  ClipPathElement evaluate(double t, Duration baseDuration) {
     properties.checkForValidity();
 
     final PathData pathData = evaluateProperties(
@@ -477,10 +453,7 @@ class ClipPathElement extends VectorElement {
 
   @override
   void paint(Canvas canvas, Size size, double progress, Duration duration) {
-    final ClipPathElement evaluated = evaluate(
-      progress,
-      baseDuration: duration,
-    );
+    final ClipPathElement evaluated = evaluate(progress, duration);
 
     canvas.clipPath(evaluated.pathData.toPath());
   }

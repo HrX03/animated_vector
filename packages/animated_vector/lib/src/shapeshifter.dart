@@ -11,15 +11,15 @@ import 'package:flutter/animation.dart';
 /// Utility class to interface with [Shape Shifter](shapeshifter.design).
 ///
 /// It can take in a json saved from Shape Shifter and convert it to an
-/// [AnimatedVectorData] at runtime using [ShapeshifterConverter.toAVD]
+/// [AnimatedVectorData] at runtime using [ShapeShifterConverter.toAVD]
 /// or convert an already built [AnimatedVectorData] to json string data using
-/// [ShapeshifterConverter.toJson].
+/// [ShapeShifterConverter.toJson].
 ///
 /// This class is not recommended for loading in JSON files and instead
 /// [animated_vector_gen](https://pub.dev/packages/animated_vector_gen) is suggested
 /// to be used instead.
-abstract final class ShapeshifterConverter {
-  const ShapeshifterConverter._();
+abstract final class ShapeShifterConverter {
+  const ShapeShifterConverter._();
 
   /// Convert a json file download from Shape Shifter to an instance of [AnimatedVectorData].
   ///
@@ -575,7 +575,7 @@ abstract final class ShapeshifterConverter {
         .where((a) => a.layerId == layerId && a.propertyName == propertyName)
         .map(
           (a) => AnimationProperty<T>(
-            tween: a.tween as ValueLerp<T>,
+            tween: a.tween as ConstTween<T>,
             interval: AnimationInterval(
               start: Duration(milliseconds: a.startTime),
               end: Duration(milliseconds: a.endTime),
@@ -638,7 +638,7 @@ abstract final class ShapeshifterConverter {
 class _JsonAnimationProperty<T> {
   final String layerId;
   final String propertyName;
-  final ValueLerp<T?> tween;
+  final ConstTween<T?> tween;
   final int startTime;
   final int endTime;
   final Curve interpolator;
@@ -671,7 +671,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: PathDataLerp(begin: from, end: to),
+          tween: ConstPathDataTween(begin: from, end: to),
         );
       case "color":
         final Color from = _colorFromHex(json.get<String>("fromValue"))!;
@@ -682,7 +682,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: ColorLerp(begin: from, end: to),
+          tween: ConsteColorTween(begin: from, end: to),
         );
       case "number":
         final double from = json.get<num>("fromValue").toDouble();
@@ -693,7 +693,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: ValueLerp<double>(begin: from, end: to),
+          tween: ConstTween<double>(begin: from, end: to),
         );
       default:
         throw UnsupportedAnimationProperty(type);
@@ -703,54 +703,54 @@ class _JsonAnimationProperty<T> {
   static Curve _interpolatorFromString(String interpolator) {
     switch (interpolator) {
       case "FAST_OUT_SLOW_IN":
-        return ShapeshifterCurves.fastOutSlowIn;
+        return ShapeShifterCurves.fastOutSlowIn;
       case "FAST_OUT_LINEAR_IN":
-        return ShapeshifterCurves.fastOutLinearIn;
+        return ShapeShifterCurves.fastOutLinearIn;
       case "LINEAR_OUT_SLOW_IN":
-        return ShapeshifterCurves.linearOutSlowIn;
+        return ShapeShifterCurves.linearOutSlowIn;
       case "ACCELERATE_DECELERATE":
-        return ShapeshifterCurves.accelerateDecelerate;
+        return ShapeShifterCurves.accelerateDecelerate;
       case "ACCELERATE":
-        return ShapeshifterCurves.accelerate;
+        return ShapeShifterCurves.accelerate;
       case "DECELERATE":
-        return ShapeshifterCurves.decelerate;
+        return ShapeShifterCurves.decelerate;
       case "ANTICIPATE":
-        return ShapeshifterCurves.anticipate;
+        return ShapeShifterCurves.anticipate;
       case "OVERSHOOT":
-        return ShapeshifterCurves.overshoot;
+        return ShapeShifterCurves.overshoot;
       case "BOUNCE":
-        return ShapeshifterCurves.bounce;
+        return ShapeShifterCurves.bounce;
       case "ANTICIPATE_OVERSHOOT":
-        return ShapeshifterCurves.anticipateOvershoot;
+        return ShapeShifterCurves.anticipateOvershoot;
       case "LINEAR":
       default:
-        return ShapeshifterCurves.linear;
+        return ShapeShifterCurves.linear;
     }
   }
 
   static String _stringFromInterpolator(Curve interpolator) {
     switch (interpolator) {
-      case ShapeshifterCurves.fastOutSlowIn:
+      case ShapeShifterCurves.fastOutSlowIn:
         return "FAST_OUT_SLOW_IN";
-      case ShapeshifterCurves.fastOutLinearIn:
+      case ShapeShifterCurves.fastOutLinearIn:
         return "FAST_OUT_LINEAR_IN";
-      case ShapeshifterCurves.linearOutSlowIn:
+      case ShapeShifterCurves.linearOutSlowIn:
         return "LINEAR_OUT_SLOW_IN";
-      case ShapeshifterCurves.accelerateDecelerate:
+      case ShapeShifterCurves.accelerateDecelerate:
         return "ACCELERATE_DECELERATE";
-      case ShapeshifterCurves.accelerate:
+      case ShapeShifterCurves.accelerate:
         return "ACCELERATE";
-      case ShapeshifterCurves.decelerate:
+      case ShapeShifterCurves.decelerate:
         return "DECELERATE";
-      case ShapeshifterCurves.anticipate:
+      case ShapeShifterCurves.anticipate:
         return "ANTICIPATE";
-      case ShapeshifterCurves.overshoot:
+      case ShapeShifterCurves.overshoot:
         return "OVERSHOOT";
-      case ShapeshifterCurves.bounce:
+      case ShapeShifterCurves.bounce:
         return "BOUNCE";
-      case ShapeshifterCurves.anticipateOvershoot:
+      case ShapeShifterCurves.anticipateOvershoot:
         return "ANTICIPATE_OVERSHOOT";
-      case ShapeshifterCurves.linear:
+      case ShapeShifterCurves.linear:
       default:
         return "LINEAR";
     }
@@ -779,7 +779,7 @@ String _colorToHex(Color color) {
   return "#$radixString";
 }
 
-/// Exception thrown when [ShapeshifterConverter.toAVD] finds an animation property
+/// Exception thrown when [ShapeShifterConverter.toAVD] finds an animation property
 /// that refers to a property the lib was not built to handle.
 ///
 /// Usually happens with corrupted or misconstructed json files.
@@ -796,7 +796,7 @@ class UnsupportedAnimationProperty implements Exception {
   }
 }
 
-/// Exception thrown when [ShapeshifterConverter.toAVD] needs a property to be found
+/// Exception thrown when [ShapeShifterConverter.toAVD] needs a property to be found
 /// inside the json file but couldn't.
 ///
 /// Usually happens with corrupted or misconstructed json files.
