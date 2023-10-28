@@ -6,6 +6,7 @@ import 'package:animated_vector/src/curves.dart';
 import 'package:animated_vector/src/data.dart';
 import 'package:animated_vector/src/extensions.dart';
 import 'package:animated_vector/src/path.dart';
+import 'package:animated_vector/src/utils.dart';
 import 'package:flutter/animation.dart';
 
 /// Utility class to interface with [Shape Shifter](shapeshifter.design).
@@ -387,18 +388,9 @@ abstract final class ShapeShifterConverter {
     for (int i = 0; i < properties.length; i++) {
       final AnimationProperty<T> prop = properties[i];
       final T beginValue = prop.tween.begin ??
-          AnimationProperties.getNearestDefaultForTween(
-            properties,
-            i,
-            defaultValue,
-            goDown: true,
-          );
+          getNearestDefaultForTween(properties, i, defaultValue, goDown: true);
       final T endValue = prop.tween.end ??
-          AnimationProperties.getNearestDefaultForTween(
-            properties,
-            i,
-            defaultValue,
-          );
+          getNearestDefaultForTween(properties, i, defaultValue);
 
       final Map<String, dynamic> jsonProp = {
         "id": generator.generate(),
@@ -682,7 +674,7 @@ class _JsonAnimationProperty<T> {
           startTime: startTime,
           endTime: endTime,
           interpolator: interpolator,
-          tween: ConsteColorTween(begin: from, end: to),
+          tween: ConstColorTween(begin: from, end: to),
         );
       case "number":
         final double from = json.get<num>("fromValue").toDouble();

@@ -61,23 +61,14 @@ class AnimatedVectorData {
 abstract class VectorElement {
   const VectorElement();
 
-  VectorElement evaluate(double t, Duration baseDuration);
+  VectorElement evaluate(double progress, Duration animationDuration);
 
-  void paint(Canvas canvas, Size size, double progress, Duration duration);
-
-  T? evaluateProperties<T>(
-    AnimationPropertySequence<T?>? properties,
-    T? defaultValue,
-    Duration baseDuration,
-    double t,
-  ) {
-    if (properties == null || properties.isEmpty) return defaultValue;
-
-    final AnimationTimeline<T?> timeline =
-        AnimationTimeline(properties, baseDuration, defaultValue);
-
-    return timeline.evaluate(t) ?? defaultValue;
-  }
+  void paint(
+    Canvas canvas,
+    Size size,
+    double progress,
+    Duration animationDuration,
+  );
 }
 
 class RootVectorElement extends VectorElement {
@@ -92,14 +83,15 @@ class RootVectorElement extends VectorElement {
   });
 
   @override
-  RootVectorElement evaluate(double t, Duration baseDuration) {
-    properties.checkForValidity();
-
-    final double alpha =
-        evaluateProperties(properties.alpha, this.alpha, baseDuration, t)!;
+  RootVectorElement evaluate(double progress, Duration animationDuration) {
+    final evaluated = properties.evaluate(
+      progress,
+      animationDuration,
+      defaultAlpha: alpha,
+    );
 
     return RootVectorElement(
-      alpha: alpha,
+      alpha: evaluated.alpha!,
       elements: elements,
     );
   }
@@ -161,44 +153,27 @@ class GroupElement extends VectorElement {
   });
 
   @override
-  GroupElement evaluate(double t, Duration baseDuration) {
-    properties.checkForValidity();
-
-    final double translateX = evaluateProperties(
-      properties.translateX,
-      this.translateX,
-      baseDuration,
-      t,
-    )!;
-    final double translateY = evaluateProperties(
-      properties.translateY,
-      this.translateY,
-      baseDuration,
-      t,
-    )!;
-    final double scaleX =
-        evaluateProperties(properties.scaleX, this.scaleX, baseDuration, t)!;
-    final double scaleY =
-        evaluateProperties(properties.scaleY, this.scaleY, baseDuration, t)!;
-    final double pivotX =
-        evaluateProperties(properties.pivotX, this.pivotX, baseDuration, t)!;
-    final double pivotY =
-        evaluateProperties(properties.pivotY, this.pivotY, baseDuration, t)!;
-    final double rotation = evaluateProperties(
-      properties.rotation,
-      this.rotation,
-      baseDuration,
-      t,
-    )!;
+  GroupElement evaluate(double progress, Duration animationDuration) {
+    final evaluated = properties.evaluate(
+      progress,
+      animationDuration,
+      defaultTranslateX: translateX,
+      defaultTranslateY: translateY,
+      defaultScaleX: scaleX,
+      defaultScaleY: scaleY,
+      defaultPivotX: pivotX,
+      defaultPivotY: pivotY,
+      defaultRotation: rotation,
+    );
 
     return GroupElement(
-      translateX: translateX,
-      translateY: translateY,
-      scaleX: scaleX,
-      scaleY: scaleY,
-      pivotX: pivotX,
-      pivotY: pivotY,
-      rotation: rotation,
+      translateX: evaluated.translateX!,
+      translateY: evaluated.translateY!,
+      scaleX: evaluated.scaleX!,
+      scaleY: evaluated.scaleY!,
+      pivotX: evaluated.pivotX!,
+      pivotY: evaluated.pivotY!,
+      rotation: evaluated.rotation!,
       elements: elements,
     );
   }
@@ -287,73 +262,34 @@ class PathElement extends VectorElement {
         assert(trimOffset >= 0 && trimOffset <= 1);
 
   @override
-  PathElement evaluate(double t, Duration baseDuration) {
-    properties.checkForValidity();
-
-    final PathData pathData = evaluateProperties(
-      properties.pathData,
-      this.pathData,
-      baseDuration,
-      t,
-    )!;
-    final Color? fillColor = evaluateProperties(
-      properties.fillColor,
-      this.fillColor,
-      baseDuration,
-      t,
+  PathElement evaluate(double progress, Duration animationDuration) {
+    final evaluated = properties.evaluate(
+      progress,
+      animationDuration,
+      defaultPathData: pathData,
+      defaultFillColor: fillColor,
+      defaultFillAlpha: fillAlpha,
+      defaultStrokeColor: strokeColor,
+      defaultStrokeAlpha: strokeAlpha,
+      defaultStrokeWidth: strokeWidth,
+      defaultTrimStart: trimStart,
+      defaultTrimEnd: trimEnd,
+      defaultTrimOffset: trimOffset,
     );
-    final double fillAlpha = evaluateProperties(
-      properties.fillAlpha,
-      this.fillAlpha,
-      baseDuration,
-      t,
-    )!;
-    final Color? strokeColor = evaluateProperties(
-      properties.strokeColor,
-      this.strokeColor,
-      baseDuration,
-      t,
-    );
-    final double strokeAlpha = evaluateProperties(
-      properties.strokeAlpha,
-      this.strokeAlpha,
-      baseDuration,
-      t,
-    )!;
-    final double strokeWidth = evaluateProperties(
-      properties.strokeWidth,
-      this.strokeWidth,
-      baseDuration,
-      t,
-    )!;
-    final double trimStart = evaluateProperties(
-      properties.trimStart,
-      this.trimStart,
-      baseDuration,
-      t,
-    )!;
-    final double trimEnd =
-        evaluateProperties(properties.trimEnd, this.trimEnd, baseDuration, t)!;
-    final double trimOffset = evaluateProperties(
-      properties.trimOffset,
-      this.trimOffset,
-      baseDuration,
-      t,
-    )!;
 
     return PathElement(
-      pathData: pathData,
-      fillColor: fillColor,
-      fillAlpha: fillAlpha,
-      strokeColor: strokeColor,
-      strokeAlpha: strokeAlpha,
-      strokeWidth: strokeWidth,
+      pathData: evaluated.pathData!,
+      fillColor: evaluated.fillColor,
+      fillAlpha: evaluated.fillAlpha!,
+      strokeColor: evaluated.strokeColor,
+      strokeAlpha: evaluated.strokeAlpha!,
+      strokeWidth: evaluated.strokeWidth!,
       strokeCap: strokeCap,
       strokeJoin: strokeJoin,
       strokeMiterLimit: strokeMiterLimit,
-      trimStart: trimStart,
-      trimEnd: trimEnd,
-      trimOffset: trimOffset,
+      trimStart: evaluated.trimStart!,
+      trimEnd: evaluated.trimEnd!,
+      trimOffset: evaluated.trimOffset!,
     );
   }
 
@@ -438,17 +374,14 @@ class ClipPathElement extends VectorElement {
   });
 
   @override
-  ClipPathElement evaluate(double t, Duration baseDuration) {
-    properties.checkForValidity();
+  ClipPathElement evaluate(double progress, Duration animationDuration) {
+    final evaluated = properties.evaluate(
+      progress,
+      animationDuration,
+      defaultPathData: pathData,
+    );
 
-    final PathData pathData = evaluateProperties(
-      properties.pathData,
-      this.pathData,
-      baseDuration,
-      t,
-    )!;
-
-    return ClipPathElement(pathData: pathData);
+    return ClipPathElement(pathData: evaluated.pathData!);
   }
 
   @override

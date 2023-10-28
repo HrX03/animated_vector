@@ -1,7 +1,6 @@
 import 'package:animated_vector/src/data.dart';
-import 'package:animated_vector/src/extensions.dart';
 import 'package:animated_vector/src/path.dart';
-import 'package:collection/collection.dart';
+import 'package:animated_vector/src/utils.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
@@ -10,49 +9,22 @@ typedef AnimationPropertySequence<T> = List<AnimationProperty<T>>;
 abstract class AnimationProperties<T extends VectorElement> {
   const AnimationProperties();
 
-  void checkForValidity() {
-    if (checkedFields.every(checkForIntervalsValidity)) return;
-
-    throw Exception("Intervals are invalid for these properties");
+  void ensureIntervalAreValid() {
+    for (final field in checkedFields) {
+      assert(
+        checkForIntervalsValidity(field),
+        "The animation intervals for this $runtimeType object are not valid. "
+        "Usually this means two or more intervals overlap with each other, "
+        "causing ambiguites over which value to pick.",
+      );
+    }
   }
 
   List<AnimationPropertySequence?> get checkedFields;
-
-  static bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
-    if (properties == null) return true;
-
-    Duration lastValidEndDuration = Duration.zero;
-
-    for (final AnimationProperty property in properties) {
-      if (property.interval.start < lastValidEndDuration) return false;
-
-      lastValidEndDuration = property.interval.end;
-    }
-
-    return true;
-  }
-
-  static T getNearestDefaultForTween<T>(
-    AnimationPropertySequence<T> properties,
-    int startIndex,
-    T defaultValue, {
-    bool goDown = false,
-  }) {
-    final List<ConstTween<T>> tweens = properties.map((p) => p.tween).toList();
-    T? value;
-
-    for (int i = startIndex;
-        goDown ? i > 0 : i < properties.length;
-        goDown ? i-- : i++) {
-      if (value != null) break;
-      value ??= goDown
-          ? tweens.getOrNull(i - 1)?.end
-          : tweens.getOrNull(i + 1)?.begin;
-    }
-
-    return value ?? defaultValue;
-  }
+  Record evaluate(double progress, Duration animationDuration);
 }
+
+typedef EvaluatedRootVectorAnimationProperties = ({double? alpha});
 
 class RootVectorAnimationProperties
     extends AnimationProperties<RootVectorElement> {
@@ -62,6 +34,18 @@ class RootVectorAnimationProperties
 
   @override
   List<AnimationPropertySequence?> get checkedFields => [alpha];
+
+  @override
+  EvaluatedRootVectorAnimationProperties evaluate(
+    double progress,
+    Duration animationDuration, {
+    double? defaultAlpha,
+  }) {
+    ensureIntervalAreValid();
+    final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
+
+    return (alpha: evaluator.evaluate(alpha, defaultAlpha),);
+  }
 
   @override
   int get hashCode => Object.hashAll(checkedFields);
@@ -75,6 +59,16 @@ class RootVectorAnimationProperties
     return false;
   }
 }
+
+typedef EvaluatedGroupAnimationProperties = ({
+  double? translateX,
+  double? translateY,
+  double? scaleX,
+  double? scaleY,
+  double? pivotX,
+  double? pivotY,
+  double? rotation,
+});
 
 class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   final AnimationPropertySequence<double>? translateX;
@@ -107,6 +101,32 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
       ];
 
   @override
+  EvaluatedGroupAnimationProperties evaluate(
+    double progress,
+    Duration animationDuration, {
+    double? defaultTranslateX,
+    double? defaultTranslateY,
+    double? defaultScaleX,
+    double? defaultScaleY,
+    double? defaultPivotX,
+    double? defaultPivotY,
+    double? defaultRotation,
+  }) {
+    ensureIntervalAreValid();
+    final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
+
+    return (
+      translateX: evaluator.evaluate(translateX, defaultTranslateX),
+      translateY: evaluator.evaluate(translateY, defaultTranslateY),
+      scaleX: evaluator.evaluate(scaleX, defaultScaleX),
+      scaleY: evaluator.evaluate(scaleY, defaultScaleY),
+      pivotX: evaluator.evaluate(pivotX, defaultPivotX),
+      pivotY: evaluator.evaluate(pivotY, defaultPivotY),
+      rotation: evaluator.evaluate(rotation, defaultRotation),
+    );
+  }
+
+  @override
   int get hashCode => Object.hashAll(checkedFields);
 
   @override
@@ -124,6 +144,18 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
     return false;
   }
 }
+
+typedef EvaluatedPathAnimationProperties = ({
+  PathData? pathData,
+  Color? fillColor,
+  double? fillAlpha,
+  Color? strokeColor,
+  double? strokeAlpha,
+  double? strokeWidth,
+  double? trimStart,
+  double? trimEnd,
+  double? trimOffset,
+});
 
 class PathAnimationProperties extends AnimationProperties<PathElement> {
   final AnimationPropertySequence<PathData>? pathData;
@@ -162,6 +194,36 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
       ];
 
   @override
+  EvaluatedPathAnimationProperties evaluate(
+    double progress,
+    Duration animationDuration, {
+    PathData? defaultPathData,
+    Color? defaultFillColor,
+    double? defaultFillAlpha,
+    Color? defaultStrokeColor,
+    double? defaultStrokeAlpha,
+    double? defaultStrokeWidth,
+    double? defaultTrimStart,
+    double? defaultTrimEnd,
+    double? defaultTrimOffset,
+  }) {
+    ensureIntervalAreValid();
+    final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
+
+    return (
+      pathData: evaluator.evaluate(pathData, defaultPathData),
+      fillColor: evaluator.evaluate(fillColor, defaultFillColor),
+      fillAlpha: evaluator.evaluate(fillAlpha, defaultFillAlpha),
+      strokeColor: evaluator.evaluate(strokeColor, defaultStrokeColor),
+      strokeAlpha: evaluator.evaluate(strokeAlpha, defaultStrokeAlpha),
+      strokeWidth: evaluator.evaluate(strokeWidth, defaultStrokeWidth),
+      trimStart: evaluator.evaluate(trimStart, defaultTrimStart),
+      trimEnd: evaluator.evaluate(trimEnd, defaultTrimEnd),
+      trimOffset: evaluator.evaluate(trimOffset, defaultTrimOffset),
+    );
+  }
+
+  @override
   int get hashCode => Object.hashAll(checkedFields);
 
   @override
@@ -182,6 +244,8 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   }
 }
 
+typedef EvaluatedClipPathAnimationProperties = ({PathData? pathData});
+
 class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   final AnimationPropertySequence<PathData>? pathData;
 
@@ -189,6 +253,18 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
 
   @override
   List<AnimationPropertySequence?> get checkedFields => [pathData];
+
+  @override
+  EvaluatedClipPathAnimationProperties evaluate(
+    double progress,
+    Duration animationDuration, {
+    PathData? defaultPathData,
+  }) {
+    ensureIntervalAreValid();
+    final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
+
+    return (pathData: evaluator.evaluate(pathData, defaultPathData),);
+  }
 
   @override
   int get hashCode => Object.hashAll(checkedFields);
@@ -214,25 +290,13 @@ class AnimationProperty<T> {
     this.curve = Curves.linear,
   });
 
-  T evaluate(T defaultValue, Duration baseDuration, double t) {
-    final Curve c = calculateIntervalCurve(baseDuration);
+  T evaluate(T defaultValue, Duration animationDuration, double progress) {
+    final Curve c =
+        animationIntervalToFlutterInterval(interval, animationDuration, curve);
 
-    final double curvedT = c.transform(t);
+    final double curvedT = c.transform(progress);
     final resolvedTween = tween.copyWithDefaults(defaultValue, defaultValue);
     return resolvedTween.transform(curvedT);
-  }
-
-  Interval calculateIntervalCurve(Duration baseDuration) {
-    final int start =
-        interval.start.inMilliseconds.clamp(0, baseDuration.inMilliseconds);
-    final int end =
-        interval.end.inMilliseconds.clamp(0, baseDuration.inMilliseconds);
-
-    return Interval(
-      start / baseDuration.inMilliseconds,
-      end / baseDuration.inMilliseconds,
-      curve: curve,
-    );
   }
 
   @override
@@ -267,21 +331,19 @@ class AnimationInterval {
           microseconds: startOffset.inMicroseconds + duration.inMicroseconds,
         );
 
-  bool isBetween(double value, Duration baseDuration) {
-    final List<double> resolved = resolve(baseDuration);
-    final double start = resolved.first;
-    final double end = resolved.last;
+  bool hasValueInside(double progress, Duration animationDuration) {
+    final (start, end) = normalizeWithDuration(animationDuration);
 
-    return value >= start && value <= end;
+    return progress >= start && progress <= end;
   }
 
-  List<double> resolve(Duration baseDuration) {
-    return [
-      start.inMilliseconds.clamp(0, baseDuration.inMilliseconds) /
-          baseDuration.inMilliseconds,
-      end.inMilliseconds.clamp(0, baseDuration.inMilliseconds) /
-          baseDuration.inMilliseconds,
-    ];
+  (double start, double end) normalizeWithDuration(Duration animationDuration) {
+    return (
+      start.inMicroseconds.clamp(0, animationDuration.inMicroseconds) /
+          animationDuration.inMicroseconds,
+      end.inMicroseconds.clamp(0, animationDuration.inMicroseconds) /
+          animationDuration.inMicroseconds,
+    );
   }
 
   @override
@@ -294,76 +356,6 @@ class AnimationInterval {
     }
 
     return false;
-  }
-}
-
-class AnimationTimeline<T> {
-  final AnimationPropertySequence<T?> timeline;
-  final Duration baseDuration;
-  final T? defaultValue;
-
-  const AnimationTimeline(
-    this.timeline,
-    this.baseDuration,
-    this.defaultValue,
-  );
-
-  T? evaluate(double t) {
-    final AnimationProperty<T?>? matchingProperty = timeline.firstWhereOrNull(
-      (element) => element.interval.isBetween(t, baseDuration),
-    );
-    T? beginDefaultValue;
-    T? endDefaultValue;
-
-    if (matchingProperty == null) {
-      for (int i = timeline.length - 1; i >= 0; i--) {
-        final AnimationProperty<T?> property = timeline[i];
-
-        final List<double> resolved = property.interval.resolve(baseDuration);
-        final double end = resolved.last;
-        final interval = t - end;
-        if (!interval.isNegative) {
-          return property.tween.end ??
-              AnimationProperties.getNearestDefaultForTween(
-                timeline,
-                i,
-                defaultValue,
-                goDown: true,
-              ) ??
-              defaultValue;
-        }
-      }
-
-      return defaultValue;
-    } else {
-      final int indexOf = timeline.indexOf(matchingProperty);
-      if (indexOf != 0) {
-        beginDefaultValue = AnimationProperties.getNearestDefaultForTween(
-          timeline,
-          indexOf,
-          defaultValue,
-          goDown: true,
-        );
-        endDefaultValue = AnimationProperties.getNearestDefaultForTween(
-          timeline,
-          indexOf,
-          defaultValue,
-        );
-      }
-    }
-
-    beginDefaultValue ??= defaultValue;
-    endDefaultValue ??= defaultValue;
-
-    final List<double> resolved =
-        matchingProperty.interval.resolve(baseDuration);
-    final double begin = resolved.first;
-    final double end = resolved.last;
-    final newT = ((t - begin) / (end - begin)).clamp(0.0, 1.0);
-    final resolvedTween = matchingProperty.tween
-        .copyWithDefaults(beginDefaultValue, endDefaultValue);
-
-    return resolvedTween.transform(matchingProperty.curve.transform(newT))!;
   }
 }
 
@@ -403,8 +395,8 @@ class ConstTween<T> extends Animatable<T> {
   }
 }
 
-class ConsteColorTween extends ConstTween<Color> {
-  const ConsteColorTween({super.begin, super.end});
+class ConstColorTween extends ConstTween<Color> {
+  const ConstColorTween({super.begin, super.end});
 
   @override
   Color transform(double t) {
@@ -415,8 +407,8 @@ class ConsteColorTween extends ConstTween<Color> {
   }
 
   @override
-  ConsteColorTween copyWithDefaults(Color begin, Color end) {
-    return ConsteColorTween(
+  ConstColorTween copyWithDefaults(Color begin, Color end) {
+    return ConstColorTween(
       begin: this.begin ?? begin,
       end: this.end ?? end,
     );
