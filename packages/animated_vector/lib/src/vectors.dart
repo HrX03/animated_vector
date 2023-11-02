@@ -12,7 +12,7 @@ class AnimatedVectors {
         GroupElement(
           properties: GroupAnimationProperties(
             translateX: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 0.0, end: -6.7),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -22,7 +22,7 @@ class AnimatedVectors {
               ),
             ],
             translateY: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 0.0, end: -6.7),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -41,7 +41,7 @@ class AnimatedVectors {
               strokeWidth: 1.8,
               properties: PathAnimationProperties(
                 trimStart: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(end: 1),
                     interval: AnimationInterval(
                       start: Duration(milliseconds: 134),
@@ -61,7 +61,7 @@ class AnimatedVectors {
           trimStart: 1.0,
           properties: PathAnimationProperties(
             trimStart: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 1.0, end: 0.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 522),
@@ -79,7 +79,7 @@ class AnimatedVectors {
           trimStart: 0.48,
           properties: PathAnimationProperties(
             trimStart: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 0.48, end: 0.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -89,7 +89,7 @@ class AnimatedVectors {
               ),
             ],
             trimEnd: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 1, end: 0.86),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -112,7 +112,7 @@ class AnimatedVectors {
         GroupElement(
           properties: GroupAnimationProperties(
             translateX: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -6.7, end: 0.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -122,7 +122,7 @@ class AnimatedVectors {
               ),
             ],
             translateY: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -6.7, end: 0.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -144,7 +144,7 @@ class AnimatedVectors {
               trimEnd: 0.0,
               properties: PathAnimationProperties(
                 trimEnd: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(begin: 0, end: 1),
                     interval: AnimationInterval(
                       start: Duration(milliseconds: 300),
@@ -163,7 +163,7 @@ class AnimatedVectors {
           strokeWidth: 1.8,
           properties: PathAnimationProperties(
             trimEnd: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 1.0, end: 0.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 134),
@@ -181,7 +181,7 @@ class AnimatedVectors {
           trimEnd: 0.86,
           properties: PathAnimationProperties(
             trimStart: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 0.0, end: 0.48),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -191,7 +191,7 @@ class AnimatedVectors {
               ),
             ],
             trimEnd: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 0.86, end: 1.0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 300),
@@ -216,7 +216,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 90.0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -233,7 +233,7 @@ class AnimatedVectors {
               fillColor: Color(0xFF000000),
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 5 6 L 5 10 L 19 10 L 19 6 L 5 6 M 5 14 L 5 18 L 19 18 L 19 14 L 5 14",
@@ -263,7 +263,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -90, end: 0.0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -280,7 +280,7 @@ class AnimatedVectors {
               fillColor: Color(0xFF000000),
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 8 5 L 8 12 L 19 12 L 19 12 L 8 5 M 8 12 L 8 19 L 19 12 L 19 12 L 8 12",
@@ -310,7 +310,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 180.0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -327,7 +327,7 @@ class AnimatedVectors {
               fillColor: Color(0xFF000000),
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 12, 4 L 10.59,5.41 L 16.17,11 L 18.99,11 L 12,4 z M 4, 11 L 4, 13 L 18.99, 13 L 20, 12 L 18.99, 11 L 4, 11 z M 12,20 L 10.59, 18.59 L 16.17, 13 L 18.99, 13 L 12, 20z",
@@ -357,7 +357,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -180.0, end: 0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -374,7 +374,7 @@ class AnimatedVectors {
               fillColor: Color(0xFF000000),
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 3,6 L 3,8 L 21,8 L 21,6 L 3,6 z M 3,11 L 3,13 L 21,13 L 21, 12 L 21,11 L 3,11 z M 3,18 L 3,16 L 21,16 L 21,18 L 3,18 z",
@@ -404,7 +404,7 @@ class AnimatedVectors {
           translateY: 15,
           properties: GroupAnimationProperties(
             translateY: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 15.0, end: 9.0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 250),
@@ -418,7 +418,7 @@ class AnimatedVectors {
               rotation: 135,
               properties: GroupAnimationProperties(
                 rotation: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(begin: 135, end: 45.0),
                     interval: AnimationInterval(
                       end: Duration(milliseconds: 200),
@@ -443,7 +443,7 @@ class AnimatedVectors {
               rotation: 45,
               properties: GroupAnimationProperties(
                 rotation: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(begin: 45, end: 135.0),
                     interval: AnimationInterval(
                       end: Duration(milliseconds: 200),
@@ -480,7 +480,7 @@ class AnimatedVectors {
           translateY: 9,
           properties: GroupAnimationProperties(
             translateY: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 9.0, end: 15.0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 250),
@@ -494,7 +494,7 @@ class AnimatedVectors {
               rotation: 45,
               properties: GroupAnimationProperties(
                 rotation: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(begin: 45, end: 135.0),
                     interval: AnimationInterval(
                       end: Duration(milliseconds: 200),
@@ -519,7 +519,7 @@ class AnimatedVectors {
               rotation: 135,
               properties: GroupAnimationProperties(
                 rotation: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(begin: 135, end: 45.0),
                     interval: AnimationInterval(
                       end: Duration(milliseconds: 200),
@@ -556,7 +556,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -180),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -574,7 +574,7 @@ class AnimatedVectors {
               strokeCap: StrokeCap.square,
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M4.8,13.4 L9,17.6 M10.4,16.2 L19.6,7",
@@ -604,7 +604,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -180),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -622,7 +622,7 @@ class AnimatedVectors {
               strokeCap: StrokeCap.square,
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 5,11 L 11,11 L 11,11 L 13,11 L 13,11 L 19,11 L 19,13 L 13,13 L 13,13 L 11,13 L 11,13 L 5,13 Z",
@@ -652,7 +652,7 @@ class AnimatedVectors {
           pivotY: 12,
           properties: GroupAnimationProperties(
             rotation: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: -180),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 300),
@@ -670,7 +670,7 @@ class AnimatedVectors {
               strokeCap: StrokeCap.square,
               properties: PathAnimationProperties(
                 pathData: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstPathDataTween(
                       end: PathData.parse(
                         "M 5,11 L 11,11 L 11,5 L 13,5 L 13,11 L 19,11 L 19,13 L 13,13 L 13,19 L 11,19 L 11,13 L 5,13 Z",
@@ -700,7 +700,7 @@ class AnimatedVectors {
           fillColor: Color(0xFF000000),
           properties: PathAnimationProperties(
             pathData: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstPathDataTween(
                   end: PathData.parse(
                     "M 19.73 22 L 21 20.73 L 3.27 3 L 2 4.27 Z",
@@ -720,7 +720,7 @@ class AnimatedVectors {
           ),
           properties: ClipPathAnimationProperties(
             pathData: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstPathDataTween(
                   end: PathData.parse(
                     "M 0 0 L 24 0 L 24 24 L 0 24 L 0 0 Z M 4.54 1.73 L 3.27 3 L 21 20.73 L 22.27 19.46 Z",
@@ -789,7 +789,7 @@ class AnimatedVectors {
                       fillColor: Color(0xFF000000),
                       properties: PathAnimationProperties(
                         pathData: [
-                          AnimationProperty(
+                          AnimationStep(
                             tween: ConstPathDataTween(
                               end: PathData.parse(
                                 "M 10,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
@@ -835,7 +835,7 @@ class AnimatedVectors {
                       fillColor: Color(0xFF000000),
                       properties: PathAnimationProperties(
                         pathData: [
-                          AnimationProperty(
+                          AnimationStep(
                             tween: ConstPathDataTween(
                               end: PathData.parse(
                                 "M -14,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
@@ -918,7 +918,7 @@ class AnimatedVectors {
                       fillColor: Color(0xFF000000),
                       properties: PathAnimationProperties(
                         pathData: [
-                          AnimationProperty(
+                          AnimationStep(
                             tween: ConstPathDataTween(
                               end: PathData.parse(
                                 "M 10,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
@@ -965,7 +965,7 @@ class AnimatedVectors {
                       fillColor: Color(0xFF000000),
                       properties: PathAnimationProperties(
                         pathData: [
-                          AnimationProperty(
+                          AnimationStep(
                             tween: ConstPathDataTween(
                               end: PathData.parse(
                                 "M -14,14 c 0,0 19.8330078125,-14 19.8330078125,-14 c 0,0 -19.8330078125,-14 -19.8330078125,-14 c 0,0 0,28 0,28 Z",
@@ -1001,7 +1001,7 @@ class AnimatedVectors {
           trimEnd: 0.185,
           properties: PathAnimationProperties(
             trimStart: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 0.75),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 600),
@@ -1010,7 +1010,7 @@ class AnimatedVectors {
               ),
             ],
             trimEnd: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 1),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 450),
@@ -1028,7 +1028,7 @@ class AnimatedVectors {
           strokeWidth: 2,
           properties: PathAnimationProperties(
             trimEnd: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 0),
                 interval: AnimationInterval(
                   end: Duration(milliseconds: 250),
@@ -1041,11 +1041,11 @@ class AnimatedVectors {
         GroupElement(
           properties: GroupAnimationProperties(
             translateX: [
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(begin: 8, end: 8),
                 interval: AnimationInterval(end: Duration.zero),
               ),
-              AnimationProperty(
+              AnimationStep(
                 tween: ConstTween<double>(end: 0),
                 interval: AnimationInterval(
                   start: Duration(milliseconds: 350),
@@ -1065,11 +1065,11 @@ class AnimatedVectors {
               trimEnd: 0,
               properties: PathAnimationProperties(
                 trimEnd: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(end: 0),
                     interval: AnimationInterval(end: Duration.zero),
                   ),
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(end: 1),
                     interval: AnimationInterval(
                       start: Duration(milliseconds: 350),
@@ -1089,11 +1089,11 @@ class AnimatedVectors {
               trimEnd: 0,
               properties: PathAnimationProperties(
                 trimEnd: [
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(end: 0),
                     interval: AnimationInterval(end: Duration.zero),
                   ),
-                  AnimationProperty(
+                  AnimationStep(
                     tween: ConstTween<double>(end: 1),
                     interval: AnimationInterval(
                       start: Duration(milliseconds: 350),

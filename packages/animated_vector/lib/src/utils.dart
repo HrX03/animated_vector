@@ -2,12 +2,12 @@ import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/extensions.dart';
 import 'package:collection/collection.dart';
 
-bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
+bool checkForIntervalsValidity(AnimationStepSequence? properties) {
   if (properties == null) return true;
 
   Duration lastValidEndDuration = Duration.zero;
 
-  for (final AnimationProperty property in properties) {
+  for (final AnimationStep property in properties) {
     if (property.interval.start < lastValidEndDuration) return false;
 
     lastValidEndDuration = property.interval.end;
@@ -17,7 +17,7 @@ bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
 }
 
 T getNearestDefaultForTween<T>(
-  AnimationPropertySequence<T> properties,
+  AnimationStepSequence<T> properties,
   int startIndex,
   T defaultValue, {
   bool goDown = false,
@@ -37,13 +37,12 @@ T getNearestDefaultForTween<T>(
 }
 
 T? timelineEvaluate<T>({
-  required AnimationPropertySequence<T?> propertySequence,
+  required AnimationStepSequence<T?> propertySequence,
   required Duration animationDuration,
   required double progress,
   T? defaultValue,
 }) {
-  final AnimationProperty<T?>? matchingProperty =
-      propertySequence.firstWhereOrNull(
+  final AnimationStep<T?>? matchingProperty = propertySequence.firstWhereOrNull(
     (e) => e.interval.hasValueInside(progress, animationDuration),
   );
   T? beginDefaultValue;
@@ -51,7 +50,7 @@ T? timelineEvaluate<T>({
 
   if (matchingProperty == null) {
     for (int i = propertySequence.length - 1; i >= 0; i--) {
-      final AnimationProperty<T?> property = propertySequence[i];
+      final AnimationStep<T?> property = propertySequence[i];
 
       final (_, end) =
           property.interval.normalizeWithDuration(animationDuration);
@@ -105,7 +104,7 @@ class AnimationPropertyEvaluator {
   const AnimationPropertyEvaluator(this.animationDuration, this.progress);
 
   T? evaluate<T>(
-    AnimationPropertySequence<T?>? properties,
+    AnimationStepSequence<T?>? properties,
     T? defaultValue,
   ) {
     if (properties == null || properties.isEmpty) return defaultValue;

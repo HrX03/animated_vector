@@ -364,7 +364,7 @@ abstract final class ShapeShifterConverter {
   }
 
   static List<Map<String, dynamic>>? _timelineFromProperties<T, V>(
-    AnimationPropertySequence<T>? properties,
+    AnimationStepSequence<T>? properties,
     String name,
     String layerId,
     V Function(T value) formatter,
@@ -386,7 +386,7 @@ abstract final class ShapeShifterConverter {
     }
 
     for (int i = 0; i < properties.length; i++) {
-      final AnimationProperty<T> prop = properties[i];
+      final AnimationStep<T> prop = properties[i];
       final T beginValue = prop.tween.begin ??
           getNearestDefaultForTween(properties, i, defaultValue, goDown: true);
       final T endValue = prop.tween.end ??
@@ -558,7 +558,7 @@ abstract final class ShapeShifterConverter {
     return elements;
   }
 
-  static AnimationPropertySequence<T> _parseJsonAnimationProperties<T>(
+  static AnimationStepSequence<T> _parseJsonAnimationProperties<T>(
     List<_JsonAnimationProperty> properties,
     String layerId,
     String propertyName,
@@ -566,7 +566,7 @@ abstract final class ShapeShifterConverter {
     return properties
         .where((a) => a.layerId == layerId && a.propertyName == propertyName)
         .map(
-          (a) => AnimationProperty<T>(
+          (a) => AnimationStep<T>(
             tween: a.tween as ConstTween<T>,
             interval: AnimationInterval(
               start: Duration(milliseconds: a.startTime),

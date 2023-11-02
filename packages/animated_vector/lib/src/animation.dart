@@ -4,18 +4,18 @@ import 'package:animated_vector/src/utils.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
-/// A sequence of [AnimationProperty] of a specific type.
+/// A sequence of [AnimationStep] of a specific type.
 /// Each entry should have an [AnimationInterval] that doesn't overlap with any
 /// other entries in the same sequence as that would throw an assertion.
 /// Used in [AnimationProperties] subclasses.
 ///
-/// Maps to `List<AnimationProperty<T>>`.
-typedef AnimationPropertySequence<T> = List<AnimationProperty<T>>;
+/// Maps to `List<AnimationStep<T>>`.
+typedef AnimationStepSequence<T> = List<AnimationStep<T>>;
 
 /// Abstract base class for a group of properties that can be animated.
 /// Each subclass should be paired to a specific [VectorElement] subclass.
 ///
-/// Usually fields of this class are of type [AnimationPropertySequence].
+/// Usually fields of this class are of type [AnimationStepSequence].
 ///
 /// The library subclasses are as follows:
 /// - [RootVectorAnimationProperties] for [RootVectorElement]
@@ -41,7 +41,7 @@ abstract class AnimationProperties {
 
   /// A list of sequences that will be checked in [ensureIntervalsAreValid].
   /// Usually every sequence field will be added to this.
-  List<AnimationPropertySequence?> get checkedFields;
+  List<AnimationStepSequence?> get checkedFields;
 
   /// Evaluate the various sequences and collapse them to a
   /// single value based on the [progress] passed in.
@@ -68,14 +68,14 @@ typedef EvaluatedRootVectorAnimationProperties = ({double? alpha});
 ///
 /// It allows to animate the [RootVectorElement.alpha] property.
 class RootVectorAnimationProperties extends AnimationProperties {
-  /// A sequence of properties to animate [RootVectorElement.alpha].
-  final AnimationPropertySequence<double>? alpha;
+  /// A sequence of steps to animate [RootVectorElement.alpha].
+  final AnimationStepSequence<double>? alpha;
 
   /// Build a new instance of [RootVectorAnimationProperties].
   const RootVectorAnimationProperties({this.alpha});
 
   @override
-  List<AnimationPropertySequence?> get checkedFields => [alpha];
+  List<AnimationStepSequence?> get checkedFields => [alpha];
 
   @override
   EvaluatedRootVectorAnimationProperties evaluate(
@@ -126,26 +126,26 @@ typedef EvaluatedGroupAnimationProperties = ({
 /// - [GroupElement.pivotY]
 /// - [GroupElement.rotation]
 class GroupAnimationProperties extends AnimationProperties {
-  /// A sequence of properties to animate [GroupElement.translateX].
-  final AnimationPropertySequence<double>? translateX;
+  /// A sequence of steps to animate [GroupElement.translateX].
+  final AnimationStepSequence<double>? translateX;
 
-  /// A sequence of properties to animate [GroupElement.translateY].
-  final AnimationPropertySequence<double>? translateY;
+  /// A sequence of steps to animate [GroupElement.translateY].
+  final AnimationStepSequence<double>? translateY;
 
-  /// A sequence of properties to animate [GroupElement.scaleX].
-  final AnimationPropertySequence<double>? scaleX;
+  /// A sequence of steps to animate [GroupElement.scaleX].
+  final AnimationStepSequence<double>? scaleX;
 
-  /// A sequence of properties to animate [GroupElement.scaleY].
-  final AnimationPropertySequence<double>? scaleY;
+  /// A sequence of steps to animate [GroupElement.scaleY].
+  final AnimationStepSequence<double>? scaleY;
 
-  /// A sequence of properties to animate [GroupElement.pivotX].
-  final AnimationPropertySequence<double>? pivotX;
+  /// A sequence of steps to animate [GroupElement.pivotX].
+  final AnimationStepSequence<double>? pivotX;
 
-  /// A sequence of properties to animate [GroupElement.pivotY].
-  final AnimationPropertySequence<double>? pivotY;
+  /// A sequence of steps to animate [GroupElement.pivotY].
+  final AnimationStepSequence<double>? pivotY;
 
-  /// A sequence of properties to animate [GroupElement.rotation].
-  final AnimationPropertySequence<double>? rotation;
+  /// A sequence of steps to animate [GroupElement.rotation].
+  final AnimationStepSequence<double>? rotation;
 
   /// Build a new instance of [GroupAnimationProperties].
   const GroupAnimationProperties({
@@ -159,7 +159,7 @@ class GroupAnimationProperties extends AnimationProperties {
   });
 
   @override
-  List<AnimationPropertySequence?> get checkedFields => [
+  List<AnimationStepSequence?> get checkedFields => [
         translateX,
         translateY,
         scaleX,
@@ -242,32 +242,32 @@ typedef EvaluatedPathAnimationProperties = ({
 /// - [PathElement.trimEnd]
 /// - [PathElement.trimOffset]
 class PathAnimationProperties extends AnimationProperties {
-  /// A sequence of properties to animate [PathElement.pathData].
-  final AnimationPropertySequence<PathData>? pathData;
+  /// A sequence of steps to animate [PathElement.pathData].
+  final AnimationStepSequence<PathData>? pathData;
 
-  /// A sequence of properties to animate [PathElement.fillColor].
-  final AnimationPropertySequence<Color?>? fillColor;
+  /// A sequence of steps to animate [PathElement.fillColor].
+  final AnimationStepSequence<Color?>? fillColor;
 
-  /// A sequence of properties to animate [PathElement.fillAlpha].
-  final AnimationPropertySequence<double>? fillAlpha;
+  /// A sequence of steps to animate [PathElement.fillAlpha].
+  final AnimationStepSequence<double>? fillAlpha;
 
-  /// A sequence of properties to animate [PathElement.strokeColor].
-  final AnimationPropertySequence<Color?>? strokeColor;
+  /// A sequence of steps to animate [PathElement.strokeColor].
+  final AnimationStepSequence<Color?>? strokeColor;
 
-  /// A sequence of properties to animate [PathElement.strokeAlpha].
-  final AnimationPropertySequence<double>? strokeAlpha;
+  /// A sequence of steps to animate [PathElement.strokeAlpha].
+  final AnimationStepSequence<double>? strokeAlpha;
 
-  /// A sequence of properties to animate [PathElement.strokeWidth].
-  final AnimationPropertySequence<double>? strokeWidth;
+  /// A sequence of steps to animate [PathElement.strokeWidth].
+  final AnimationStepSequence<double>? strokeWidth;
 
-  /// A sequence of properties to animate [PathElement.trimStart].
-  final AnimationPropertySequence<double>? trimStart;
+  /// A sequence of steps to animate [PathElement.trimStart].
+  final AnimationStepSequence<double>? trimStart;
 
-  /// A sequence of properties to animate [PathElement.trimEnd].
-  final AnimationPropertySequence<double>? trimEnd;
+  /// A sequence of steps to animate [PathElement.trimEnd].
+  final AnimationStepSequence<double>? trimEnd;
 
-  /// A sequence of properties to animate [PathElement.trimOffset].
-  final AnimationPropertySequence<double>? trimOffset;
+  /// A sequence of steps to animate [PathElement.trimOffset].
+  final AnimationStepSequence<double>? trimOffset;
 
   /// Build a new instance of [PathAnimationProperties].
   const PathAnimationProperties({
@@ -283,7 +283,7 @@ class PathAnimationProperties extends AnimationProperties {
   });
 
   @override
-  List<AnimationPropertySequence?> get checkedFields => [
+  List<AnimationStepSequence?> get checkedFields => [
         pathData,
         fillColor,
         fillAlpha,
@@ -352,14 +352,14 @@ class PathAnimationProperties extends AnimationProperties {
 typedef EvaluatedClipPathAnimationProperties = ({PathData? pathData});
 
 class ClipPathAnimationProperties extends AnimationProperties {
-  /// A sequence of properties to animate [ClipPathElement.pathData].
-  final AnimationPropertySequence<PathData>? pathData;
+  /// A sequence of steps to animate [ClipPathElement.pathData].
+  final AnimationStepSequence<PathData>? pathData;
 
   /// Build a new instance of [ClipPathAnimationProperties].
   const ClipPathAnimationProperties({this.pathData});
 
   @override
-  List<AnimationPropertySequence?> get checkedFields => [pathData];
+  List<AnimationStepSequence?> get checkedFields => [pathData];
 
   @override
   EvaluatedClipPathAnimationProperties evaluate(
@@ -386,12 +386,12 @@ class ClipPathAnimationProperties extends AnimationProperties {
   }
 }
 
-/// An animatable property of an [AnimationPropertySequence].
+/// A step of an [AnimationStepSequence].
 /// Needs a [tween] with at least one of begin or end to be non null.
-/// This property will be animated in the period of time defined by [interval].
+/// This step will be animated in the period of time defined by [interval].
 ///
 /// An optional [curve] parameter can be passed in.
-class AnimationProperty<T> {
+class AnimationStep<T> {
   /// The tween that defines the values that need to be interpolated.
   /// One of the two values can be left null, in that case it will be filled by
   /// looking at the nearest non null value in the sequence.
@@ -405,10 +405,10 @@ class AnimationProperty<T> {
   /// found in this library [ShapeShifterCurves] class or in flutter [Curves] class.
   final Curve curve;
 
-  /// Construct a new [AnimationProperty] instance.
+  /// Construct a new [AnimationStep] instance.
   ///
   /// The [curve] parameter is by default [Curves.linear].
-  const AnimationProperty({
+  const AnimationStep({
     required this.tween,
     required this.interval,
     this.curve = Curves.linear,
@@ -419,7 +419,7 @@ class AnimationProperty<T> {
 
   @override
   bool operator ==(Object other) {
-    if (other is AnimationProperty) {
+    if (other is AnimationStep) {
       return tween == other.tween &&
           interval == other.interval &&
           curve == other.curve;
