@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "layers": {
+    "vectorLayer": {
+      "id": "31235",
+      "name": "menu_to_close",
+      "type": "vector",
+      "width": 24,
+      "height": 24,
+      "children": [
+        {
+          "id": "37429",
+          "name": "group",
+          "type": "group",
+          "pivotX": 12,
+          "pivotY": 12,
+          "children": [
+            {
+              "id": "31237",
+              "name": "path",
+              "type": "path",
+              "pathData": "M 21 7 L 3 7",
+              "strokeColor": "#000000",
+              "strokeWidth": 2
+            },
+            {
+              "id": "33756",
+              "name": "path_2",
+              "type": "path",
+              "pathData": "M 3 12 L 21 12",
+              "strokeColor": "#000000",
+              "strokeWidth": 2
+            },
+            {
+              "id": "31677",
+              "name": "path_1",
+              "type": "path",
+              "pathData": "M 3 17 L 21 17",
+              "strokeColor": "#000000",
+              "strokeWidth": 2
+            }
+          ]
+        }
+      ]
+    },
+    "hiddenLayerIds": []
+  },
+  "timeline": {
+    "animation": {
+      "id": "31236",
+      "name": "anim",
+      "duration": 500,
+      "blocks": [
+        {
+          "id": "31273",
+          "layerId": "31237",
+          "propertyName": "pathData",
+          "startTime": 50,
+          "endTime": 350,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 21 7 L 3 7",
+          "toValue": "M 18.3 5.7 L 5.7 18.3"
+        },
+        {
+          "id": "31691",
+          "layerId": "31677",
+          "propertyName": "pathData",
+          "startTime": 50,
+          "endTime": 350,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 21 17 L 3 17",
+          "toValue": "M 18.3 18.3 L 5.7 5.7"
+        },
+        {
+          "id": "34951",
+          "layerId": "33756",
+          "propertyName": "trimPathStart",
+          "startTime": 0,
+          "endTime": 200,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 0.5
+        },
+        {
+          "id": "34952",
+          "layerId": "33756",
+          "propertyName": "trimPathEnd",
+          "startTime": 0,
+          "endTime": 200,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 1,
+          "toValue": 0.5
+        },
+        {
+          "id": "37430",
+          "layerId": "37429",
+          "propertyName": "rotation",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 180
+        }
+      ]
+    }
+  }
+}

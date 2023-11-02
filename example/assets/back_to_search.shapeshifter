@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "layers": {
+    "vectorLayer": {
+      "id": "137601",
+      "name": "back_to_search",
+      "type": "vector",
+      "width": 24,
+      "height": 24,
+      "children": [
+        {
+          "id": "137603",
+          "name": "path",
+          "type": "path",
+          "pathData": "M 12.71 4.7 C 12.71 4.7 20.01 12 20.01 12 C 20.01 12 12.71 19.3 12.71 19.3 C 12.71 19.3 5.41 12 5.41 12 C 5.41 12 12.71 4.7 12.71 4.7 Z",
+          "strokeColor": "#000000",
+          "strokeWidth": 2,
+          "trimPathStart": 0.5
+        },
+        {
+          "id": "144950",
+          "name": "path_1",
+          "type": "path",
+          "pathData": "M 6.5 12 L 20 12",
+          "strokeColor": "#000000",
+          "strokeWidth": 2
+        },
+        {
+          "id": "150521",
+          "name": "path_2",
+          "type": "path",
+          "pathData": "M 13.2 13.2 L 20.3 20.3",
+          "strokeColor": "#000000",
+          "strokeWidth": 2,
+          "trimPathEnd": 0
+        }
+      ]
+    },
+    "hiddenLayerIds": []
+  },
+  "timeline": {
+    "animation": {
+      "id": "137602",
+      "name": "anim",
+      "duration": 500,
+      "blocks": [
+        {
+          "id": "137627",
+          "layerId": "137603",
+          "propertyName": "pathData",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 12.71 4.7 C 12.71 4.7 20.01 12 20.01 12 C 20.01 12 12.71 19.3 12.71 19.3 C 12.71 19.3 5.41 12 5.41 12 C 5.41 12 12.71 4.7 12.71 4.7 Z",
+          "toValue": "M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z"
+        },
+        {
+          "id": "141357",
+          "layerId": "137603",
+          "propertyName": "trimPathOffset",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 0.75
+        },
+        {
+          "id": "145016",
+          "layerId": "144950",
+          "propertyName": "trimPathStart",
+          "startTime": 0,
+          "endTime": 200,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        },
+        {
+          "id": "150526",
+          "layerId": "150521",
+          "propertyName": "trimPathEnd",
+          "startTime": 250,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        },
+        {
+          "id": "163143",
+          "layerId": "137603",
+          "propertyName": "trimPathStart",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0.5,
+          "toValue": 0
+        }
+      ]
+    }
+  }
+}

@@ -91,7 +91,7 @@ const zeroToOne = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _one),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -120,7 +120,7 @@ const oneToTwo = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _two),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -149,7 +149,7 @@ const twoToThree = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _three),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -178,7 +178,7 @@ const threeToFour = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _four),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -207,7 +207,7 @@ const fourToFive = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _five),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -236,7 +236,7 @@ const fiveToSix = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _six),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -265,7 +265,7 @@ const sixToSeven = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _seven),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -294,7 +294,7 @@ const sevenToEight = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _eight),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -323,7 +323,7 @@ const eightToNine = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _nine),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),
@@ -352,7 +352,7 @@ const nineToZero = AnimatedVectorData(
             strokeWidth: _strokeWidth,
             properties: PathAnimationProperties(
               pathData: [
-                AnimationProperty(
+                AnimationStep(
                   tween: ConstPathDataTween(end: _zero),
                   curve: Curves.fastOutSlowIn,
                   interval: AnimationInterval(end: _duration),

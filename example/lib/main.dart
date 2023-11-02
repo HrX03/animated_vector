@@ -52,8 +52,8 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: AnimatedVectors.closeToSearch,
-              reverseItem: AnimatedVectors.searchToClose,
+              item: AnimatedVectors.searchToClose,
+              reverseItem: AnimatedVectors.closeToSearch,
               size: _iconSize,
             ),
             AnimatedVectorButton(
@@ -101,8 +101,38 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               item: CustomVectors.appsToClose,
               size: _iconSize,
             ),
+            AnimatedVectorButton(
+              item: CustomVectors.searchToMore,
+              reverseItem: CustomVectors.moreToSearch,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: CustomVectors.searchToBack,
+              reverseItem: CustomVectors.backToSearch,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: CustomVectors.menuToClose,
+              reverseItem: CustomVectors.closeToMenu,
+              size: _iconSize,
+            ),
+            AnimatedVectorButton(
+              item: CustomVectors.moreToClose,
+              reverseItem: CustomVectors.closeToMore,
+              size: _iconSize,
+            ),
+            AnimatedCarouselSwitcher(
+              sequence: const [
+                SequenceItem(CustomVectors.searchToMore),
+                SequenceItem(CustomVectors.moreToClose),
+                SequenceItem(CustomVectors.closeToMenu),
+                SequenceItem(AnimatedVectors.drawerToArrow),
+                SequenceItem(CustomVectors.backToSearch),
+              ],
+              size: _iconSize,
+            ),
             AnimatedVectorJumpCarousel(size: _iconSize),
-            AnimatedDigitSwitcher(size: _iconSize),
+            AnimatedCarouselSwitcher(sequence: digitSequence, size: _iconSize),
             AnimatedDownloadCarousel(size: _iconSize),
           ],
         ),
@@ -294,19 +324,22 @@ class _AnimatedDownloadCarouselState extends State<AnimatedDownloadCarousel> {
   }
 }
 
-class AnimatedDigitSwitcher extends StatefulWidget {
+class AnimatedCarouselSwitcher extends StatefulWidget {
+  final List<SequenceEntry> sequence;
   final double size;
 
-  const AnimatedDigitSwitcher({
+  const AnimatedCarouselSwitcher({
+    required this.sequence,
     required this.size,
     super.key,
   });
 
   @override
-  State<AnimatedDigitSwitcher> createState() => _AnimatedDigitSwitcherState();
+  State<AnimatedCarouselSwitcher> createState() =>
+      _AnimatedCarouselSwitcherState();
 }
 
-class _AnimatedDigitSwitcherState extends State<AnimatedDigitSwitcher> {
+class _AnimatedCarouselSwitcherState extends State<AnimatedCarouselSwitcher> {
   final controller = AnimatedSequenceController();
 
   @override
@@ -316,7 +349,7 @@ class _AnimatedDigitSwitcherState extends State<AnimatedDigitSwitcher> {
         controller.skip();
       },
       child: AnimatedSequence(
-        items: digitSequence,
+        items: widget.sequence,
         controller: controller,
         applyColor: true,
         autostart: false,

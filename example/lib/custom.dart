@@ -20,6 +20,33 @@ abstract final class CustomVectors {
 
   @ShapeshifterAsset("assets/download_end.shapeshifter")
   static const AnimatedVectorData downloadEnd = _$downloadEnd;
+
+  @ShapeshifterAsset("assets/search_to_more.shapeshifter")
+  static const AnimatedVectorData searchToMore = _$searchToMore;
+
+  @ShapeshifterAsset("assets/more_to_search.shapeshifter")
+  static const AnimatedVectorData moreToSearch = _$moreToSearch;
+
+  @ShapeshifterAsset("assets/menu_to_close.shapeshifter")
+  static const AnimatedVectorData menuToClose = _$menuToClose;
+
+  @ShapeshifterAsset("assets/close_to_menu.shapeshifter")
+  static const AnimatedVectorData closeToMenu = _$closeToMenu;
+
+  @ShapeshifterAsset("assets/more_to_close.shapeshifter")
+  static const AnimatedVectorData moreToClose = _$moreToClose;
+
+  @ShapeshifterAsset("assets/close_to_more.shapeshifter")
+  static const AnimatedVectorData closeToMore = _$closeToMore;
+
+  @ShapeshifterAsset("assets/search_to_back.shapeshifter")
+  static const AnimatedVectorData searchToBack = _$searchToBack;
+
+  @ShapeshifterAsset("assets/search_to_back_alt.shapeshifter")
+  static const AnimatedVectorData searchToBackAlt = _$searchToBackAlt;
+
+  @ShapeshifterAsset("assets/back_to_search.shapeshifter")
+  static const AnimatedVectorData backToSearch = _$backToSearch;
 }
 
 class CustomSequences {

@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "layers": {
+    "vectorLayer": {
+      "id": "1",
+      "name": "more_to_search",
+      "type": "vector",
+      "width": 24,
+      "height": 24,
+      "children": [
+        {
+          "id": "6370",
+          "name": "group",
+          "type": "group",
+          "rotation": -180,
+          "pivotX": 12,
+          "pivotY": 12,
+          "children": [
+            {
+              "id": "5",
+              "name": "top_dot",
+              "type": "group",
+              "translateX": 12,
+              "translateY": 6,
+              "children": [
+                {
+                  "id": "6",
+                  "name": "path",
+                  "type": "path",
+                  "pathData": "M 0 0 L 0 0",
+                  "strokeColor": "#000000",
+                  "strokeWidth": 4,
+                  "strokeLinecap": "round"
+                }
+              ]
+            },
+            {
+              "id": "37",
+              "name": "bottom_dot",
+              "type": "group",
+              "translateX": 12,
+              "translateY": 18,
+              "children": [
+                {
+                  "id": "38",
+                  "name": "path_1",
+                  "type": "path",
+                  "pathData": "M 0 0 L 0 0",
+                  "strokeColor": "#000000",
+                  "strokeWidth": 4,
+                  "strokeLinecap": "round"
+                }
+              ]
+            },
+            {
+              "id": "49",
+              "name": "path_2",
+              "type": "path",
+              "pathData": "M 12 11 C 12.55 11 13 11.45 13 12 C 13 12.55 12.55 13 12 13 C 11.45 13 11 12.55 11 12 C 11 11.45 11.45 11 12 11 Z",
+              "strokeColor": "#000000",
+              "strokeWidth": 2
+            },
+            {
+              "id": "4102",
+              "name": "path_3",
+              "type": "path",
+              "pathData": "M 13.2 13.2 L 20.3 20.3",
+              "strokeColor": "#000000",
+              "strokeWidth": 2,
+              "trimPathEnd": 0
+            }
+          ]
+        }
+      ]
+    },
+    "hiddenLayerIds": []
+  },
+  "timeline": {
+    "animation": {
+      "id": "2",
+      "name": "anim",
+      "duration": 500,
+      "blocks": [
+        {
+          "id": "43",
+          "layerId": "37",
+          "propertyName": "translateY",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 18,
+          "toValue": 12
+        },
+        {
+          "id": "44",
+          "layerId": "38",
+          "propertyName": "strokeWidth",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 4,
+          "toValue": 2
+        },
+        {
+          "id": "45",
+          "layerId": "38",
+          "propertyName": "strokeAlpha",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 1,
+          "toValue": 0
+        },
+        {
+          "id": "46",
+          "layerId": "5",
+          "propertyName": "translateY",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 6,
+          "toValue": 12
+        },
+        {
+          "id": "47",
+          "layerId": "6",
+          "propertyName": "strokeWidth",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 4,
+          "toValue": 2
+        },
+        {
+          "id": "48",
+          "layerId": "6",
+          "propertyName": "strokeAlpha",
+          "startTime": 0,
+          "endTime": 300,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 1,
+          "toValue": 0
+        },
+        {
+          "id": "173",
+          "layerId": "49",
+          "propertyName": "pathData",
+          "startTime": 150,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 12 11 C 12.55 11 13 11.45 13 12 C 13 12.55 12.55 13 12 13 C 11.45 13 11 12.55 11 12 C 11 11.45 11.45 11 12 11 Z",
+          "toValue": "M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z"
+        },
+        {
+          "id": "4193",
+          "layerId": "4102",
+          "propertyName": "trimPathEnd",
+          "startTime": 300,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": 0,
+          "toValue": 1
+        },
+        {
+          "id": "6647",
+          "layerId": "6370",
+          "propertyName": "rotation",
+          "startTime": 0,
+          "endTime": 400,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "number",
+          "fromValue": -180,
+          "toValue": 0
+        }
+      ]
+    }
+  }
+}
