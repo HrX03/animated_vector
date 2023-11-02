@@ -4,12 +4,31 @@ import 'package:animated_vector/src/utils.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/foundation.dart';
 
+/// A sequence of [AnimationProperty] of a specific type.
+/// Each entry should have an [AnimationInterval] that doesn't overlap with any
+/// other entries in the same sequence as that would throw an assertion.
+/// Used in [AnimationProperties] subclasses.
+///
+/// Maps to `List<AnimationProperty<T>>`.
 typedef AnimationPropertySequence<T> = List<AnimationProperty<T>>;
 
-abstract class AnimationProperties<T extends VectorElement> {
+/// Abstract base class for a group of properties that can be animated.
+/// Each subclass should be paired to a specific [VectorElement] subclass.
+///
+/// Usually fields of this class are of type [AnimationPropertySequence].
+///
+/// The library subclasses are as follows:
+/// - [RootVectorAnimationProperties] for [RootVectorElement]
+/// - [GroupAnimationProperties] for [GroupElement]
+/// - [PathAnimationProperties] for [PathElement]
+/// - [ClipPathAnimationProperties] for [ClipPathElement]
+abstract class AnimationProperties {
+  /// Base const constructor, allows subclasses to define const constructors.
   const AnimationProperties();
 
-  void ensureIntervalAreValid() {
+  /// Make sure every interval in this properties sequences is valid.
+  /// Intervals are valid when they don't overlap with each other in the same sequence.
+  void ensureIntervalsAreValid() {
     for (final field in checkedFields) {
       assert(
         checkForIntervalsValidity(field),
@@ -20,16 +39,39 @@ abstract class AnimationProperties<T extends VectorElement> {
     }
   }
 
+  /// A list of sequences that will be checked in [ensureIntervalsAreValid].
+  /// Usually every sequence field will be added to this.
   List<AnimationPropertySequence?> get checkedFields;
+
+  /// Evaluate the various sequences and collapse them to a
+  /// single value based on the [progress] passed in.
+  /// The return value is a `Record` that contains each field resolved value.
+  ///
+  /// Usually subclasses will have a list of optional named parameters for this
+  /// method that allows to pass in default values for each sequence as they could
+  /// potentially collapse to `null` values. If default values are passed in
+  /// usually the user expects said field to be non null.
+  ///
+  /// The parameter [animationDuration] is the duration from the source [AnimatedVectorData].
+  ///
+  /// It would be useful for implementers to refer to builtin properties subclasses
+  /// implementations like [PathAnimationProperties.evaluate] and [EvaluatedPathAnimationProperties].
   Record evaluate(double progress, Duration animationDuration);
 }
 
+/// Evaluated data for [RootVectorAnimationProperties].
+///
+/// An instance of this typedef is returned by [RootVectorAnimationProperties.evaluate].
 typedef EvaluatedRootVectorAnimationProperties = ({double? alpha});
 
-class RootVectorAnimationProperties
-    extends AnimationProperties<RootVectorElement> {
+/// An [AnimationProperties] subclass for [RootVectorElement].
+///
+/// It allows to animate the [RootVectorElement.alpha] property.
+class RootVectorAnimationProperties extends AnimationProperties {
+  /// A sequence of properties to animate [RootVectorElement.alpha].
   final AnimationPropertySequence<double>? alpha;
 
+  /// Build a new instance of [RootVectorAnimationProperties].
   const RootVectorAnimationProperties({this.alpha});
 
   @override
@@ -41,7 +83,7 @@ class RootVectorAnimationProperties
     Duration animationDuration, {
     double? defaultAlpha,
   }) {
-    ensureIntervalAreValid();
+    ensureIntervalsAreValid();
     final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
 
     return (alpha: evaluator.evaluate(alpha, defaultAlpha),);
@@ -60,6 +102,9 @@ class RootVectorAnimationProperties
   }
 }
 
+/// Evaluated data for [GroupAnimationProperties].
+///
+/// An instance of this typedef is returned by [GroupAnimationProperties.evaluate].
 typedef EvaluatedGroupAnimationProperties = ({
   double? translateX,
   double? translateY,
@@ -70,15 +115,39 @@ typedef EvaluatedGroupAnimationProperties = ({
   double? rotation,
 });
 
-class GroupAnimationProperties extends AnimationProperties<GroupElement> {
+/// An [AnimationProperties] subclass for [GroupElement].
+///
+/// It allows to animate various properties of [GroupElement]:
+/// - [GroupElement.translateX]
+/// - [GroupElement.translateY]
+/// - [GroupElement.scaleX]
+/// - [GroupElement.scaleY]
+/// - [GroupElement.pivotX]
+/// - [GroupElement.pivotY]
+/// - [GroupElement.rotation]
+class GroupAnimationProperties extends AnimationProperties {
+  /// A sequence of properties to animate [GroupElement.translateX].
   final AnimationPropertySequence<double>? translateX;
+
+  /// A sequence of properties to animate [GroupElement.translateY].
   final AnimationPropertySequence<double>? translateY;
+
+  /// A sequence of properties to animate [GroupElement.scaleX].
   final AnimationPropertySequence<double>? scaleX;
+
+  /// A sequence of properties to animate [GroupElement.scaleY].
   final AnimationPropertySequence<double>? scaleY;
+
+  /// A sequence of properties to animate [GroupElement.pivotX].
   final AnimationPropertySequence<double>? pivotX;
+
+  /// A sequence of properties to animate [GroupElement.pivotY].
   final AnimationPropertySequence<double>? pivotY;
+
+  /// A sequence of properties to animate [GroupElement.rotation].
   final AnimationPropertySequence<double>? rotation;
 
+  /// Build a new instance of [GroupAnimationProperties].
   const GroupAnimationProperties({
     this.translateX,
     this.translateY,
@@ -112,7 +181,7 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
     double? defaultPivotY,
     double? defaultRotation,
   }) {
-    ensureIntervalAreValid();
+    ensureIntervalsAreValid();
     final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
 
     return (
@@ -145,6 +214,9 @@ class GroupAnimationProperties extends AnimationProperties<GroupElement> {
   }
 }
 
+/// Evaluated data for [PathAnimationProperties].
+///
+/// An instance of this typedef is returned by [PathAnimationProperties.evaluate].
 typedef EvaluatedPathAnimationProperties = ({
   PathData? pathData,
   Color? fillColor,
@@ -157,17 +229,47 @@ typedef EvaluatedPathAnimationProperties = ({
   double? trimOffset,
 });
 
-class PathAnimationProperties extends AnimationProperties<PathElement> {
+/// An [AnimationProperties] subclass for [PathElement].
+///
+/// It allows to animate various properties of [PathElement]:
+/// - [PathElement.pathData]
+/// - [PathElement.fillCOlor]
+/// - [PathElement.fillAlpha]
+/// - [PathElement.strokeColor]
+/// - [PathElement.strokeAlpha]
+/// - [PathElement.strokeWidth]
+/// - [PathElement.trimStart]
+/// - [PathElement.trimEnd]
+/// - [PathElement.trimOffset]
+class PathAnimationProperties extends AnimationProperties {
+  /// A sequence of properties to animate [PathElement.pathData].
   final AnimationPropertySequence<PathData>? pathData;
+
+  /// A sequence of properties to animate [PathElement.fillColor].
   final AnimationPropertySequence<Color?>? fillColor;
+
+  /// A sequence of properties to animate [PathElement.fillAlpha].
   final AnimationPropertySequence<double>? fillAlpha;
+
+  /// A sequence of properties to animate [PathElement.strokeColor].
   final AnimationPropertySequence<Color?>? strokeColor;
+
+  /// A sequence of properties to animate [PathElement.strokeAlpha].
   final AnimationPropertySequence<double>? strokeAlpha;
+
+  /// A sequence of properties to animate [PathElement.strokeWidth].
   final AnimationPropertySequence<double>? strokeWidth;
+
+  /// A sequence of properties to animate [PathElement.trimStart].
   final AnimationPropertySequence<double>? trimStart;
+
+  /// A sequence of properties to animate [PathElement.trimEnd].
   final AnimationPropertySequence<double>? trimEnd;
+
+  /// A sequence of properties to animate [PathElement.trimOffset].
   final AnimationPropertySequence<double>? trimOffset;
 
+  /// Build a new instance of [PathAnimationProperties].
   const PathAnimationProperties({
     this.pathData,
     this.fillColor,
@@ -207,7 +309,7 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
     double? defaultTrimEnd,
     double? defaultTrimOffset,
   }) {
-    ensureIntervalAreValid();
+    ensureIntervalsAreValid();
     final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
 
     return (
@@ -244,11 +346,16 @@ class PathAnimationProperties extends AnimationProperties<PathElement> {
   }
 }
 
+/// Evaluated data for [ClipPathAnimationProperties].
+///
+/// An instance of this typedef is returned by [ClipPathAnimationProperties.evaluate].
 typedef EvaluatedClipPathAnimationProperties = ({PathData? pathData});
 
-class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
+class ClipPathAnimationProperties extends AnimationProperties {
+  /// A sequence of properties to animate [ClipPathElement.pathData].
   final AnimationPropertySequence<PathData>? pathData;
 
+  /// Build a new instance of [ClipPathAnimationProperties].
   const ClipPathAnimationProperties({this.pathData});
 
   @override
@@ -260,7 +367,7 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
     Duration animationDuration, {
     PathData? defaultPathData,
   }) {
-    ensureIntervalAreValid();
+    ensureIntervalsAreValid();
     final evaluator = AnimationPropertyEvaluator(animationDuration, progress);
 
     return (pathData: evaluator.evaluate(pathData, defaultPathData),);
@@ -279,25 +386,33 @@ class ClipPathAnimationProperties extends AnimationProperties<ClipPathElement> {
   }
 }
 
+/// An animatable property of an [AnimationPropertySequence].
+/// Needs a [tween] with at least one of begin or end to be non null.
+/// This property will be animated in the period of time defined by [interval].
+///
+/// An optional [curve] parameter can be passed in.
 class AnimationProperty<T> {
+  /// The tween that defines the values that need to be interpolated.
+  /// One of the two values can be left null, in that case it will be filled by
+  /// looking at the nearest non null value in the sequence.
   final ConstTween<T> tween;
+
+  /// The interval of time which defines the period of time this property will be
+  /// animated in.
   final AnimationInterval interval;
+
+  /// The curve to use to interpolate the two values. Some default curves can be
+  /// found in this library [ShapeShifterCurves] class or in flutter [Curves] class.
   final Curve curve;
 
+  /// Construct a new [AnimationProperty] instance.
+  ///
+  /// The [curve] parameter is by default [Curves.linear].
   const AnimationProperty({
     required this.tween,
     required this.interval,
     this.curve = Curves.linear,
   });
-
-  T evaluate(T defaultValue, Duration animationDuration, double progress) {
-    final Curve c =
-        animationIntervalToFlutterInterval(interval, animationDuration, curve);
-
-    final double curvedT = c.transform(progress);
-    final resolvedTween = tween.copyWithDefaults(defaultValue, defaultValue);
-    return resolvedTween.transform(curvedT);
-  }
 
   @override
   int get hashCode => Object.hash(tween, interval, curve);
@@ -314,29 +429,71 @@ class AnimationProperty<T> {
   }
 }
 
+/// An interval of time that defines when an animation starts and when it end.
+/// Very similar to flutter [Interval] but instead of using normalized values
+/// it instead uses more human friendly [Duration] values.
+/// It is nonetheless possible to get normalized values with [normalizeWithDuration].
 class AnimationInterval {
+  /// The start duration of this interval
   final Duration start;
+
+  /// The end duration of this interval
   final Duration end;
 
+  /// Constructs a new [AnimationInterval] usin ga [start] and [end] durations defined.
+  ///
+  /// If [start] is omitted it is assumed to start at a time of zero.
+  ///
+  /// It is very similar in concept to [Rect.fromLTRB], where you build a rect
+  /// by its top point and its bottom point.
   const AnimationInterval({
     this.start = Duration.zero,
     required this.end,
   });
 
-  AnimationInterval.withDuration({
+  /// Constructs a new [AnimationInterval] using
+  /// a start point defined by [startOffset] and a [duration].
+  ///
+  /// If [startOffset] is omitted it is assumed to start at a time of zero.
+  ///
+  /// It is very similar in concept to [Rect.fromLTWH], where you build a rect
+  /// by its top point and by lengths starting from that point.
+  const AnimationInterval.withDuration({
     Duration startOffset = Duration.zero,
     required Duration duration,
   })  : start = startOffset,
-        end = Duration(
-          microseconds: startOffset.inMicroseconds + duration.inMicroseconds,
-        );
+        end = startOffset + duration;
 
+  /// Constructs a new [AnimationInterval] with duration zero which starts at [offset].
+  const AnimationInterval.instant({required Duration offset})
+      : start = offset,
+        end = offset;
+
+  /// Simple getter to get the duration of this interval
+  Duration get duration => end - start;
+
+  /// Returns true if the passed in [progress] lies in between the normalized
+  /// [start] and [end] values. To do so, [animationDuration] is used to normalize
+  /// the bounds.
+  ///
+  /// For example, for an [animationDuration] that lasts 1 second and an [AnimationInterval]
+  /// with [start] 500ms and [end] 1000ms any [progress] between 0.5 and 1.0
+  /// inclusive will return true, while any other value will return false.
+  ///
+  /// ```
+  /// progress
+  ///       vvvvv     0.5 - 1.0
+  /// |-----=====|    1000 ms total
+  /// timeline
+  /// ```
   bool hasValueInside(double progress, Duration animationDuration) {
     final (start, end) = normalizeWithDuration(animationDuration);
 
     return progress >= start && progress <= end;
   }
 
+  /// Returns a pair of doubles that represents the [start] and [end] values
+  /// normalized to the range 0.0 - 1.0 using [animationDuration].
   (double start, double end) normalizeWithDuration(Duration animationDuration) {
     return (
       start.inMicroseconds.clamp(0, animationDuration.inMicroseconds) /
@@ -359,14 +516,21 @@ class AnimationInterval {
   }
 }
 
+/// A class that is very similar to flutter's [Tween] but has its fields immutable
+/// and the constructor is const.
+/// Was mainly created to allow for completely consts [AnimatedVectorData] instances.
+///
+/// It is recommended to call [transform] only from instances created
+/// from [copyWithDefaults] to ensure no null value is mistakenly transformed,
+/// which would result in an assertion to be throw,
 class ConstTween<T> extends Animatable<T> {
+  /// The initial value of this tween.
   final T? begin;
+
+  /// The final vaule of this tween.
   final T? end;
 
-  const ConstTween({
-    this.begin,
-    this.end,
-  });
+  const ConstTween({this.begin, this.end});
 
   @override
   int get hashCode => Object.hash(begin, end);
@@ -387,6 +551,10 @@ class ConstTween<T> extends Animatable<T> {
     ).transform(t);
   }
 
+  /// Create a new [ConstTween] instance based on this but with eventual null values
+  /// replaced with the ones provided in the arguments of this method.
+  ///
+  /// Prefer calling [transform] on an instance of [ConstTween] created by this method.
   ConstTween<T> copyWithDefaults(T begin, T end) {
     return ConstTween<T>(
       begin: this.begin ?? begin,
@@ -395,6 +563,9 @@ class ConstTween<T> extends Animatable<T> {
   }
 }
 
+/// Specialized subclass of [ConstTween] for tweening between colors.
+/// It calls [Color.lerp] inside its [transform] method.
+/// Mirrors [ColorTween] from flutter.
 class ConstColorTween extends ConstTween<Color> {
   const ConstColorTween({super.begin, super.end});
 
@@ -415,6 +586,8 @@ class ConstColorTween extends ConstTween<Color> {
   }
 }
 
+/// Specialized subclass of [ConstTween] for tweening between path data.
+/// It calls [PathData.lerp] inside its [transform] method.
 class ConstPathDataTween extends ConstTween<PathData> {
   const ConstPathDataTween({super.begin, super.end});
 

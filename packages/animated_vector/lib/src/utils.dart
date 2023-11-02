@@ -1,7 +1,6 @@
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/extensions.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 
 bool checkForIntervalsValidity(AnimationPropertySequence? properties) {
   if (properties == null) return true;
@@ -35,23 +34,6 @@ T getNearestDefaultForTween<T>(
   }
 
   return value ?? defaultValue;
-}
-
-Interval animationIntervalToFlutterInterval(
-  AnimationInterval interval,
-  Duration animationDuration,
-  Curve curve,
-) {
-  final int start =
-      interval.start.inMilliseconds.clamp(0, animationDuration.inMilliseconds);
-  final int end =
-      interval.end.inMilliseconds.clamp(0, animationDuration.inMilliseconds);
-
-  return Interval(
-    start / animationDuration.inMilliseconds,
-    end / animationDuration.inMilliseconds,
-    curve: curve,
-  );
 }
 
 T? timelineEvaluate<T>({

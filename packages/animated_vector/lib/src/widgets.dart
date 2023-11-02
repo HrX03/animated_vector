@@ -67,7 +67,7 @@ class _AnimatedVectorPainter extends CustomPainter {
           ),
       );
     }
-    vector.root.paint(
+    vector.paint(
       canvas,
       vector.viewportSize,
       progress,
