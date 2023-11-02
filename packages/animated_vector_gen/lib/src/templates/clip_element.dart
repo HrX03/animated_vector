@@ -21,7 +21,7 @@ class ClipElementTemplate extends ElementTemplate {
 }
 
 class ClipAnimationPropertiesTemplate extends Template {
-  final List<AnimationPropertyTemplate> pathData;
+  final List<AnimationStepTemplate> pathData;
 
   const ClipAnimationPropertiesTemplate({
     required this.pathData,

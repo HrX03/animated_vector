@@ -1,14 +1,14 @@
 import 'package:animated_vector_gen/src/templates/template.dart';
 import 'package:animated_vector_gen/src/templates/utils.dart';
 
-class AnimationPropertyTemplate<T> extends Template {
+class AnimationStepTemplate<T> extends Template {
   final TweenTemplate<T> tween;
   final ValueType type;
   final int? start;
   final int end;
   final String? curve;
 
-  const AnimationPropertyTemplate({
+  const AnimationStepTemplate({
     required this.tween,
     required this.type,
     required this.start,
@@ -18,7 +18,7 @@ class AnimationPropertyTemplate<T> extends Template {
 
   @override
   String? build() {
-    return buildConstructorCall("AnimationProperty<${type.typeName}>", {
+    return buildConstructorCall("AnimationStep<${type.typeName}>", {
       "tween": tween,
       "interval": buildConstructorCall("AnimationInterval", {
         "start": start != null && start! > 0

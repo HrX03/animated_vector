@@ -42,13 +42,13 @@ class GroupElementTemplate extends ElementTemplate {
 }
 
 class GroupAnimationPropertiesTemplate extends Template {
-  final List<AnimationPropertyTemplate> translateX;
-  final List<AnimationPropertyTemplate> translateY;
-  final List<AnimationPropertyTemplate> scaleX;
-  final List<AnimationPropertyTemplate> scaleY;
-  final List<AnimationPropertyTemplate> pivotX;
-  final List<AnimationPropertyTemplate> pivotY;
-  final List<AnimationPropertyTemplate> rotation;
+  final List<AnimationStepTemplate> translateX;
+  final List<AnimationStepTemplate> translateY;
+  final List<AnimationStepTemplate> scaleX;
+  final List<AnimationStepTemplate> scaleY;
+  final List<AnimationStepTemplate> pivotX;
+  final List<AnimationStepTemplate> pivotY;
+  final List<AnimationStepTemplate> rotation;
 
   const GroupAnimationPropertiesTemplate({
     required this.translateX,

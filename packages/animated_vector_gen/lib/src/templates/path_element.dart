@@ -56,15 +56,15 @@ class PathElementTemplate extends ElementTemplate {
 }
 
 class PathAnimationPropertiesTemplate extends Template {
-  final List<AnimationPropertyTemplate> pathData;
-  final List<AnimationPropertyTemplate> fillColor;
-  final List<AnimationPropertyTemplate> fillAlpha;
-  final List<AnimationPropertyTemplate> strokeColor;
-  final List<AnimationPropertyTemplate> strokeAlpha;
-  final List<AnimationPropertyTemplate> strokeWidth;
-  final List<AnimationPropertyTemplate> trimStart;
-  final List<AnimationPropertyTemplate> trimEnd;
-  final List<AnimationPropertyTemplate> trimOffset;
+  final List<AnimationStepTemplate> pathData;
+  final List<AnimationStepTemplate> fillColor;
+  final List<AnimationStepTemplate> fillAlpha;
+  final List<AnimationStepTemplate> strokeColor;
+  final List<AnimationStepTemplate> strokeAlpha;
+  final List<AnimationStepTemplate> strokeWidth;
+  final List<AnimationStepTemplate> trimStart;
+  final List<AnimationStepTemplate> trimEnd;
+  final List<AnimationStepTemplate> trimOffset;
 
   const PathAnimationPropertiesTemplate({
     required this.pathData,

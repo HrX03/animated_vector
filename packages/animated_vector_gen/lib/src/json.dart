@@ -125,7 +125,7 @@ List<ElementTemplate> _elementsFromJson(
   return elements;
 }
 
-List<AnimationPropertyTemplate<T>> _parseProperties<T>(
+List<AnimationStepTemplate<T>> _parseProperties<T>(
   List<_JsonAnimationProperty> properties,
   String layerId,
   String propertyName,
@@ -133,7 +133,7 @@ List<AnimationPropertyTemplate<T>> _parseProperties<T>(
   return properties
       .where((a) => a.layerId == layerId && a.propertyName == propertyName)
       .map(
-        (a) => AnimationPropertyTemplate<T>(
+        (a) => AnimationStepTemplate<T>(
           tween: TweenTemplate<T>(
             begin: a.begin as T,
             end: a.end as T,

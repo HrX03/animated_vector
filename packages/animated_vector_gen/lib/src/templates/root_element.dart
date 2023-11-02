@@ -24,7 +24,7 @@ class RootElementTemplate extends Template {
 }
 
 class RootAnimationPropertiesTemplate extends Template {
-  final List<AnimationPropertyTemplate> alpha;
+  final List<AnimationStepTemplate> alpha;
 
   const RootAnimationPropertiesTemplate({
     required this.alpha,
