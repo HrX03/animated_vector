@@ -233,7 +233,7 @@ typedef EvaluatedPathAnimationProperties = ({
 ///
 /// It allows to animate various properties of [PathElement]:
 /// - [PathElement.pathData]
-/// - [PathElement.fillCOlor]
+/// - [PathElement.fillColor]
 /// - [PathElement.fillAlpha]
 /// - [PathElement.strokeColor]
 /// - [PathElement.strokeAlpha]

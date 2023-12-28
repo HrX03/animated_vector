@@ -7,5 +7,6 @@ export 'src/data.dart';
 export 'src/path.dart';
 export 'src/sequence.dart';
 export 'src/shapeshifter.dart';
+export 'src/to_animation.dart';
 export 'src/vectors.dart';
 export 'src/widgets.dart';
