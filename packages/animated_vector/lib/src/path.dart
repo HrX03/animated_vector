@@ -16,13 +16,25 @@ typedef PathCommands = List<PathCommand>;
 class PathData {
   final PathCommands _operations;
 
+  /// Builds a new instance of [PathData] by using a list of [PathCommand]s.
+  ///
+  /// An easier way to build a [PathData] instance is by using [PathData.parse].
   const PathData(this._operations);
 
   /// The currently stored operations for this PathData
   PathCommands get operations => _operations;
 
+  /// Builds a new instance of [PathData] using the [PathDataParse] class.
+  ///
+  /// The [svg] string is parsed only when [operations] is called and when the
+  /// [PathCache] instance doesn't have a cached version of this path.
   const factory PathData.parse(String svg) = PathDataParse;
 
+  /// Interpolates between two [PathData]s given an interval [t] that is described
+  /// between 1.0 and 0.0 both inclusive.
+  ///
+  /// The two paths must be non null and compatible, which means they have to have
+  /// the same length and the same commands must appear in the same order.
   factory PathData.lerp(PathData a, PathData b, double t) {
     assert(a.checkForCompatibility(b));
     final PathCommands interpolatedOperations = [];
@@ -114,32 +126,18 @@ class PathData {
   }
 }
 
-/// A cache for [PathDataParse] classes to avoid parsing and computing the svg
-/// path each time the operations array is requested.
-///
-/// Use the [PathCache.instance] to access the singleton instance instead of building
-/// a new instance.
-final class PathCache {
-  final Expando<PathCommands> _cache = Expando<PathCommands>();
-
-  /// The singleton instance that [PathDataParse.operations] uses.
-  /// Avoid building fresh instances where possible.
-  static final PathCache instance = PathCache();
-
-  /// Get stored [PathCommands] using a [PathDataParse] instance as [key].
-  /// [onCacheMiss] will be called if there is no associated commands inside the
-  /// cache for the specificed [key].
-  PathCommands get(PathDataParse key, PathCommands Function() onCacheMiss) {
-    return _cache[key] ?? (_cache[key] = onCacheMiss());
-  }
-}
-
 /// A specialized instance of [PathData] that is able to
 /// build a list of [PathCommand] using the path data inside [svg].
+///
 /// This is the class that is used by [PathData.parse]
 class PathDataParse extends PathData {
+  /// The svg string to parse. Follows the conventions described in [this article](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d).
   final String svg;
 
+  /// Builds a new instance of [PathDataParse].
+  ///
+  /// The [svg] string is parsed only when [operations] is called and when the
+  /// [PathCache] instance doesn't have a cached version of this path.
   const PathDataParse(this.svg) : super(const []);
 
   /// The list of operations computed from the [svg] path data.
@@ -180,6 +178,26 @@ class PathDataParse extends PathData {
   @override
   String toString() {
     return svg;
+  }
+}
+
+/// A cache for [PathDataParse] classes to avoid parsing and computing the svg
+/// path each time the operations array is requested.
+///
+/// Use the [PathCache.instance] to access the singleton instance instead of building
+/// a new instance.
+final class PathCache {
+  final Expando<PathCommands> _cache = Expando<PathCommands>();
+
+  /// The singleton instance that [PathDataParse.operations] uses.
+  /// Avoid building fresh instances where possible.
+  static final PathCache instance = PathCache();
+
+  /// Get stored [PathCommands] using a [PathDataParse] instance as [key].
+  /// [onCacheMiss] will be called if there is no associated commands inside the
+  /// cache for the specificed [key].
+  PathCommands get(PathDataParse key, PathCommands Function() onCacheMiss) {
+    return _cache[key] ?? (_cache[key] = onCacheMiss());
   }
 }
 

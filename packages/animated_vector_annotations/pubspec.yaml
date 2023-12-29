@@ -1,6 +1,6 @@
 name: animated_vector_annotations
-description: Annotations for animated_vector_gen
-version: 0.1.0
+description: Code generation annotations for animated_vector_gen and animated_vector.
+version: 0.2.0
 license: MIT
 homepage: https://github.com/HrX03/animated_vector/tree/main/packages/animated_vector_annotations
 repository: https://github.com/HrX03/animated_vector

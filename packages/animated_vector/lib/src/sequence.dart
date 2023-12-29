@@ -37,6 +37,10 @@ class SequenceMachine {
     );
   }
 
+  /// The current item the sequence is processing.
+  ///
+  /// It is guaranteed to always be an instance of [SequenceItem] as groups
+  /// aren't directly executed but instead describe the behaviour of a group of items.
   SequenceItem get currentItem => (_currentEntry.item as _ExecutionItem).sItem;
   _ExecutionEntry get _currentEntry => _instructions[_currIndex];
 
@@ -320,6 +324,8 @@ class SequenceItem extends SequenceEntry {
 /// The properties set in the class will be checked only after the last item of
 /// [children] will be done executing.
 class SequenceGroup extends SequenceEntry {
+  /// The children of this group, subjected to the execution rules described by this group.
+  /// They can either be [SequenceItem]s or [SequenceGroup]s.
   final List<SequenceEntry> children;
 
   /// Builds an instance of [SequenceGroup].

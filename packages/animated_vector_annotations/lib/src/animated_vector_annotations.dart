@@ -2,7 +2,7 @@ import 'package:meta/meta_meta.dart';
 
 /// An annotation to generate [AnimatedVectorData] from a shapeshifter file.
 @Target({TargetKind.field, TargetKind.topLevelVariable})
-class ShapeshifterAsset {
+class ShapeShifterAsset {
   /// The path of the shapeshifter file to convert
   final String path;
 
@@ -51,5 +51,5 @@ class ShapeshifterAsset {
   /// If static conversion of a file can't be used (for example when the file
   /// needs to be picked at runtime) then [AnimatedVectorData] has static methods
   /// to load a file from the app's assets or directly from the file system.
-  const ShapeshifterAsset(this.path);
+  const ShapeShifterAsset(this.path);
 }

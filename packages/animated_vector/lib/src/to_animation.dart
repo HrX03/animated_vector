@@ -1,4 +1,3 @@
-import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:animated_vector/animated_vector.dart';
@@ -90,13 +89,21 @@ extension AnimatedVectorDataToAnimation on AnimatedVectorData {
 
       final image = await picture.toImage(width.toInt(), height.toInt());
       final byteData = await image.toByteData();
-      final dartImage = await Isolate.run(
-        () => img.Image.fromBytes(
-          width: width.toInt(),
-          height: height.toInt(),
-          bytes: byteData!.buffer,
+      final dartImage = await compute(
+        (msg) => img.Image.fromBytes(
+          width: msg.width.toInt(),
+          height: msg.height.toInt(),
+          bytes: msg.byteData!.buffer,
           numChannels: 4,
-          frameDuration: (frameDuration * frameDurationModifier).floor(),
+          frameDuration:
+              (msg.frameDuration * msg.frameDurationModifier).floor(),
+        ),
+        (
+          width: width,
+          height: height,
+          byteData: byteData,
+          frameDuration: frameDuration,
+          frameDurationModifier: frameDurationModifier,
         ),
       );
       switch (gif) {

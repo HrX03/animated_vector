@@ -42,6 +42,14 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
       appBar: AppBar(
         title: const Text("animated_vector example"),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          print(const bool.fromEnvironment("dart.library.io"));
+          final _ = await AnimatedVectorData.loadFromFile(
+            r"C:\Users\dnbia\Projects\animated_vector\example\assets\isocube.shapeshifter",
+          );
+        },
+      ),
       body: Center(
         child: Wrap(
           alignment: WrapAlignment.center,

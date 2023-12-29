@@ -11,7 +11,9 @@ import 'package:flutter/animation.dart';
 /// or by imagining how they'd animate.
 ///
 /// Mirrors the [AnimatedIcons] class from flutter.
-class AnimatedVectors {
+abstract final class AnimatedVectors {
+  const AnimatedVectors._();
+
   /// Animated vector for search to close.
   ///
   /// Pairs with [close_to_search].

@@ -132,6 +132,9 @@ class _AnimatedVectorPainter extends CustomPainter {
 ///
 /// A controller can be attached to a single sequence at a time.
 class AnimatedSequenceController {
+  /// Create a new instance of [AnimatedSequenceController].
+  AnimatedSequenceController();
+
   _AnimatedSequenceState? _state;
 
   void _attach(_AnimatedSequenceState state) {

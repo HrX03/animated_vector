@@ -351,6 +351,10 @@ class PathAnimationProperties extends AnimationProperties {
 /// An instance of this typedef is returned by [ClipPathAnimationProperties.evaluate].
 typedef EvaluatedClipPathAnimationProperties = ({PathData? pathData});
 
+/// An [AnimationProperties] subclass for [ClipPathElement].
+///
+/// It allows to animate various properties of [ClipPathElement]:
+/// - [ClipPathElement.pathData]
 class ClipPathAnimationProperties extends AnimationProperties {
   /// A sequence of steps to animate [ClipPathElement.pathData].
   final AnimationStepSequence<PathData>? pathData;
@@ -530,6 +534,7 @@ class ConstTween<T> extends Animatable<T> {
   /// The final vaule of this tween.
   final T? end;
 
+  /// Builds a new instance of [ConstTween].
   const ConstTween({this.begin, this.end});
 
   @override
@@ -567,6 +572,7 @@ class ConstTween<T> extends Animatable<T> {
 /// It calls [Color.lerp] inside its [transform] method.
 /// Mirrors [ColorTween] from flutter.
 class ConstColorTween extends ConstTween<Color> {
+  /// Builds a new instance of [ConstColorTween].
   const ConstColorTween({super.begin, super.end});
 
   @override
@@ -589,6 +595,7 @@ class ConstColorTween extends ConstTween<Color> {
 /// Specialized subclass of [ConstTween] for tweening between path data.
 /// It calls [PathData.lerp] inside its [transform] method.
 class ConstPathDataTween extends ConstTween<PathData> {
+  /// Builds a new instance of [ConstPathDataTween].
   const ConstPathDataTween({super.begin, super.end});
 
   @override

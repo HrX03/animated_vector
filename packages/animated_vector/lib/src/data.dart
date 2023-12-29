@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'dart:math' as math;
 
+import 'package:animated_vector/src/_stub_loader.dart'
+    if (dart.library.io) 'package:animated_vector/src/_io_loader.dart';
 import 'package:animated_vector/src/animation.dart';
 import 'package:animated_vector/src/path.dart';
 import 'package:animated_vector/src/shapeshifter.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+/// A list of [VectorElement]s.
+/// Used by [RootVectorElement] and [GroupElement].
 typedef VectorElements = List<VectorElement>;
 
 /// Data for an animated vector, to use with widgets like [AnimatedVector] or
@@ -64,13 +67,16 @@ class AnimatedVectorData {
 
   /// Dynamically load an [AnimatedVectorData] from a json Shape Shifter file
   /// inside the file system.
+  ///
   /// The returned instance needs to be stored somewhere in order to be used as
   /// this method doesn't store anything inside a cache or similar.
   ///
+  /// This method will throw [UnsupportedError] when called on the web platform.s
+  ///
   /// Where possible prefer to use code generation from [animated_vector_gen](https://pub.dev/packages/animated_vector_gen)
   /// as it's syncronous and allows for const instances to be created.
-  static Future<AnimatedVectorData> loadFromFile(File file) async {
-    return ShapeShifterConverter.toAVD(await file.readAsString());
+  static Future<AnimatedVectorData> loadFromFile(String path) async {
+    return loadDataFromFile(path);
   }
 
   /// Dynamically load an [AnimatedVectorData] from a json Shape Shifter file

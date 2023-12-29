@@ -14,7 +14,7 @@ import 'package:source_gen/source_gen.dart'
 
 class ShapeshifterAssetGenerator extends Generator {
   TypeChecker get typeChecker =>
-      const TypeChecker.fromRuntime(ShapeshifterAsset);
+      const TypeChecker.fromRuntime(ShapeShifterAsset);
 
   @override
   Future<String> generate(LibraryReader library, BuildStep buildStep) async {

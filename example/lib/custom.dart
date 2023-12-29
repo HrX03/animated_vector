@@ -7,22 +7,22 @@ import 'package:flutter/widgets.dart';
 part 'custom.g.dart';
 
 abstract final class CustomVectors {
-  @ShapeshifterAsset("assets/apps_to_close_composite.shapeshifter")
+  @ShapeShifterAsset("assets/apps_to_close_composite.shapeshifter")
   static const AnimatedVectorData apps_to_close = _$apps_to_close;
 
-  @ShapeshifterAsset("assets/add_transition.shapeshifter")
+  @ShapeShifterAsset("assets/add_transition.shapeshifter")
   static const AnimatedVectorData add_transition = _$add_transition;
 
-  @ShapeshifterAsset("assets/download_start.shapeshifter")
+  @ShapeShifterAsset("assets/download_start.shapeshifter")
   static const AnimatedVectorData download_start = _$download_start;
 
-  @ShapeshifterAsset("assets/download_loop.shapeshifter")
+  @ShapeShifterAsset("assets/download_loop.shapeshifter")
   static const AnimatedVectorData download_loop = _$download_loop;
 
-  @ShapeshifterAsset("assets/download_end.shapeshifter")
+  @ShapeShifterAsset("assets/download_end.shapeshifter")
   static const AnimatedVectorData download_end = _$download_end;
 
-  @ShapeshifterAsset("assets/isocube.shapeshifter")
+  @ShapeShifterAsset("assets/isocube.shapeshifter")
   static const AnimatedVectorData isocube = _$isocube;
 
   static const AnimatedVectorData search_to_back = AnimatedVectorData(
