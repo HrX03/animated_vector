@@ -208,7 +208,7 @@ class AnimatedSequence extends StatefulWidget {
   /// It's recommended to use multiples of the viewport size.
   final Size? size;
 
-  /// Whether to apply a custom color over the [vector].
+  /// Whether to apply a custom color over the [items].
   /// It's recommended to use this on vectors that have flat colors.
   ///
   /// If [colorOverride] is null and the current item has no color override

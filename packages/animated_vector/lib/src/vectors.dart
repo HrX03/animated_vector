@@ -1,10 +1,23 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:ui';
 
 import 'package:animated_vector/animated_vector.dart';
 import 'package:flutter/animation.dart';
 
+/// A collection of animated vectors that are available with the lib by default.
+///
+/// Most of these are hand made either by following some available material animations
+/// or by imagining how they'd animate.
+///
+/// Mirrors the [AnimatedIcons] class from flutter.
 class AnimatedVectors {
-  static const AnimatedVectorData searchToClose = AnimatedVectorData(
+  /// Animated vector for search to close.
+  ///
+  /// Pairs with [close_to_search].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/search_to_close.gif}
+  static const AnimatedVectorData search_to_close = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 850),
     root: RootVectorElement(
@@ -104,7 +117,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData closeToSearch = AnimatedVectorData(
+  /// Animated vector for close to search.
+  ///
+  /// Pairs with [search_to_close].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/close_to_search.gif}
+  static const AnimatedVectorData close_to_search = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 850),
     root: RootVectorElement(
@@ -206,7 +224,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData playToPause = AnimatedVectorData(
+  /// Animated vector for play to pause.
+  ///
+  /// Pairs with [pause_to_play].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/play_to_pause.gif}
+  static const AnimatedVectorData play_to_pause = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -253,7 +276,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData pauseToPlay = AnimatedVectorData(
+  /// Animated vector for pause to play.
+  ///
+  /// Pairs with [play_to_pause].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/pause_to_play.gif}
+  static const AnimatedVectorData pause_to_play = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -300,7 +328,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData drawerToArrow = AnimatedVectorData(
+  /// Animated vector for drawer to arrow.
+  ///
+  /// Pairs with [arrow_to_drawer].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/drawer_to_arrow.gif}
+  static const AnimatedVectorData drawer_to_arrow = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -347,7 +380,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData arrowToDrawer = AnimatedVectorData(
+  /// Animated vector for arrow to drawer.
+  ///
+  /// Pairs with [drawer_to_arrow].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/arrow_to_drawer.gif}
+  static const AnimatedVectorData arrow_to_drawer = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -394,7 +432,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData expandToCollapse = AnimatedVectorData(
+  /// Animated vector for expand to collapse.
+  ///
+  /// Pairs with [collapse_to_expand].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/expand_to_collapse.gif}
+  static const AnimatedVectorData expand_to_collapse = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 250),
     root: RootVectorElement(
@@ -470,7 +513,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData collapseToExpand = AnimatedVectorData(
+  /// Animated vector for collapse to expand.
+  ///
+  /// Pairs with [expand_to_collapse].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/collapse_to_expand.gif}
+  static const AnimatedVectorData collapse_to_expand = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 250),
     root: RootVectorElement(
@@ -546,7 +594,10 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData crossToTick = AnimatedVectorData(
+  /// Animated vector for cross to tick.
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/cross_to_tick.gif}
+  static const AnimatedVectorData cross_to_tick = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -594,7 +645,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData minusToPlus = AnimatedVectorData(
+  /// Animated vector for minus to plus.
+  ///
+  /// Pairs with [plus_to_minus].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/minus_to_plus.gif}
+  static const AnimatedVectorData minus_to_plus = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -642,7 +698,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData plusToMinus = AnimatedVectorData(
+  /// Animated vector for plus to minus.
+  ///
+  /// Pairs with [minus_to_plus].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/plus_to_minus.gif}
+  static const AnimatedVectorData plus_to_minus = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 300),
     root: RootVectorElement(
@@ -690,7 +751,10 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData visibilityToggle = AnimatedVectorData(
+  /// Animated vector for visibility toggle.
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/visibility_toggle.gif}
+  static const AnimatedVectorData visibility_toggle = AnimatedVectorData(
     viewportSize: Size.square(24),
     duration: Duration(milliseconds: 320),
     root: RootVectorElement(
@@ -744,7 +808,10 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData musicNext = AnimatedVectorData(
+  /// Animated vector for music skip.
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/music_next.gif}
+  static const AnimatedVectorData music_next = AnimatedVectorData(
     viewportSize: Size.square(200),
     duration: Duration(milliseconds: 333),
     root: RootVectorElement(
@@ -859,7 +926,10 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData musicPrevious = AnimatedVectorData(
+  /// Animated vector for music previous.
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/music_previous.gif}
+  static const AnimatedVectorData music_previous = AnimatedVectorData(
     viewportSize: Size.square(200),
     duration: Duration(milliseconds: 333),
     root: RootVectorElement(
@@ -989,7 +1059,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData searchToMore = AnimatedVectorData(
+  /// Animated vector for search to more.
+  ///
+  /// Pairs with [more_to_search].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/search_to_more.gif}
+  static const AnimatedVectorData search_to_more = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -1181,7 +1256,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData moreToSearch = AnimatedVectorData(
+  /// Animated vector for more to search.
+  ///
+  /// Pairs with [search_to_more].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/more_to_search.gif}
+  static const AnimatedVectorData more_to_search = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -1368,7 +1448,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData menuToClose = AnimatedVectorData(
+  /// Animated vector for menu to close.
+  ///
+  /// Pairs with [close_to_menu].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/menu_to_close.gif}
+  static const AnimatedVectorData menu_to_close = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -1482,7 +1567,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData closeToMenu = AnimatedVectorData(
+  /// Animated vector for close to menu.
+  ///
+  /// Pairs with [menu_to_close].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/close_to_menu.gif}
+  static const AnimatedVectorData close_to_menu = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -1600,7 +1690,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData moreToClose = AnimatedVectorData(
+  /// Animated vector for more to close.
+  ///
+  /// Pairs with [close_to_more].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/more_to_close.gif}
+  static const AnimatedVectorData more_to_close = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -1841,7 +1936,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData closeToMore = AnimatedVectorData(
+  /// Animated vector for close to more.
+  ///
+  /// Pairs with [more_to_close].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/close_to_more.gif}
+  static const AnimatedVectorData close_to_more = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -2081,7 +2181,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData searchToBack = AnimatedVectorData(
+  /// Animated vector for search to back.
+  ///
+  /// Pairs with [back_to_search].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/search_to_back.gif}
+  static const AnimatedVectorData search_to_back = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -2215,7 +2320,12 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData backToSearch = AnimatedVectorData(
+  /// Animated vector for back to search.
+  ///
+  /// Pairs with [search_to_back].
+  ///
+  /// {@animation 128 128 https://raw.githubusercontent.com/HrX03/animated_vector/main/static/vectors/back_to_search.gif}
+  static const AnimatedVectorData back_to_search = AnimatedVectorData(
     viewportSize: Size(24, 24),
     duration: Duration(milliseconds: 500),
     root: RootVectorElement(
@@ -2317,4 +2427,30 @@ class AnimatedVectors {
       ],
     ),
   );
+
+  /// A complete list of every available bundled vector
+  static const List<AnimatedVectorData> values = [
+    AnimatedVectors.arrow_to_drawer,
+    AnimatedVectors.back_to_search,
+    AnimatedVectors.close_to_menu,
+    AnimatedVectors.close_to_more,
+    AnimatedVectors.close_to_search,
+    AnimatedVectors.collapse_to_expand,
+    AnimatedVectors.cross_to_tick,
+    AnimatedVectors.drawer_to_arrow,
+    AnimatedVectors.expand_to_collapse,
+    AnimatedVectors.menu_to_close,
+    AnimatedVectors.minus_to_plus,
+    AnimatedVectors.more_to_close,
+    AnimatedVectors.more_to_search,
+    AnimatedVectors.music_next,
+    AnimatedVectors.music_previous,
+    AnimatedVectors.pause_to_play,
+    AnimatedVectors.play_to_pause,
+    AnimatedVectors.plus_to_minus,
+    AnimatedVectors.search_to_back,
+    AnimatedVectors.search_to_close,
+    AnimatedVectors.search_to_more,
+    AnimatedVectors.visibility_toggle,
+  ];
 }
