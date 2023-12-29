@@ -22,7 +22,7 @@ After that, you can use animations with either the [AnimatedVector](https://pub.
 
 [AnimatedVectorData](https://pub.dev/documentation/animated_vector/latest/animated_vector/AnimatedVectorData-class.html) exposes some even lower level methods that you can use to paint directly on a canvas for example, check the docs for full info.
 
-The package bundles multiple already made vector animations, all available on the [AnimatedVectors](https://pub.dev/documentation/animated_vector/latest/animated_vector/AnimatedVectorData-class.html) class.
+The package bundles multiple already made vector animations, all available on the [AnimatedVectors](https://pub.dev/documentation/animated_vector/latest/animated_vector/AnimatedVectors-class.html) class.
 
 An example is available on [the package example](https://github.com/HrX03/animated_vector/tree/main/example/).
 
@@ -39,4 +39,4 @@ In case you need any help with the package, head over to the [github issues page
 ## Extras
 Code generation is available for generating `AnimatedVectorData` from `.shapeshifter` files.
 
-### More info over [animated_vector_gen](https://pub.dev/packages/aniamted_vector_gen).
+### More info over [animated_vector_gen](https://pub.dev/packages/animated_vector_gen).
