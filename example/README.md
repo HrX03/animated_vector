@@ -1,16 +1,7 @@
 # example
 
-A new Flutter project.
+The main example for [animated_vector](https://pub.dev/packages/animated_vector) and [animated_vector_gen](https://pub.dev/packages/animated_vector_gen).
 
-## Getting Started
+It provides examples on how to use the data format to define animations directly with code ([digits.dart](./lib/digits.dart)) or on how to use the code generator for shapeshifter files ([custom.dart](./lib/custom.dart) and [assets](./assets/)).
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The app can be ran on any platform and is [hosted live](https://hrx03.github.io/animated_vector/)

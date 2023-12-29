@@ -1,8 +1,12 @@
 name: animated_vector
 description: A package that adds support for vector data based animations.
 version: 0.1.0
-homepage: https://github.com/PotatoProject/animated_vector
+homepage: https://github.com/HrX03/animated_vector/tree/main/packages/animated_vector_annotations
+repository: https://github.com/HrX03/animated_vector
 license: MIT
+screenshots:
+  - description: "animated_vector library logo, it's made up of a square in the bottom left corner with a 'V' on it and a circle on the top right corner with an 'A' on it"
+  - path: "../../static/logo_pub.gif"
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
