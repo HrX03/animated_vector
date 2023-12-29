@@ -47,6 +47,9 @@ abstract final class CustomVectors {
 
   @ShapeshifterAsset("assets/back_to_search.shapeshifter")
   static const AnimatedVectorData backToSearch = _$backToSearch;
+
+  @ShapeshifterAsset("assets/isocube.shapeshifter")
+  static const AnimatedVectorData isocube = _$isocube;
 }
 
 class CustomSequences {

@@ -2501,3 +2501,144 @@ const AnimatedVectorData _$backToSearch = AnimatedVectorData(
     ],
   ),
 );
+
+const AnimatedVectorData _$isocube = AnimatedVectorData(
+  viewportSize: Size(48, 48),
+  duration: Duration(milliseconds: 500),
+  root: RootVectorElement(
+    elements: [
+      PathElement(
+        pathData: PathData.parse(
+          'M 3 12 L 24 24 L 24 48 L 3 36 Z',
+        ),
+        fillColor: Color(0xFFFFFFFF),
+        properties: PathAnimationProperties(
+          pathData: [
+            AnimationStep<PathData>(
+              tween: ConstPathDataTween(
+                begin: PathData.parse(
+                  'M 3 12 L 24 24 L 24 48 L 3 36 Z',
+                ),
+                end: PathData.parse(
+                  'M 3 36 L 24 48 L 44 36 L 24 24 Z',
+                ),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+          fillColor: [
+            AnimationStep<Color>(
+              tween: ConstColorTween(
+                begin: Color(0xFFFFFFFF),
+                end: Color(0xFF000000),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+        ),
+      ),
+      PathElement(
+        pathData: PathData.parse(
+          'M 24 24 L 45 36 L 45 12 L 24 0 Z',
+        ),
+        fillColor: Color(0xFF000000),
+        properties: PathAnimationProperties(
+          pathData: [
+            AnimationStep<PathData>(
+              tween: ConstPathDataTween(
+                begin: PathData.parse(
+                  'M 24 24 L 45 36 L 45 12 L 24 0 Z',
+                ),
+                end: PathData.parse(
+                  'M 24 0 L 45 12 L 24 24 L 3 12 Z',
+                ),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+          fillColor: [
+            AnimationStep<Color>(
+              tween: ConstColorTween(
+                begin: Color(0xFF000000),
+                end: Color(0xFFE4E4E4),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+        ),
+      ),
+      PathElement(
+        pathData: PathData.parse(
+          'M 3 12 L 24 24 L 24 48 L 3 36 Z',
+        ),
+        fillColor: Color(0xFFE4E4E4),
+        properties: PathAnimationProperties(
+          pathData: [
+            AnimationStep<PathData>(
+              tween: ConstPathDataTween(
+                begin: PathData.parse(
+                  'M 24 0 L 45 12 L 24 24 L 3 12 Z',
+                ),
+                end: PathData.parse(
+                  'M 3 12 L 24 24 L 24 48 L 3 36 Z',
+                ),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+          fillColor: [
+            AnimationStep<Color>(
+              tween: ConstColorTween(
+                begin: Color(0xFFE4E4E4),
+                end: Color(0xFFFFFFFF),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+        ),
+      ),
+      PathElement(
+        pathData: PathData.parse(
+          'M 45 12 L 45 36 L 24 48 L 24 24 Z',
+        ),
+        fillColor: Color(0xFFCACACA),
+        properties: PathAnimationProperties(
+          pathData: [
+            AnimationStep<PathData>(
+              tween: ConstPathDataTween(
+                begin: PathData.parse(
+                  'M 45 12 L 45 36 L 24 48 L 24 24 Z',
+                ),
+                end: PathData.parse(
+                  'M 24 24 L 45 12 L 45 36 L 24 48 Z',
+                ),
+              ),
+              interval: AnimationInterval(
+                end: Duration(milliseconds: 500),
+              ),
+              curve: ShapeShifterCurves.fastOutSlowIn,
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+);

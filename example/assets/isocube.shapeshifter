@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "layers": {
+    "vectorLayer": {
+      "id": "87",
+      "name": "isocube",
+      "type": "vector",
+      "width": 48,
+      "height": 48,
+      "children": [
+        {
+          "id": "88",
+          "name": "bottom",
+          "type": "path",
+          "pathData": "M 3 12 L 24 24 L 24 48 L 3 36 Z",
+          "fillColor": "#ffffff"
+        },
+        {
+          "id": "89",
+          "name": "top",
+          "type": "path",
+          "pathData": "M 24 24 L 45 36 L 45 12 L 24 0 Z",
+          "fillColor": "#000000"
+        },
+        {
+          "id": "90",
+          "name": "front",
+          "type": "path",
+          "pathData": "M 3 12 L 24 24 L 24 48 L 3 36 Z",
+          "fillColor": "#e4e4e4"
+        },
+        {
+          "id": "91",
+          "name": "side",
+          "type": "path",
+          "pathData": "M 45 12 L 45 36 L 24 48 L 24 24 Z",
+          "fillColor": "#cacaca"
+        }
+      ]
+    },
+    "hiddenLayerIds": []
+  },
+  "timeline": {
+    "animation": {
+      "id": "92",
+      "name": "anim",
+      "duration": 500,
+      "blocks": [
+        {
+          "id": "93",
+          "layerId": "90",
+          "propertyName": "pathData",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 24 0 L 45 12 L 24 24 L 3 12 Z",
+          "toValue": "M 3 12 L 24 24 L 24 48 L 3 36 Z"
+        },
+        {
+          "id": "94",
+          "layerId": "89",
+          "propertyName": "pathData",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 24 24 L 45 36 L 45 12 L 24 0 Z",
+          "toValue": "M 24 0 L 45 12 L 24 24 L 3 12 Z"
+        },
+        {
+          "id": "95",
+          "layerId": "91",
+          "propertyName": "pathData",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 45 12 L 45 36 L 24 48 L 24 24 Z",
+          "toValue": "M 24 24 L 45 12 L 45 36 L 24 48 Z"
+        },
+        {
+          "id": "96",
+          "layerId": "90",
+          "propertyName": "fillColor",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "color",
+          "fromValue": "#e4e4e4",
+          "toValue": "#ffffff"
+        },
+        {
+          "id": "97",
+          "layerId": "88",
+          "propertyName": "pathData",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "path",
+          "fromValue": "M 3 12 L 24 24 L 24 48 L 3 36 Z",
+          "toValue": "M 3 36 L 24 48 L 44 36 L 24 24 Z"
+        },
+        {
+          "id": "98",
+          "layerId": "88",
+          "propertyName": "fillColor",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "color",
+          "fromValue": "#ffffff",
+          "toValue": "#000000"
+        },
+        {
+          "id": "99",
+          "layerId": "89",
+          "propertyName": "fillColor",
+          "startTime": 0,
+          "endTime": 500,
+          "interpolator": "FAST_OUT_SLOW_IN",
+          "type": "color",
+          "fromValue": "#000000",
+          "toValue": "#e4e4e4"
+        }
+      ]
+    }
+  }
+}

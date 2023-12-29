@@ -131,6 +131,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               ],
               size: _iconSize,
             ),
+            AnimatedCubeButton(size: _iconSize),
             AnimatedVectorJumpCarousel(size: _iconSize),
             AnimatedCarouselSwitcher(sequence: digitSequence, size: _iconSize),
             AnimatedDownloadCarousel(size: _iconSize),
@@ -232,14 +233,57 @@ class _AnimatedVectorButtonState extends State<AnimatedVectorButton>
               autostart: false,
               controller: _controller,
               size: size,
-              applyColor: true,
+              applyTheme: true,
             )
           : AnimatedVector(
               vector: widget.item,
               progress: _ac,
               size: size,
-              applyColor: true,
+              applyTheme: true,
             ),
+    );
+  }
+}
+
+class AnimatedCubeButton extends StatefulWidget {
+  final double size;
+
+  const AnimatedCubeButton({
+    required this.size,
+    super.key,
+  });
+
+  @override
+  State<AnimatedCubeButton> createState() => _AnimatedCubeButtonState();
+}
+
+class _AnimatedCubeButtonState extends State<AnimatedCubeButton>
+    with SingleTickerProviderStateMixin {
+  late final _ac = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 500),
+  );
+
+  @override
+  void dispose() {
+    _ac.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = Size.square(widget.size);
+
+    return _Button(
+      onTap: () {
+        _ac.value = 0;
+        _ac.forward();
+      },
+      child: AnimatedVector(
+        vector: CustomVectors.isocube,
+        progress: _ac,
+        size: size,
+      ),
     );
   }
 }
@@ -288,7 +332,7 @@ class _AnimatedVectorJumpCarouselState
           ),
         ],
         controller: controller,
-        applyColor: true,
+        applyTheme: true,
         size: Size.square(widget.size),
       ),
     );
@@ -317,7 +361,7 @@ class _AnimatedDownloadCarouselState extends State<AnimatedDownloadCarousel> {
       child: AnimatedSequence(
         items: CustomSequences.download,
         controller: controller,
-        applyColor: true,
+        applyTheme: true,
         size: Size.square(widget.size),
       ),
     );
@@ -351,7 +395,7 @@ class _AnimatedCarouselSwitcherState extends State<AnimatedCarouselSwitcher> {
       child: AnimatedSequence(
         items: widget.sequence,
         controller: controller,
-        applyColor: true,
+        applyTheme: true,
         autostart: false,
         size: Size.square(widget.size),
       ),
