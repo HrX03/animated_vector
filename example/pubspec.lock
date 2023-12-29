@@ -23,21 +23,21 @@ packages:
       path: "../packages/animated_vector"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.2.0"
   animated_vector_annotations:
     dependency: "direct main"
     description:
       path: "../packages/animated_vector_annotations"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.2.0"
   animated_vector_gen:
     dependency: "direct dev"
     description:
       path: "../packages/animated_vector_gen"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.2.1"
   archive:
     dependency: transitive
     description:
