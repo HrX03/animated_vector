@@ -989,126 +989,1332 @@ class AnimatedVectors {
     ),
   );
 
-  static const AnimatedVectorData searchToBack = AnimatedVectorData(
+  static const AnimatedVectorData searchToMore = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
     root: RootVectorElement(
       elements: [
-        PathElement(
-          pathData: PathData.parse(
-            "M24.7,12.7 C24.70,12.7 31.8173374,19.9066081 31.8173371,19.9066082 C32.7867437,20.7006357 34.4599991,23 37.5,23 C40.54,23 43,20.54 43,17.5 C43,14.46 40.54,12 37.5,12 C34.46,12 33.2173088,12 31.8173371,12 C31.8173374,12 18.8477173,12 18.8477173,12",
-          ),
-          strokeColor: Color(0xFF000000),
-          strokeWidth: 2,
-          trimEnd: 0.185,
-          properties: PathAnimationProperties(
-            trimStart: [
-              AnimationStep(
-                tween: ConstTween<double>(end: 0.75),
-                interval: AnimationInterval(
-                  end: Duration(milliseconds: 600),
-                ),
-                curve: Curves.fastOutSlowIn,
-              ),
-            ],
-            trimEnd: [
-              AnimationStep(
-                tween: ConstTween<double>(end: 1),
-                interval: AnimationInterval(
-                  end: Duration(milliseconds: 450),
-                ),
-                curve: Curves.fastOutSlowIn,
-              ),
-            ],
-          ),
-        ),
-        PathElement(
-          pathData: PathData.parse(
-            "M25.39,13.39 A 5.5 5.5 0 1 1 17.61 5.61 A 5.5 5.5 0 1 1 25.39 13.39",
-          ),
-          strokeColor: Color(0xFF000000),
-          strokeWidth: 2,
-          properties: PathAnimationProperties(
-            trimEnd: [
-              AnimationStep(
-                tween: ConstTween<double>(end: 0),
-                interval: AnimationInterval(
-                  end: Duration(milliseconds: 250),
-                ),
-                curve: Curves.fastOutSlowIn,
-              ),
-            ],
-          ),
-        ),
         GroupElement(
-          properties: GroupAnimationProperties(
-            translateX: [
-              AnimationStep(
-                tween: ConstTween<double>(begin: 8, end: 8),
-                interval: AnimationInterval(end: Duration.zero),
-              ),
-              AnimationStep(
-                tween: ConstTween<double>(end: 0),
-                interval: AnimationInterval(
-                  start: Duration(milliseconds: 350),
-                  end: Duration(milliseconds: 600),
-                ),
-                curve: Curves.fastLinearToSlowEaseIn,
-              ),
-            ],
-          ),
+          pivotX: 12.0,
+          pivotY: 12.0,
           elements: [
-            PathElement(
-              pathData: PathData.parse(
-                "M16.7017297,12.6957157 L24.7043962,4.69304955",
-              ),
-              strokeColor: Color(0xFF000000),
-              strokeWidth: 2,
-              trimEnd: 0,
-              properties: PathAnimationProperties(
-                trimEnd: [
-                  AnimationStep(
-                    tween: ConstTween<double>(end: 0),
-                    interval: AnimationInterval(end: Duration.zero),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 12.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
                   ),
-                  AnimationStep(
-                    tween: ConstTween<double>(end: 1),
-                    interval: AnimationInterval(
-                      start: Duration(milliseconds: 350),
-                      end: Duration(milliseconds: 600),
+                  strokeColor: Color(0xFF000000),
+                  strokeAlpha: 0.0,
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 100),
+                          end: Duration(milliseconds: 400),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 2.0,
+                          end: 4.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 100),
+                          end: Duration(milliseconds: 400),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 12.0,
+                      end: 6.0,
                     ),
-                    curve: Curves.fastOutSlowIn,
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 100),
+                      end: Duration(milliseconds: 400),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 12.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeAlpha: 0.0,
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 100),
+                          end: Duration(milliseconds: 400),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 2.0,
+                          end: 4.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 100),
+                          end: Duration(milliseconds: 400),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 12.0,
+                      end: 18.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 100),
+                      end: Duration(milliseconds: 400),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
                   ),
                 ],
               ),
             ),
             PathElement(
               pathData: PathData.parse(
-                "M16.7107986,11.2764828 L24.7221527,19.2878361",
+                'M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z',
               ),
               strokeColor: Color(0xFF000000),
-              strokeWidth: 2,
-              trimEnd: 0,
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z',
+                      ),
+                      end: PathData.parse(
+                        'M 12 11 C 12.55 11 13 11.45 13 12 C 13 12.55 12.55 13 12 13 C 11.45 13 11 12.55 11 12 C 11 11.45 11.45 11 12 11 Z',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 13.2 13.2 L 20.3 20.3',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
               properties: PathAnimationProperties(
                 trimEnd: [
-                  AnimationStep(
-                    tween: ConstTween<double>(end: 0),
-                    interval: AnimationInterval(end: Duration.zero),
-                  ),
-                  AnimationStep(
-                    tween: ConstTween<double>(end: 1),
-                    interval: AnimationInterval(
-                      start: Duration(milliseconds: 350),
-                      end: Duration(milliseconds: 600),
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 1.0,
+                      end: 0.0,
                     ),
-                    curve: Curves.fastOutSlowIn,
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 200),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
                   ),
                 ],
               ),
             ),
           ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 180.0,
+                ),
+                interval: AnimationInterval(
+                  start: Duration(milliseconds: 100),
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
         ),
       ],
     ),
-    duration: Duration(milliseconds: 600),
-    viewportSize: Size(48, 24),
+  );
+
+  static const AnimatedVectorData moreToSearch = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        GroupElement(
+          pivotX: 12.0,
+          pivotY: 12.0,
+          rotation: -180.0,
+          elements: [
+            GroupElement(
+              translateX: 12.0,
+              translateY: 6.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeWidth: 4.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ),
+                        interval: AnimationInterval(
+                          end: Duration(milliseconds: 300),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 4.0,
+                          end: 2.0,
+                        ),
+                        interval: AnimationInterval(
+                          end: Duration(milliseconds: 300),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 6.0,
+                      end: 12.0,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 300),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 18.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeWidth: 4.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ),
+                        interval: AnimationInterval(
+                          end: Duration(milliseconds: 300),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 4.0,
+                          end: 2.0,
+                        ),
+                        interval: AnimationInterval(
+                          end: Duration(milliseconds: 300),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 18.0,
+                      end: 12.0,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 300),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 12 11 C 12.55 11 13 11.45 13 12 C 13 12.55 12.55 13 12 13 C 11.45 13 11 12.55 11 12 C 11 11.45 11.45 11 12 11 Z',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 12 11 C 12.55 11 13 11.45 13 12 C 13 12.55 12.55 13 12 13 C 11.45 13 11 12.55 11 12 C 11 11.45 11.45 11 12 11 Z',
+                      ),
+                      end: PathData.parse(
+                        'M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 500),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 13.2 13.2 L 20.3 20.3',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              trimEnd: 0.0,
+              properties: PathAnimationProperties(
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.0,
+                      end: 1.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 300),
+                      end: Duration(milliseconds: 500),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: -180.0,
+                  end: 0.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 400),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData menuToClose = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        GroupElement(
+          pivotX: 12.0,
+          pivotY: 12.0,
+          elements: [
+            PathElement(
+              pathData: PathData.parse(
+                'M 21 7 L 3 7',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 21 7 L 3 7',
+                      ),
+                      end: PathData.parse(
+                        'M 18.3 5.7 L 5.7 18.3',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 3 12 L 21 12',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 200),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 1.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 200),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 3 17 L 21 17',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 21 17 L 3 17',
+                      ),
+                      end: PathData.parse(
+                        'M 18.3 18.3 L 5.7 5.7',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 180.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData closeToMenu = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        GroupElement(
+          pivotX: 12.0,
+          pivotY: 12.0,
+          elements: [
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 5.7 L 5.7 18.3',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 18.3 5.7 L 5.7 18.3',
+                      ),
+                      end: PathData.parse(
+                        'M 21 7 L 3 7',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 3 12 L 21 12',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              trimStart: 0.5,
+              trimEnd: 0.5,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 0.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 1.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 18.3 L 5.7 5.7',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 18.3 18.3 L 5.7 5.7',
+                      ),
+                      end: PathData.parse(
+                        'M 21 17 L 3 17',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 180.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData moreToClose = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        GroupElement(
+          pivotX: 12.0,
+          pivotY: 12.0,
+          elements: [
+            PathElement(
+              pathData: PathData.parse(
+                'M 12 10 C 13.1 10 14 10.9 14 12 C 14 13.1 13.1 14 12 14 C 10.9 14 10 13.1 10 12 C 10 10.9 10.9 10 12 10 Z',
+              ),
+              fillColor: Color(0xFF000000),
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 12 10 C 13.1 10 14 10.9 14 12 C 14 13.1 13.1 14 12 14 C 10.9 14 10 13.1 10 12 C 10 10.9 10.9 10 12 10 Z',
+                      ),
+                      end: PathData.parse(
+                        'M 12 10.6 C 12 10.6 13.4 12 13.4 12 C 13.4 12 12 13.4 12 13.4 C 12 13.4 10.6 12 10.6 12 C 10.6 12 12 10.6 12 10.6 Z',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 300),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 5.7 L 5.7 18.3',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              trimStart: 0.5,
+              trimEnd: 0.5,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 0.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 450),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 1.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 450),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 18.3 L 5.7 5.7',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              trimStart: 0.5,
+              trimEnd: 0.5,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 0.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 450),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.5,
+                      end: 1.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 450),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 6.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeWidth: 4.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 50),
+                          end: Duration(milliseconds: 250),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 4.0,
+                          end: 2.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 50),
+                          end: Duration(milliseconds: 250),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 6.0,
+                      end: 12.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 250),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 18.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeWidth: 4.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 1.0,
+                          end: 0.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 50),
+                          end: Duration(milliseconds: 250),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 4.0,
+                          end: 2.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 50),
+                          end: Duration(milliseconds: 250),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 18.0,
+                      end: 12.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 250),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 180.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData closeToMore = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        GroupElement(
+          pivotX: 12.0,
+          pivotY: 12.0,
+          elements: [
+            PathElement(
+              pathData: PathData.parse(
+                'M 12 10.6 C 12 10.6 13.4 12 13.4 12 C 13.4 12 12 13.4 12 13.4 C 12 13.4 10.6 12 10.6 12 C 10.6 12 12 10.6 12 10.6 Z',
+              ),
+              fillColor: Color(0xFF000000),
+              properties: PathAnimationProperties(
+                pathData: [
+                  AnimationStep<PathData>(
+                    tween: ConstPathDataTween(
+                      begin: PathData.parse(
+                        'M 12 10.6 C 12 10.6 13.4 12 13.4 12 C 13.4 12 12 13.4 12 13.4 C 12 13.4 10.6 12 10.6 12 C 10.6 12 12 10.6 12 10.6 Z',
+                      ),
+                      end: PathData.parse(
+                        'M 12 10 C 13.1 10 14 10.9 14 12 C 14 13.1 13.1 14 12 14 C 10.9 14 10 13.1 10 12 C 10 10.9 10.9 10 12 10 Z',
+                      ),
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 100),
+                      end: Duration(milliseconds: 400),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 5.7 L 5.7 18.3',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 1.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            PathElement(
+              pathData: PathData.parse(
+                'M 18.3 18.3 L 5.7 5.7',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 1.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 50),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 12.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeAlpha: 0.0,
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 150),
+                          end: Duration(milliseconds: 350),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 2.0,
+                          end: 4.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 150),
+                          end: Duration(milliseconds: 350),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 12.0,
+                      end: 6.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+            GroupElement(
+              translateX: 12.0,
+              translateY: 12.0,
+              elements: [
+                PathElement(
+                  pathData: PathData.parse(
+                    'M 0 0 L 0 0',
+                  ),
+                  strokeColor: Color(0xFF000000),
+                  strokeAlpha: 0.0,
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.round,
+                  properties: PathAnimationProperties(
+                    strokeAlpha: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 0.0,
+                          end: 1.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 150),
+                          end: Duration(milliseconds: 350),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                    strokeWidth: [
+                      AnimationStep<double>(
+                        tween: ConstTween<double>(
+                          begin: 2.0,
+                          end: 4.0,
+                        ),
+                        interval: AnimationInterval(
+                          start: Duration(milliseconds: 150),
+                          end: Duration(milliseconds: 350),
+                        ),
+                        curve: ShapeShifterCurves.fastOutSlowIn,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              properties: GroupAnimationProperties(
+                translateY: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 12.0,
+                      end: 18.0,
+                    ),
+                    interval: AnimationInterval(
+                      start: Duration(milliseconds: 150),
+                      end: Duration(milliseconds: 350),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            rotation: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 180.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData searchToBack = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        PathElement(
+          pathData: PathData.parse(
+            'M 20.3 20.3 L 13.2 13.2 L 20.3 6.1',
+          ),
+          strokeColor: Color(0xFF000000),
+          strokeWidth: 2.0,
+          trimEnd: 0.5,
+          properties: PathAnimationProperties(
+            pathData: [
+              AnimationStep<PathData>(
+                tween: ConstPathDataTween(
+                  begin: PathData.parse(
+                    'M 20.3 20.3 L 13.2 13.2 L 20.3 6.1',
+                  ),
+                  end: PathData.parse(
+                    'M 12.71 19.3 L 5.41 12 L 12.71 4.7',
+                  ),
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 400),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+            trimEnd: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.5,
+                  end: 1.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 400),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+        GroupElement(
+          elements: [
+            PathElement(
+              pathData: PathData.parse(
+                'M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z',
+              ),
+              strokeColor: Color(0xFF000000),
+              strokeWidth: 2.0,
+              trimOffset: 0.875,
+              properties: PathAnimationProperties(
+                trimStart: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 0.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 300),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+                trimEnd: [
+                  AnimationStep<double>(
+                    tween: ConstTween<double>(
+                      begin: 1.0,
+                      end: 0.5,
+                    ),
+                    interval: AnimationInterval(
+                      end: Duration(milliseconds: 300),
+                    ),
+                    curve: ShapeShifterCurves.fastOutSlowIn,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          properties: GroupAnimationProperties(
+            translateX: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: -8.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 300),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+            translateY: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: -8.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 300),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+        PathElement(
+          pathData: PathData.parse(
+            'M 6.5 12 L 20 12',
+          ),
+          strokeColor: Color(0xFF000000),
+          strokeWidth: 2.0,
+          trimEnd: 0.0,
+          properties: PathAnimationProperties(
+            trimEnd: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 1.0,
+                ),
+                interval: AnimationInterval(
+                  start: Duration(milliseconds: 250),
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  static const AnimatedVectorData backToSearch = AnimatedVectorData(
+    viewportSize: Size(24, 24),
+    duration: Duration(milliseconds: 500),
+    root: RootVectorElement(
+      elements: [
+        PathElement(
+          pathData: PathData.parse(
+            'M 12.71 4.7 C 12.71 4.7 20.01 12 20.01 12 C 20.01 12 12.71 19.3 12.71 19.3 C 12.71 19.3 5.41 12 5.41 12 C 5.41 12 12.71 4.7 12.71 4.7 Z',
+          ),
+          strokeColor: Color(0xFF000000),
+          strokeWidth: 2.0,
+          trimStart: 0.5,
+          properties: PathAnimationProperties(
+            pathData: [
+              AnimationStep<PathData>(
+                tween: ConstPathDataTween(
+                  begin: PathData.parse(
+                    'M 12.71 4.7 C 12.71 4.7 20.01 12 20.01 12 C 20.01 12 12.71 19.3 12.71 19.3 C 12.71 19.3 5.41 12 5.41 12 C 5.41 12 12.71 4.7 12.71 4.7 Z',
+                  ),
+                  end: PathData.parse(
+                    'M 9.5 4 C 12.54 4 15 6.46 15 9.5 C 15 12.54 12.54 15 9.5 15 C 6.46 15 4 12.54 4 9.5 C 4 6.46 6.46 4 9.5 4 Z',
+                  ),
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+            trimStart: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.5,
+                  end: 0.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+            trimOffset: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 0.75,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+        PathElement(
+          pathData: PathData.parse(
+            'M 6.5 12 L 20 12',
+          ),
+          strokeColor: Color(0xFF000000),
+          strokeWidth: 2.0,
+          properties: PathAnimationProperties(
+            trimStart: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 1.0,
+                ),
+                interval: AnimationInterval(
+                  end: Duration(milliseconds: 200),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+        PathElement(
+          pathData: PathData.parse(
+            'M 13.2 13.2 L 20.3 20.3',
+          ),
+          strokeColor: Color(0xFF000000),
+          strokeWidth: 2.0,
+          trimEnd: 0.0,
+          properties: PathAnimationProperties(
+            trimEnd: [
+              AnimationStep<double>(
+                tween: ConstTween<double>(
+                  begin: 0.0,
+                  end: 1.0,
+                ),
+                interval: AnimationInterval(
+                  start: Duration(milliseconds: 250),
+                  end: Duration(milliseconds: 500),
+                ),
+                curve: ShapeShifterCurves.fastOutSlowIn,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
   );
 }

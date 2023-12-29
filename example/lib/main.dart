@@ -86,7 +86,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: AnimatedVectors.searchToBack,
+              item: CustomVectors.searchToBack,
               size: _iconSize,
             ),
             AnimatedVectorButton(
@@ -102,32 +102,32 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: CustomVectors.searchToMore,
-              reverseItem: CustomVectors.moreToSearch,
+              item: AnimatedVectors.searchToMore,
+              reverseItem: AnimatedVectors.moreToSearch,
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: CustomVectors.searchToBack,
-              reverseItem: CustomVectors.backToSearch,
+              item: AnimatedVectors.searchToBack,
+              reverseItem: AnimatedVectors.backToSearch,
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: CustomVectors.menuToClose,
-              reverseItem: CustomVectors.closeToMenu,
+              item: AnimatedVectors.menuToClose,
+              reverseItem: AnimatedVectors.closeToMenu,
               size: _iconSize,
             ),
             AnimatedVectorButton(
-              item: CustomVectors.moreToClose,
-              reverseItem: CustomVectors.closeToMore,
+              item: AnimatedVectors.moreToClose,
+              reverseItem: AnimatedVectors.closeToMore,
               size: _iconSize,
             ),
             AnimatedCarouselSwitcher(
               sequence: const [
-                SequenceItem(CustomVectors.searchToMore),
-                SequenceItem(CustomVectors.moreToClose),
-                SequenceItem(CustomVectors.closeToMenu),
+                SequenceItem(AnimatedVectors.searchToMore),
+                SequenceItem(AnimatedVectors.moreToClose),
+                SequenceItem(AnimatedVectors.closeToMenu),
                 SequenceItem(AnimatedVectors.drawerToArrow),
-                SequenceItem(CustomVectors.backToSearch),
+                SequenceItem(AnimatedVectors.backToSearch),
               ],
               size: _iconSize,
             ),
