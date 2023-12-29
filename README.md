@@ -27,7 +27,8 @@ The package bundles multiple already made vector animations, all available on th
 An example is available on [the package example](https://github.com/HrX03/animated_vector/tree/main/example/).
 
 ## Description and inspiration
-The data format is heavily inspired from the AnimatedVectorDrawable from android, which allows for pretty flexible animations and adapts the declarative style for definitions, allowing for immutable composable instances.
+The data format is heavily inspired from the AnimatedVectorDrawable from android, which allows for pretty flexible animations.
+It also adapts the declarative style for definitions, allowing for immutable composable instances.
 
 [This article](https://www.androiddesignpatterns.com/2016/11/introduction-to-icon-animation-techniques.html) was the main reason for developing this package, huge props to the author for the awesome resource.
 

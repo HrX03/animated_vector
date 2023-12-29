@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:animated_vector/animated_vector.dart';
 import 'package:animated_vector_annotations/animated_vector_annotations.dart';
 import 'package:flutter/widgets.dart';
@@ -6,24 +8,24 @@ part 'custom.g.dart';
 
 abstract final class CustomVectors {
   @ShapeshifterAsset("assets/apps_to_close_composite.shapeshifter")
-  static const AnimatedVectorData appsToClose = _$appsToClose;
+  static const AnimatedVectorData apps_to_close = _$apps_to_close;
 
   @ShapeshifterAsset("assets/add_transition.shapeshifter")
-  static const AnimatedVectorData addTransition = _$addTransition;
+  static const AnimatedVectorData add_transition = _$add_transition;
 
   @ShapeshifterAsset("assets/download_start.shapeshifter")
-  static const AnimatedVectorData downloadStart = _$downloadStart;
+  static const AnimatedVectorData download_start = _$download_start;
 
   @ShapeshifterAsset("assets/download_loop.shapeshifter")
-  static const AnimatedVectorData downloadLoop = _$downloadLoop;
+  static const AnimatedVectorData download_loop = _$download_loop;
 
   @ShapeshifterAsset("assets/download_end.shapeshifter")
-  static const AnimatedVectorData downloadEnd = _$downloadEnd;
+  static const AnimatedVectorData download_end = _$download_end;
 
   @ShapeshifterAsset("assets/isocube.shapeshifter")
   static const AnimatedVectorData isocube = _$isocube;
 
-  static const AnimatedVectorData searchToBack = AnimatedVectorData(
+  static const AnimatedVectorData search_to_back = AnimatedVectorData(
     root: RootVectorElement(
       elements: [
         PathElement(
@@ -149,15 +151,15 @@ abstract final class CustomVectors {
 
 class CustomSequences {
   static const List<SequenceEntry> download = [
-    SequenceItem(CustomVectors.downloadStart, skipMidAnimation: false),
+    SequenceItem(CustomVectors.download_start, skipMidAnimation: false),
     SequenceItem(
-      CustomVectors.downloadLoop,
+      CustomVectors.download_loop,
       repeatCount: null,
       skipMidAnimation: false,
       nextOnComplete: true,
     ),
     SequenceItem(
-      CustomVectors.downloadEnd,
+      CustomVectors.download_end,
       skipMidAnimation: false,
       nextOnComplete: true,
     ),

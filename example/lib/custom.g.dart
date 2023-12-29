@@ -6,7 +6,7 @@ part of 'custom.dart';
 // ShapeshifterAssetGenerator
 // **************************************************************************
 
-const AnimatedVectorData _$appsToClose = AnimatedVectorData(
+const AnimatedVectorData _$apps_to_close = AnimatedVectorData(
   viewportSize: Size(24, 24),
   duration: Duration(milliseconds: 800),
   root: RootVectorElement(
@@ -588,7 +588,7 @@ const AnimatedVectorData _$appsToClose = AnimatedVectorData(
   ),
 );
 
-const AnimatedVectorData _$addTransition = AnimatedVectorData(
+const AnimatedVectorData _$add_transition = AnimatedVectorData(
   viewportSize: Size(24, 24),
   duration: Duration(milliseconds: 500),
   root: RootVectorElement(
@@ -667,7 +667,7 @@ const AnimatedVectorData _$addTransition = AnimatedVectorData(
   ),
 );
 
-const AnimatedVectorData _$downloadStart = AnimatedVectorData(
+const AnimatedVectorData _$download_start = AnimatedVectorData(
   viewportSize: Size(24, 24),
   duration: Duration(milliseconds: 600),
   root: RootVectorElement(
@@ -737,7 +737,7 @@ const AnimatedVectorData _$downloadStart = AnimatedVectorData(
   ),
 );
 
-const AnimatedVectorData _$downloadLoop = AnimatedVectorData(
+const AnimatedVectorData _$download_loop = AnimatedVectorData(
   viewportSize: Size(24, 24),
   duration: Duration(milliseconds: 1100),
   root: RootVectorElement(
@@ -899,7 +899,7 @@ const AnimatedVectorData _$downloadLoop = AnimatedVectorData(
   ),
 );
 
-const AnimatedVectorData _$downloadEnd = AnimatedVectorData(
+const AnimatedVectorData _$download_end = AnimatedVectorData(
   viewportSize: Size(24, 24),
   duration: Duration(milliseconds: 1100),
   root: RootVectorElement(
