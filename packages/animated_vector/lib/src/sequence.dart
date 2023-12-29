@@ -269,6 +269,9 @@ class SequenceItem extends SequenceEntry {
   /// An optional color that will override the color of this item vector data
   final Color? colorOverride;
 
+  /// The blend mode to use when applying colors over this item
+  final BlendMode? blendMode;
+
   /// Used to jump to a specific item in a sequence using the
   /// [AnimatedSequenceController.jumpTo] method
   final String? tag;
@@ -281,6 +284,7 @@ class SequenceItem extends SequenceEntry {
     super.skipMidAnimation,
     super.nextOnComplete,
     this.colorOverride,
+    this.blendMode,
     this.tag,
   });
 
@@ -291,6 +295,7 @@ class SequenceItem extends SequenceEntry {
         nextOnComplete,
         data,
         colorOverride,
+        blendMode,
         tag,
       );
 
@@ -302,6 +307,7 @@ class SequenceItem extends SequenceEntry {
           nextOnComplete == other.nextOnComplete &&
           data == other.data &&
           colorOverride == other.colorOverride &&
+          blendMode == other.blendMode &&
           tag == other.tag;
     }
 
