@@ -15,7 +15,7 @@ You'll need to depend on animated_vector first of all:
 
 ```yaml
 dependencies:
-  animated_vector: ^0.1.0
+  animated_vector: ^0.2.0
 ```
 
 After that, you can use animations with either the [AnimatedVector](https://pub.dev/documentation/animated_vector/latest/animated_vector/AnimatedVector-class.html) widget for simple animations and/or low level control, or the [AnimatedSequence](https://pub.dev/documentation/animated_vector/latest/animated_vector/AnimatedSequence-class.html) widget to create more complex interactions between multiple animations.
