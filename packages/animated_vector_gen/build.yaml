@@ -1,8 +1,0 @@
-builders:
-  animated_vector_gen:
-    import: "package:animated_vector_gen/builder.dart"
-    builder_factories: ["animatedVectorBuilder"]
-    build_extensions: { ".dart": [".vector.g.part"] }
-    auto_apply: dependents
-    build_to: cache
-    applies_builders: ["source_gen|combining_builder"]

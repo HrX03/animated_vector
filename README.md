@@ -1,1 +1,0 @@
-./packages/animated_vector/README.md
