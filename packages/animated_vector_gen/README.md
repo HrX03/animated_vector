@@ -34,7 +34,7 @@ The recommended folder for this kind of file is `assets/` or a subdirectory insi
 
 A shapeshifter file can be created using [ShapeShifter](https://shapeshifter.design), by selecting the File > Save option.
 
-The `@ShapeshifterAsset` annotation will only work on toplevel const variables or static const class fields and will generate a toplevel const variable that will have as name the var/field name with a `_$` prefix.
+The `@ShapeShifterAsset` annotation will only work on toplevel const variables or static const class fields and will generate a toplevel const variable that will have as name the var/field name with a `_$` prefix.
 
 As follows we can see an example file and the generated counterpart:
 
@@ -44,11 +44,11 @@ import 'package:animated_vector_annotations/animated_vector_annotations.dart';
 
 part 'vectors.g.dart';
 
-@ShapeshifterAsset("assets/iconA.shapeshifter")
+@ShapeShifterAsset("assets/iconA.shapeshifter")
 const iconA = _$iconA;
 
 class Vectors {
-    @ShapeshifterAsset("assets/iconB.shapeshifter")
+    @ShapeShifterAsset("assets/iconB.shapeshifter")
     static const playPause = _$playPause; // the field name doesn't need to match file name, but the generated var name will always be derived from the field name.
 }
 ```
