@@ -609,7 +609,6 @@ abstract final class ShapeShifterConverter {
       case StrokeCap.round:
         return "round";
       case StrokeCap.butt:
-      default:
         return "butt";
     }
   }
@@ -621,7 +620,6 @@ abstract final class ShapeShifterConverter {
       case StrokeJoin.round:
         return "round";
       case StrokeJoin.miter:
-      default:
         return "miter";
     }
   }
@@ -766,8 +764,9 @@ Color? _colorFromHex(String? hex) {
 }
 
 String _colorToHex(Color color) {
+  // ignore: deprecated_member_use
   final String radixString = color.value.toRadixString(16);
-  if (color.alpha == 0xFF) return "#${radixString.substring(2)}";
+  if (color.a == 0xFF) return "#${radixString.substring(2)}";
   return "#$radixString";
 }
 

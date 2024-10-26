@@ -277,6 +277,7 @@ class _AnimatedSequenceState extends State<AnimatedSequence>
   void dispose() {
     _animationController.removeStatusListener(_animationStatusListener);
     _animationController.removeStatusListener(_waitForSkip);
+    _animationController.dispose();
     widget.controller._detach();
     super.dispose();
   }
