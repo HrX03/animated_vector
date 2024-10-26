@@ -14,6 +14,8 @@ AnimatedVectorDataTemplate jsonToCode(String rawJson) {
 
   final Map<String, dynamic> layers = json.get("layers");
   final Map<String, dynamic> vectorLayer = layers.get("vectorLayer");
+  final List<String>? hiddenLayerIds =
+      layers.maybeGet<List>("hiddenLayerIds")?.cast<String>();
   final Map<String, dynamic> animation =
       json.get<Map<String, dynamic>>("timeline").get("animation");
   final List<_JsonAnimationProperty> blocks = animation
@@ -33,6 +35,7 @@ AnimatedVectorDataTemplate jsonToCode(String rawJson) {
       elements: _elementsFromJson(
         children.cast<Map<String, dynamic>>(),
         blocks,
+        hiddenLayerIds ?? [],
       ),
       properties: RootAnimationPropertiesTemplate(
         alpha: _parseProperties<double>(
@@ -48,12 +51,15 @@ AnimatedVectorDataTemplate jsonToCode(String rawJson) {
 List<ElementTemplate> _elementsFromJson(
   List<Map<String, dynamic>> json,
   List<_JsonAnimationProperty> animations,
+  List<String> hiddenLayerIds,
 ) {
   final List<ElementTemplate> elements = [];
 
   for (final Map<String, dynamic> child in json) {
     final String id = child.get<String>("id");
     final String type = child.get<String>("type");
+
+    if (hiddenLayerIds.contains(id)) continue;
 
     switch (type) {
       case "path":
@@ -107,6 +113,7 @@ List<ElementTemplate> _elementsFromJson(
           elements: _elementsFromJson(
             child.get<List<dynamic>>("children").cast<Map<String, dynamic>>(),
             animations,
+            hiddenLayerIds,
           ),
           properties: GroupAnimationPropertiesTemplate(
             translateX: _parseProperties<double>(animations, id, "translateX"),
