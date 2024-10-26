@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Dispose the internal `AnimationController` for `AnimatedSequence` widgets
+
 ## 0.2.0
 
 - Added more docs to classes and methods
