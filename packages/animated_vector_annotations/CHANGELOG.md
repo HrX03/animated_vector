@@ -1,3 +1,7 @@
+##0.2.2
+
+Update dependency on animated_vector
+
 ## 0.2.1
 
 Export libraries for generated files from the main animated_vector_annotations library

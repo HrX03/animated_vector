@@ -230,7 +230,7 @@ class RootVectorElement extends VectorElement<RootVectorAnimationProperties> {
       Offset.zero & size,
       Paint()
         ..colorFilter = ColorFilter.mode(
-          const Color(0xFFFFFFFF).withValues(alpha: evaluated.alpha),
+          const Color(0xFFFFFFFF).withOpacity(evaluated.alpha!),
           BlendMode.modulate,
         ),
     );
@@ -518,8 +518,8 @@ class PathElement extends VectorElement<PathAnimationProperties> {
             )
             .transform(transform.storage),
         Paint()
-          ..color = strokeColor.withValues(
-            alpha: strokeColor.a * evaluated.strokeAlpha!,
+          ..color = strokeColor.withOpacity(
+            strokeColor.opacity * evaluated.strokeAlpha!,
           )
           ..strokeWidth = evaluated.strokeWidth!
           ..strokeCap = strokeCap
@@ -532,7 +532,7 @@ class PathElement extends VectorElement<PathAnimationProperties> {
       evaluated.pathData!.toPath().transform(transform.storage),
       Paint()
         ..color =
-            fillColor.withValues(alpha: fillColor.a * evaluated.fillAlpha!),
+            fillColor.withOpacity(fillColor.opacity * evaluated.fillAlpha!),
     );
   }
 

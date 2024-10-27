@@ -1,6 +1,6 @@
 name: animated_vector_gen
 description: Code generator for animated_vector. Allows to generate vector data from shape shifter files
-version: 0.2.2
+version: 0.2.3
 license: MIT
 homepage: https://github.com/HrX03/animated_vector/tree/main/packages/animated_vector_annotations
 repository: https://github.com/HrX03/animated_vector
@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   analyzer: ^6.2.0
-  animated_vector_annotations: ^0.2.1
+  animated_vector_annotations: ^0.2.2
   build: ^2.4.1
   code_builder: ^4.7.0
   dart_style: ^2.3.3

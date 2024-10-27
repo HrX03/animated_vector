@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Fix support for stable branch of flutter
+
 ## 0.2.1
 
 - Dispose the internal `AnimationController` for `AnimatedSequence` widgets

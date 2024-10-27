@@ -1,3 +1,7 @@
+## 0.2.3
+
+Update dependency on animated_vector_annotations
+
 ## 0.2.2
 
 - Ignore hidden layers inside the shapeshifter file

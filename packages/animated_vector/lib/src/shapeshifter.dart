@@ -766,7 +766,7 @@ Color? _colorFromHex(String? hex) {
 String _colorToHex(Color color) {
   // ignore: deprecated_member_use
   final String radixString = color.value.toRadixString(16);
-  if (color.a == 0xFF) return "#${radixString.substring(2)}";
+  if (color.alpha == 0xFF) return "#${radixString.substring(2)}";
   return "#$radixString";
 }
 

@@ -1,6 +1,6 @@
 name: animated_vector
 description: A package that adds support for vector data based animations.
-version: 0.2.1
+version: 0.2.2
 homepage: https://github.com/HrX03/animated_vector/tree/main/packages/animated_vector_annotations
 repository: https://github.com/HrX03/animated_vector
 license: MIT
